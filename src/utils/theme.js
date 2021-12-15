@@ -2,7 +2,7 @@ const theme = {
     palette: {
         mode: "light",
         primary: {
-            main: '#5182f5',
+            main: '#4BAEA6',
         },
         secondary: {
             main: '#f50057',

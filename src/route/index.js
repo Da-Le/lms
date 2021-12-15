@@ -51,7 +51,7 @@ export default function RouterComponent() {
         })
     }, [dispatch])
 
-    console.log(user);
+    // console.log(user);
 
     console.log(classUser.classData)
 
