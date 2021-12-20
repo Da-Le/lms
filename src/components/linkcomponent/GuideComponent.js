@@ -4,6 +4,7 @@ import {
     Box,
     Typography,
     Grid,
+    Paper
 } from '@mui/material';
 
 import Card from '@mui/material/Card';
@@ -55,53 +56,53 @@ export default function GuideComponent() {
                 <Box component={Grid} container justifyContent="center" sx={{ padding: 2 }}>
                     <Grid sm item>
                         <Grid container justifyContent="center">
-                            <Card sx={style.cardStyle}>
+                            <Paper sx={style.cardStyle}>
                                 <Grid container justifyContent="center" sx={{ marginTop: -3 }}>
-                                    <img src={Bulb} alt="message" style={style.imgStyle} />
+                                    <img src={'assets/img/find.png'} alt="message" style={style.imgStyle} />
                                 </Grid>
                                 <CardContent>
                                     <Typography gutterBottom sx={{ ...style.textStyle, ...style.textAlignStyle }}>
-                                        Focused on K-12 schools just like yours
+                                        Find ypu classroom
                                     </Typography>
                                     <Typography variant="body2" sx={{ ...style.textAlignStyle, ...style.descriptStyle }}>
                                         Elementary students don’t learn the same way as college students or adults. Rendezvous was designed for all students—from kindergarten through 12th grade—to be fully engaged with their learning.
                                     </Typography>
                                 </CardContent>
-                            </Card>
+                            </Paper>
                         </Grid>
                     </Grid>
                     <Grid sm item>
                         <Grid container justifyContent="center">
-                            <Card sx={style.cardStyle}>
+                            <Paper sx={style.cardStyle}>
                                 <Grid container justifyContent="center" sx={{ marginTop: -2 }}>
-                                    <img src={Find} alt="message" style={style.imgStyle} />
+                                    <img src={'assets/img/join.png'} alt="message" style={style.imgStyle} />
                                 </Grid>
                                 <CardContent>
                                     <Typography gutterBottom sx={{ ...style.textStyle, ...style.textAlignStyle }}>
-                                        Designed for district success together
+                                        Join meeting
                                     </Typography>
                                     <Typography variant="body2" sx={{ ...style.textAlignStyle, ...style.descriptStyle }}>
                                         Rendezvous has spent the last 10 years learning from our 1,600+ customers and more than 20 million users about what products and services classrooms, schools, and entire districts need to be successful.
                                     </Typography>
                                 </CardContent>
-                            </Card>
+                            </Paper>
                         </Grid>
                     </Grid>
                     <Grid sm item>
                         <Grid container justifyContent="center">
-                            <Card sx={style.cardStyle}>
+                            <Paper sx={style.cardStyle}>
                                 <Grid container justifyContent="center" sx={{ marginTop: -5 }}>
-                                    <img src={Message} alt="message" style={style.imgStyle} />
+                                    <img src={'assets/img/monitor.png'} alt="message" style={style.imgStyle} />
                                 </Grid>
                                 <CardContent>
                                     <Typography gutterBottom sx={{ ...style.textStyle, ...style.textAlignStyle }}>
-                                        Bring your community together
+                                        Monitor your students
                                     </Typography>
                                     <Typography variant="body2" sx={{ ...style.textAlignStyle, ...style.descriptStyle }}>
                                         Learning is not just about teachers and students. Rendezvous allows you to bring everyone together—students, teachers, coaches, parents, administrators—with one communication and collaboration platform.
                                     </Typography>
                                 </CardContent>
-                            </Card>
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Box>

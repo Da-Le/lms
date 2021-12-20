@@ -8,6 +8,8 @@ import {
     Typography,
     Grid,
 } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+
 
 import Clipdrawer from '../dashboardcomponent/ClipDrawer';
 
@@ -41,20 +43,22 @@ export default function DashboardUser() {
     const [classData, setClassData] = useState();
     const [userId, setUserId] = useState('');
 
+    const history = useHistory();
+
 
     useEffect(() => {
         getUser().then(user => {
             if(user){
                 setUserId(user.uid)
-                getData()
-            } 
+                getData(user.uid)
+            } return
         })
       }, []);
 
-      const getData = () => {
+      const getData = (userId) => {
         getDocsByCollection('createclass')
         .then(item => {
-            const data = item.filter(item => item.ownerId === 'IQPJp62BtBbafecm6e4e2ZiR08u2')
+            const data = item.filter(item => item.ownerId === userId)
             setClassData(data)
         })
       }
@@ -73,7 +77,14 @@ export default function DashboardUser() {
                     <Typography sx={{ marginTop: 6 }}>Deadline:June 6, 2021</Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" color="primary" sx={{ marginTop: 5 }}>VIEW</Button>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        sx={{ marginTop: 5 }}
+                        onClick={() => history.push('/dashboardclass')}
+                    >
+                        VIEW
+                    </Button>
                 </Grid>
             </Grid>
         )

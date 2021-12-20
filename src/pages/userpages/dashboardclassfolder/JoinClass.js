@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
+import {joinClass, getUser, getDocsByCollection} from '../../../utils/firebaseUtil';
 import {
     Box,
     Button,
@@ -22,6 +23,29 @@ const style = {
 }
 
 export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
+    const [userId, setUserId] = useState('');
+    const [classCode, setClassCode] = useState('');
+
+
+    useEffect(() => {
+        getUser().then(user => {
+            if(user){
+                setUserId(user.uid)
+            } 
+        })
+      }, []);
+
+    const joinClass = () => {
+        
+        joinClass('createclass', classCode, userId )
+    }
+
+    const handleChangeClassCode = (e) => {
+        setClassCode(e.target.value)
+        
+    }
+
+      console.log(userId)
 
     return (
         <div>
@@ -35,7 +59,13 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
                 </DialogTitle>
                 <DialogContent>
                     <Box component={Grid} container justifyContent="center" sx={style.formContainer}>
-                        <TextField variant="outlined" placeholder="Class Code" sx={style.textfieldStyle} />
+                        <TextField 
+                            variant="outlined" 
+                            placeholder="Class Code" 
+                            sx={style.textfieldStyle} 
+                            value={classCode}
+                            onChange ={e => handleChangeClassCode(e)}
+                        />
                         <TextField variant="outlined" placeholder="Owner's Email" sx={style.textfieldStyle} />
 
                     </Box>
@@ -44,7 +74,7 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
                     <Button autoFocus onClick={toggleJoinClass}>
                         Back
                     </Button>
-                    <Button onClick={toggleJoinClass} autoFocus>
+                    <Button onClick={joinClass} autoFocus>
                         Join Class
                     </Button>
                 </DialogActions>

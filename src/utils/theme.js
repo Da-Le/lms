@@ -16,7 +16,7 @@ const theme = {
     },
     colors: {
         base2: "#fff",
-        navButton: "#fff",
+        navButton: "rgba(0, 0, 0, 0.87)",
         navButtonHover: "#ff992b",
         primarycolor: "#0097a7",
         primary1: "#143438",

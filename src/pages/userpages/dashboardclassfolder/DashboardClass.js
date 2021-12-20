@@ -22,7 +22,7 @@ import JoinClass from './JoinClass';
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-import { onSnapshot, collection } from 'firebase/firestore';
+import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 
 import { useHistory } from 'react-router';
@@ -180,15 +180,25 @@ export default function DashboardClass() {
 
     const [classroom, setClassroom] = useState([]);
 
-    useEffect(
-        () =>
-            onSnapshot(collection(db, "createclass"), (snapshot) => {
-                setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-                setLoading(false);
-            }
-            ),
-        []
-    );
+    useEffect(() => {
+        const classCollection = collection(db, "createclass")
+        const q = query(classCollection, where('students', "array-contains", "guV6OSfbwldR3ggHbmHhGRzm11G2"));
+        onSnapshot(q, (snapshot) => {
+            setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            setLoading(false);
+        }
+        )
+      }, []);
+
+    // useEffect(
+    //     () =>
+    //         onSnapshot(collection(db, "createclass"), (snapshot) => {
+    //             setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    //             setLoading(false);
+    //         }
+    //         ),
+    //     []
+    // );
 
     const classBtn = (classdata) => {
         dispatch(toggleClassroomData(classdata, history));

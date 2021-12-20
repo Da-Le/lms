@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs} from "firebase/firestore"; 
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestore"; 
 
 
 
@@ -32,6 +32,7 @@ export const createUser = async (email, password) => {
  * @param {string} collectionName 
  * @param {object} data
  */
+// Create a document
 export const createDoc = async (collectionName, data) => {
 
   const docInstance = await addDoc(collection(db,collectionName),data)
@@ -39,33 +40,34 @@ export const createDoc = async (collectionName, data) => {
 }
 
 /**
+ * create doc
+ * @param {string} collectionName 
+ * @param {string} id
+ * @param {object} data
+ */
+// Add a new document in collection "cities"
+export const joinClass = async (collectionName, id, data) => {
+  const addData = doc(db, collectionName, id);
+
+// Update field
+  // await updateDoc(addData,data);
+  await updateDoc(addData, {
+    students: arrayUnion(data)
+  });
+
+  return addData
+}
+
+/**
  * 
  * @param {string} collectionName 
  */
 export const getDocsByCollection = async (collectionName) => {
-  // const collection = await db.collection(collectionName).get().then(querySnapshot => {
-  //   return querySnapshot.docs.map((doc) => doc.data())
-  // }).catch((err) => err);
-  // const collection = await getDocs(collection(db, collectionName));
-  // if(collection.exist){
-  //   console.log(collection)
-  // }
-  // collection.forEach((doc) => {
-  //   console.log(doc)
-  //   // console.log(`${doc.id} => ${doc.data()}`);
-  //   // return `${doc.id} => ${doc.data()}`
-  // });
+  
   const querySnapshot = await getDocs(collection(db, collectionName));
-  // console.log(querySnapshot)
-    // querySnapshot.forEach((doc) => {
-    //   console.log(doc.data())
-    //   return doc.data()
-    //   // doc.data() is never undefined for query doc snapshots
-    //   // console.log(doc.id, " => ", doc.data());
-    // });
+  
     return querySnapshot.docs.map((doc) => doc.data())
 
-  // return querySnapshot
 }
 
 /**

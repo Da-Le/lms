@@ -69,6 +69,7 @@ const style = {
         }
     },
     toolbarStyle: {
+        backgroundColor: '#f5f8ff',
         padding: {
             xs: 1,
             sm: 1,

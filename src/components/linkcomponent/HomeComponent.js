@@ -31,13 +31,13 @@ const style = {
         }
     },
     section1: {
-        padding: "140px 0px",
+        padding: "140px 0px 0px 0px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "320px",
+        // height: "320px",
         width: 1800,
         marginLeft: {
             xs: 0,
@@ -85,7 +85,16 @@ const style = {
     columnContainer: {
         display: "flex",
         justifyContent: "center",
-        padding: 5
+        padding: 5,
+        h2: {
+            textAlign: "center",
+            fontSize: {
+                xs: "2rem",
+                sm: "2.2rem",
+                md: "2.5rem",
+            },
+            color: (theme) => theme.colors.textColor
+        }
     }
 }
 
@@ -96,46 +105,34 @@ export default function HomeComponent() {
         <Box component={Grid} container justifyContent="center" id="Home">
             <Box sx={style.section1}>
                 <Grid container justifyContent="flex-start">
-                    <Typography variant="h1" color="textPrimary" sx={{ ...style.headingStyle1, ...style.marginTop3, ...style.marginLeft1 }}>
-                        In learning you will teach, and in teaching you will learn
-                    </Typography>
-                </Grid>
-                <Grid container justifyContent="flex-start">
-                    <Typography variant="subtitle1" sx={{ ...style.marginLeft1, ...style.marginTop3 }}>Learning is not attained by chance, it must be sought for with ardor and attended to with diligence</Typography>
-                </Grid>
-                <Grid container justifyContent="flex-start">
-                    <Button variant="contained" sx={{ ...style.marginLeft1, ...style.marginTop3 }}>Learn More</Button>
+                    <Grid item xs={6}>
+                        <Typography variant="h1" color="textPrimary" sx={{ ...style.headingStyle1, ...style.marginTop3, ...style.marginLeft1 }}>
+                            Learning never exhausts the mind
+                        </Typography>
+                        <Typography variant="subtitle1" color="textPrimary" sx={{ ...style.subtitle1, ...style.marginTop3 }}>
+                            Rendezvous aims to create an innovative e-learning environment for the teachers and students
+                        </Typography>
+                        <div style={{ display: 'flex', justifyContent:'center' }}>
+                            <Button variant="contained">Start Now</Button>
+                        </div>
+                        
+                    </Grid>
+                    <Grid item xs={6}>
+                    <img
+                        src={"assets/img/section1.png"}
+                    />
+                    </Grid>
+                    
                 </Grid>
             </Box>
             {/* This is a component section 2 */}
             <Box sx={style.section2}>
                 <Grid container justifyContent="center">
                     <Grid sm item sx={style.columnContainer}>
-                        <LiveTvIcon />
-                        <Grid>
-                            <Typography>968 online courses</Typography>
-                            <Typography>968 online courses</Typography>
-                        </Grid>
-
+                        <Typography variant="h2">0 Users</Typography>
                     </Grid>
-                    <Grid sm item>
-                        <Grid sm item sx={style.columnContainer}>
-                            <LiveTvIcon />
-                            <Grid>
-                                <Typography>968 online courses</Typography>
-                                <Typography>968 online courses</Typography>
-                            </Grid>
-
-                        </Grid>
-                    </Grid>
-                    <Grid sm item>
-                        <Grid sm item sx={style.columnContainer}>
-                            <LiveTvIcon />
-                            <Grid>
-                                <Typography>968 online courses</Typography>
-                                <Typography>968 online courses</Typography>
-                            </Grid>
-                        </Grid>
+                    <Grid sm item sx={style.columnContainer}>
+                        <Typography variant="h2">0 Classrooms</Typography>
                     </Grid>
                 </Grid>
             </Box>
