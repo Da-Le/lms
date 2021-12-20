@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestore"; 
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc} from "firebase/firestore"; 
 
 
 
@@ -12,12 +12,14 @@ import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion} from "firebase
  * 
  * @param {string} email 
  * @param {string} password
+ * @param {object} data
  */
-export const createUser = async (email, password) => {
+export const createUser = async (email, password, data) => {
   const isUserCreated = await createUserWithEmailAndPassword(auth,email, password)
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
+    setDoc(doc(db, 'users', user.uid), data);
     return user
     // ...
   })

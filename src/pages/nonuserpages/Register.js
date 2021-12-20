@@ -154,10 +154,8 @@ export default function Register() {
         //     // setValues({ ...values, errors: "", isLoading: true });
         //     // dispatch(registerInitiate(values.email, values.password, values.displayName, history));
         // }
-            createUser(values.email, values.password).then(() => {
-                createDoc('users',values).then(() => {
-                    console.log('success')
-                })
+            createUser(values.email, values.password, values).then(() => {
+                console.log('success')
             })
     }
 
