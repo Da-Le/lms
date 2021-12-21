@@ -103,8 +103,8 @@ export default function NavBar() {
                         <Box component="span" style={style.linkContainer} />
                         {!matchMD ? <SideDrawer /> :
                             <>
-                                <Box component="span" sx={{ flexGrow: 1 }} align="right" style={style.linkContainer}>
-                                    <Grid container justifyContent="center">
+                                <Box component="span" sx={{ flexGrow: 1 }} align="right" >
+                                    <Grid container justifyContent="center" style={style.linkContainer}>
                                         <ScrollLink
                                             className="navy"
                                             smooth={true}
