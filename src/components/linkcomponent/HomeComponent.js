@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, {useEffect, useState} from 'react';
+import {getDocsByCollection} from '../../utils/firebaseUtil'
 import {
     Box,
     Button,
@@ -99,7 +99,17 @@ const style = {
 }
 
 export default function HomeComponent() {
+    const [users, setUsers] = useState(0)
+    const [classRooms, setClassRooms] = useState(0)
 
+    useEffect(() => {
+        getDocsByCollection('users').then(item => {
+            setUsers(item.length)
+        })
+        getDocsByCollection('createclass').then(item => {
+            setClassRooms(item.length)
+        })
+      }, []);
 
     return (
         <Box component={Grid} container justifyContent="center" id="Home">
@@ -129,10 +139,10 @@ export default function HomeComponent() {
             <Box sx={style.section2}>
                 <Grid container justifyContent="center">
                     <Grid sm item sx={style.columnContainer}>
-                        <Typography variant="h2">0 Users</Typography>
+                        <Typography variant="h2">{users} Users</Typography>
                     </Grid>
                     <Grid sm item sx={style.columnContainer}>
-                        <Typography variant="h2">0 Classrooms</Typography>
+                        <Typography variant="h2">{classRooms} Classrooms</Typography>
                     </Grid>
                 </Grid>
             </Box>

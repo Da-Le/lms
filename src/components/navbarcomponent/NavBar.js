@@ -85,6 +85,8 @@ export default function NavBar() {
 
     const matchMD = useMediaQuery(theme.breakpoints.up('md'));
 
+    
+
     return (
         <Box component={Grid} container justifyContent="center">
             <AppBar position="relative" color="transparent" elevation={0}>
