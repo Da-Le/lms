@@ -16,7 +16,7 @@ import Scroll from "react-scroll";
 
 import { useTheme } from '@mui/material/styles';
 
-import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg';
+// import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg';
 
 import SideDrawer from './drawercomponent/SideDrawer';
 
@@ -25,15 +25,15 @@ const ScrollLink = Scroll.Link;
 const style = {
     accountButton: {
         fontSize: '20px',
-        width: '100px',
+        width: '100%',
         color: (theme) => theme.colors.navButton,
         '&:hover': {
             color: (theme) => theme.colors.navButtonHover,
         }
     },
     logoStyle: {
-        height: "50px",
-        width: "50px",
+        height: "100&",
+        width: "auto",
     },
     title: {
         fontSize: '25px',
@@ -62,6 +62,7 @@ const style = {
         }
     },
     linkContainer: {
+        justifyContent: 'end',
         flexGrow: {
             xs: '1',
             sm: '1',
@@ -69,7 +70,6 @@ const style = {
         }
     },
     toolbarStyle: {
-        backgroundColor: '#f5f8ff',
         padding: {
             xs: 1,
             sm: 1,
@@ -87,21 +87,21 @@ export default function NavBar() {
 
     return (
         <Box component={Grid} container justifyContent="center">
-            <AppBar position="fixed">
+            <AppBar position="relative" color="transparent" elevation={0}>
                 <Grid container justifyContent="center">
                     <Toolbar sx={style.toolbarStyle}>
-                        <img
-                            src={logoRendezvous}
-                            alt="Rendezvous Logo"
-                            style={style.logoStyle}
-                        />
+                        
                         <Link href="#" sx={style.linkStyle}>
-                            <Typography sx={style.title}>Rendezvous</Typography>
+                            <img
+                                src={'assets/img/logo.png'}
+                                alt="Rendezvous Logo"
+                                style={style.logoStyle}
+                            />
                         </Link>
-                        <Box component="span" sx={style.linkContainer} />
+                        <Box component="span" style={style.linkContainer} />
                         {!matchMD ? <SideDrawer /> :
                             <>
-                                <Box component="span" sx={{ flexGrow: 1 }}>
+                                <Box component="span" sx={{ flexGrow: 1 }} align="right" style={style.linkContainer}>
                                     <Grid container justifyContent="center">
                                         <ScrollLink
                                             className="navy"
@@ -143,19 +143,20 @@ export default function NavBar() {
                                                 Contact
                                             </Button>
                                         </ScrollLink>
+                                        <Link component={ReactLink} to="/login" sx={style.linkStyle}>
+                                            <Button sx={style.accountButton}>
+                                                Log in
+                                            </Button>
+                                        </Link>
+                                        <Link component={ReactLink} to="/register" sx={style.linkStyle}>
+                                            <Button sx={style.accountButton} >
+                                                Sign up
+                                            </Button>
+                                        </Link>
                                     </Grid>
                                 </Box>
-                                <Link component={ReactLink} to="/login" sx={style.linkStyle}>
-                                    <Button sx={style.accountButton}>
-                                        Log in
-                                    </Button>
-                                </Link>
 
-                                <Link component={ReactLink} to="/register" sx={style.linkStyle}>
-                                    <Button sx={style.accountButton} >
-                                        Sign up
-                                    </Button>
-                                </Link>
+                                
                             </>
                         }
                     </Toolbar>
