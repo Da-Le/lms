@@ -141,7 +141,7 @@ export default function MiniDrawer({ children }) {
                     </IconButton>
                     <Grid container justifyContent="center">
                         <Typography variant="h6" noWrap component="div">
-                            {classUser.classData.className}
+                            {/* {classUser.classData.className} */}
                         </Typography>
                     </Grid>
                 </Toolbar>

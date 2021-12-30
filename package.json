@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@firebase/firestore": "^3.4.1",
     "@fullcalendar/daygrid": "^5.10.1",
     "@fullcalendar/react": "^5.10.1",
     "@mui/icons-material": "^5.1.1",

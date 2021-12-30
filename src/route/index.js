@@ -22,6 +22,7 @@ import Forgot from '../pages/nonuserpages/Forgot';
 import DashboardUser from '../pages/userpages/dashboarduser/DashboarduUser';
 import DashboardProfile from '../pages/userpages/dashboardprofile/DashboardProfile';
 import DashboardClass from '../pages/userpages/dashboardclassfolder/DashboardClass';
+import Announcement from '../pages/userpages/announcement'
 import DashboardCalendar from '../pages/userpages/dashboardcalendar/DashboardCalendar';
 import DashboardFile from '../pages/userpages/dashboardfile/DashboardFile';
 import DashboardAbout from '../pages/userpages/dashboardabout/DashboardAbout';
@@ -71,6 +72,7 @@ export default function RouterComponent() {
                     <Route component={DashboardUser} path="/dashboarduser" exact />
                     <Route component={DashboardProfile} path="/dashboardprofile" exact />
                     <Route component={DashboardClass} path="/dashboardclass" exact />
+                    <Route component={Announcement} path="/announcement/:id" exact />
                     <Route component={DashboardCalendar} path="/dashboardcalendar" exact />
                     <Route component={DashboardFile} path="/dashboardfile" exact />
                     <Route component={DashboardAbout} path="/dashboardabout" exact />

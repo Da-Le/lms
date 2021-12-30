@@ -35,9 +35,11 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
         })
       }, []);
 
-    const joinClass = () => {
+    const hanldeJoinClass = () => {
         
-        joinClass('createclass', classCode, userId )
+        joinClass('createclass', classCode, userId ).then(() => {
+            setClassCode('')
+        })
     }
 
     const handleChangeClassCode = (e) => {
@@ -74,7 +76,7 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
                     <Button autoFocus onClick={toggleJoinClass}>
                         Back
                     </Button>
-                    <Button onClick={joinClass} autoFocus>
+                    <Button onClick={hanldeJoinClass} autoFocus>
                         Join Class
                     </Button>
                 </DialogActions>

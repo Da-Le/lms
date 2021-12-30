@@ -11,7 +11,8 @@ const theme = {
             main: '#f44336'
         },
         background: {
-            default: '#f5f8ff'
+            // default: '#f5f8ff'
+            default: '#ffffff'
         }
     },
     colors: {
