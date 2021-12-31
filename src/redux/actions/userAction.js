@@ -57,6 +57,7 @@ export const loginInitiate = (email, password, history) => (dispatch) => {
           // Signed in 
           const user = userCredential.user;
           dispatch(loginSuccess(user));
+          window.sessionStorage.setItem('id',user.uid)
           history.push('/dashboarduser');
           // ...
         })
@@ -73,6 +74,15 @@ export const loginInitiate = (email, password, history) => (dispatch) => {
 export const setUser = (user) => async (dispatch) => {
     try {
         await dispatch({ type: actionTypes.SET_USER, payload: user });
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+export const getUserId = () => async (dispatch) => {
+    try {
+        const userId = window.sessionStorage.getItem('id')
+        await dispatch({ type: actionTypes.SET_USER, payload: JSON.parse(userId)});
     } catch (err) {
         console.error(err)
     }

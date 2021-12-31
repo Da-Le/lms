@@ -97,10 +97,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function MiniDrawer({ children }) {
+export default function MiniDrawer(props) {
 
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
 
     const [loading, setLoading] = useState(true)
 
@@ -139,9 +139,11 @@ export default function MiniDrawer({ children }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Grid container justifyContent="center">
+                    <Grid container justifyContent="flex-start">
                         <Typography variant="h6" noWrap component="div">
                             {/* {classUser.classData.className} */}
+                            {props.headTitle}
+                            {/* test */}
                         </Typography>
                     </Grid>
                 </Toolbar>
@@ -181,6 +183,14 @@ export default function MiniDrawer({ children }) {
                     <ListItem
                         button
                         component={Link}
+                        to={`/classroom`}
+                    >
+                        <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                        <ListItemText>Classroom</ListItemText>
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
                         to={`/classjoinmeet/${classUser.classData.classCode}`}
                     >
                         <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
@@ -213,7 +223,7 @@ export default function MiniDrawer({ children }) {
                 </List>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                {children}
+                {props.children}
             </Box>
         </Box>
     );

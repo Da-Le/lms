@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { auth } from '../utils/firebase';
 
-import { setUser } from '../redux/actions/userAction';
+import { setUser , getUserId} from '../redux/actions/userAction';
 
 // nonuserhomepage
 import Login from '../pages/nonuserpages/Login';
@@ -34,6 +34,7 @@ import ClassPeople from '../pages/userpages/mainclassroom/classlinks/classpeople
 import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetting/ClassSetting';
 import { getClassroomData } from '../redux/actions/classAction';
 import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/ClassWork';
+import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 
 export default function RouterComponent() {
 
@@ -43,6 +44,7 @@ export default function RouterComponent() {
 
     useEffect(() => {
         auth.onAuthStateChanged((authUser) => {
+            dispatch(getUserId())
             if (authUser) {
                 dispatch(setUser(authUser));
                 dispatch(getClassroomData());
@@ -55,6 +57,7 @@ export default function RouterComponent() {
     // console.log(user);
 
     console.log(classUser.classData)
+    console.log('asdasd',user.currentUser)
 
     const THEME = createTheme(theme);
 
@@ -83,6 +86,7 @@ export default function RouterComponent() {
                     <Route component={ClassPeople} path="/classpeople/:id" exact />
                     <Route component={ClassSetting} path="/classsetting/:id" exact />
                     <Route component={ClassWork} path="/classwork/:id" exact />
+                    <Route component={ClassList} path="/classroom" exact />
                 </Switch>
             </Router>
         </ThemeProvider>

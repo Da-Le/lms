@@ -26,7 +26,8 @@ import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 
 import { useHistory } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
+
 
 import {  toggleClassroomData } from '../../../redux/actions/classAction'
 
@@ -61,6 +62,7 @@ export default function DashboardClass() {
   const history = useHistory();
 
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state);
 
   const [loading, setLoading] = useState(true)
 
@@ -91,12 +93,15 @@ export default function DashboardClass() {
 
   useEffect(() => {
       const classCollection = collection(db, "createclass")
-      const q = query(classCollection, where('students', "array-contains", "guV6OSfbwldR3ggHbmHhGRzm11G2"));
-      onSnapshot(q, (snapshot) => {
-          setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-          setLoading(false);
+      if(user){
+        const q = query(classCollection, where('students', "array-contains", user.currentUser.uid));
+        onSnapshot(q, (snapshot) => {
+            setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            setLoading(false);
+        }
+        )
       }
-      )
+      
     }, []);
 
   // useEffect(

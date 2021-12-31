@@ -46,7 +46,7 @@ const style = {
     },
     announementBtn: {
       display:'flex',
-      justifyContent:'end'
+      justifyContent:'flex-end'
     }
 }
 
@@ -123,7 +123,6 @@ export default function Announcment() {
             />
             <div style={style.announementBtn}>
             <Button 
-                variant="contained" 
                 color="primary" 
                 sx={{ marginTop: 2, marginRight: 2 }}
                 onClick={null}
@@ -165,8 +164,8 @@ export default function Announcment() {
                  </Button>
              </Grid>
          </Grid>
-     )
- }
+      )
+    }
     console.log(announcementContent)
     return (
         <Box>

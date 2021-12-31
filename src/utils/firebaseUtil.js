@@ -42,12 +42,26 @@ export const createDoc = async (collectionName, data) => {
 }
 
 /**
+ * 
+ * @param {string} collectionName
+ * @param {string} id 
+ * @param {object} data
+ */
+// Create a document
+export const createClassDoc = async (collectionName, id, data) => {
+
+  // const docInstance =  doc(collection(db,collectionName, id),data)
+  const docInstance = await setDoc(doc(db, collectionName, id), data);
+
+  return docInstance
+}
+
+/**
  * create doc
  * @param {string} collectionName 
  * @param {string} id
  * @param {object} data
  */
-// Add a new document in collection "cities"
 export const joinClass = async (collectionName, id, data) => {
   const addData = doc(db, collectionName, id);
 

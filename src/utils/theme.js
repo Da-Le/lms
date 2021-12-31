@@ -3,17 +3,18 @@ const theme = {
         mode: "light",
         primary: {
             main: '#4BAEA6',
+            contrastText: '#fff',
         },
         secondary: {
             main: '#f50057',
         },
         error: {
-            main: '#f44336'
+            main: '#f44336',
         },
         background: {
             // default: '#f5f8ff'
             default: '#ffffff'
-        }
+        },
     },
     colors: {
         base2: "#fff",
@@ -26,7 +27,7 @@ const theme = {
         btnColor: "#ebae2d",
         buttonColor: "#1a90d9",
         buttonHover: "#6fb7e3",
-        colorsuccess: '#00f230'
+        colorsuccess: '#00f230',
     },
     typography: {
         fontFamily: [
@@ -42,7 +43,17 @@ const theme = {
             '"Segoe UI Emoji"',
             '"Segoe UI Symbol"'
         ].join(",")
-    }
+    },
+    button: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              color: '#fff',
+            },
+          },
+        },
+      },
 };
+
 
 export default theme;
