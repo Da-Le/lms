@@ -22,7 +22,7 @@ const style = {
     },
 }
 
-export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
+export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpenJoinClass }) {
     const [userId, setUserId] = useState('');
     const [classCode, setClassCode] = useState('');
 
@@ -39,6 +39,7 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
         
         joinClass('createclass', classCode, userId ).then(() => {
             setClassCode('')
+            handleOpenJoinClass()
         })
     }
 
@@ -68,8 +69,6 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass }) {
                             value={classCode}
                             onChange ={e => handleChangeClassCode(e)}
                         />
-                        <TextField variant="outlined" placeholder="Owner's Email" sx={style.textfieldStyle} />
-
                     </Box>
                 </DialogContent>
                 <DialogActions>

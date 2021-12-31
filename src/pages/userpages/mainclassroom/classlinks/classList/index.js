@@ -335,6 +335,7 @@ export default function ClassList() {
             <JoinClass
                 isJoinClassOpen={joinClassOpen}
                 toggleJoinClass={handleOpenJoinClass}
+                handleOpenJoinClass={handleOpenJoinClass}
             />
             <CreateActivityDialog
                 isCreateActivityOpen={createActivityOpen}
