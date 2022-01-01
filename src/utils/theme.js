@@ -6,7 +6,7 @@ const theme = {
             contrastText: '#fff',
         },
         secondary: {
-            main: '#f50057',
+            main: '#3e857f',
         },
         error: {
             main: '#f44336',

@@ -52,7 +52,8 @@ export default function Input(props) {
     onChange,
     name,
     type,
-    pattern
+    pattern,
+    errorMessage
   } = props
   return (
     <div style={{display:'flex',flexDirection:'column', width:'100%'}}>
@@ -68,7 +69,7 @@ export default function Input(props) {
         type={type}
         pattern={pattern}
       />
-      <FormHelperText error={true} id="component-error-text">Error</FormHelperText>
+      <FormHelperText error={true} id="component-error-text">{errorMessage}</FormHelperText>
     </div>
   );
 }

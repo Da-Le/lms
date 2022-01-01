@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc} from "firebase/firestore"; 
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc, orderBy, query} from "firebase/firestore"; 
 
 
 
@@ -79,9 +79,22 @@ export const joinClass = async (collectionName, id, data) => {
  * @param {string} collectionName 
  */
 export const getDocsByCollection = async (collectionName) => {
-  
-  const querySnapshot = await getDocs(collection(db, collectionName));
-  
+  const data = collection(db, collectionName)
+  // const q = query(data,orderBy('created', 'desc'))
+  const querySnapshot = await getDocs(data);
+    return querySnapshot.docs.map((doc) => doc.data())
+
+}
+
+/**
+ * 
+ * @param {string} collectionName 
+ * @param {string} sort
+ */
+export const getAnnouncement = async (collectionName, sort) => {
+  const data = collection(db, collectionName)
+  const q = query(data,orderBy(sort, 'desc'))
+  const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => doc.data())
 
 }

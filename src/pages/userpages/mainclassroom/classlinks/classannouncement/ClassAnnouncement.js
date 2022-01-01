@@ -13,7 +13,7 @@ import {
 import Classdrawer from '../../classdrawer/ClassDrawer';
 import { Timestamp } from 'firebase/firestore';
 
-import {getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
+import {getAnnouncement, getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
 import { useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
 
@@ -83,7 +83,7 @@ export default function ClassAnnouncement() {
   }
 
   const getDataAnnouncement = () => {
-    getDocsByCollection('announcement')
+    getAnnouncement('announcement', 'created')
     .then(item => {
       const data = item.filter(item => item.classCode === params.id)
       setAnnouncementData(data)

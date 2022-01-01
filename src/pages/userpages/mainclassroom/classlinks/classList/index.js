@@ -70,7 +70,7 @@ const style = {
         color: (theme) => theme.colors.textColor,
         backgroundColor: (theme) => theme.palette.primary.main,
         '&:hover': {
-            backgroundColor: "#346ef7",
+            backgroundColor: "#3e857f",
             boxShadow: '0 3px 5px 2px rgba(163, 163, 163, .3)',
         },
     },

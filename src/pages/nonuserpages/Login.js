@@ -132,7 +132,7 @@ export default function Login() {
                 // The signed-in user info.
                 const user = result.user;
                 handleNew(user);
-                history.push('/dashboarduser')
+                history.push('/classroom')
                 // ...
             }).catch((error) => {
                 // Handle Errors here.

@@ -13,12 +13,14 @@ import {
     Switch,
     FormControlLabel
 } from '@mui/material';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { Link, useHistory } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
 import { registerInitiate } from '../../redux/actions/userAction';
+import GoogleIcon from '@mui/icons-material/Google';
 
 import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg'
 import EmailIcon from '@mui/icons-material/Email';
@@ -31,9 +33,18 @@ import PersonIcon from '@mui/icons-material/Person';
 
 import {createUser, createDoc} from '../../utils/firebaseUtil'
 
+import { setDoc, doc } from '@firebase/firestore';
+
+import { db } from '../../utils/firebase';
+
 import Container from '@mui/material/Container';
 import Input from '../../components/Input'
 // import {validPhone} from '../../utils/validations'
+
+import NavBar from '../../components/navbarcomponent/NavBar'
+import Footer from '../../components/linkcomponent/Footer';
+
+
 
 const style = {
     marginTopButton: {
@@ -100,8 +111,15 @@ export default function Register() {
         confirmPassword: '',
         showPassword: false,
         isTeacher: false,
-        errors: "",
     });
+
+    const [error, setError] = useState({
+        firstName: '',
+        lastName:'',
+        email:'',
+        phone:'',
+        password:''
+    })
 
     const history = useHistory();
 
@@ -135,6 +153,53 @@ export default function Register() {
         event.preventDefault();
     };
 
+    const validateForm = () => {
+        let isValid = true
+        let error = {
+            firstName: '',
+            lastName:'',
+            email:'',
+            phone:'',
+            password:''
+        }
+        //validate first name
+        if(!values.firstName){
+            error.firstName = 'Please enter firstname'
+            isValid = false
+        }
+
+        //validate last name
+        if(!values.lastName){
+            error.lastName = 'Please enter lastname'
+            isValid = false
+        }
+
+        //validate email
+        if(!values.email){
+            error.email = 'Please enter email'
+            isValid = false
+        }
+
+        //validate password
+        if(!values.password){
+            error.password = 'Please enter password'
+            isValid = false
+        }
+        if(values.password !== values.confirmPassword){
+            error.password = 'Password is not matched'
+            isValid = false
+        }
+
+        //validate confirm password
+        if(!values.confirmPassword){
+            error.confirmPassword = 'Please enter password'
+            isValid = false
+        }
+
+        setError(error)
+        return isValid
+    }
+
     const signup = () => {
 
         // if (!values.email || !values.password || !values.confirmPassword || !values.displayName) {
@@ -154,16 +219,64 @@ export default function Register() {
         //     // setValues({ ...values, errors: "", isLoading: true });
         //     // dispatch(registerInitiate(values.email, values.password, values.displayName, history));
         // }
-            createUser(values.email, values.password, values).then(() => {
-                console.log('success')
+        if(validateForm()){
+            const data = {
+                displayName: values.firstName + values.lastName, 
+                email: values.email, 
+                isTeacher: values.isTeacher,
+                phone: values.phone
+            }
+            createUser(values.email, values.password, data).then(() => {
+                history.push('/classroom')
             })
+        }
+            
     }
 
-    console.log(values)
+    const btnSignInWithGoogle = () => {
+        const provider = new GoogleAuthProvider()
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                // The signed-in user info.
+                const user = result.user;
+                handleNew(user);
+                history.push('/classroom')
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorMessage = error.message;
+                alert(errorMessage);
+                // The email of the user's account used.
+                const email = error.email;
+                alert(email);
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                // ...
+                alert(credential);
+            });
+    }
+
+    const handleNew = async(user) => {
+        const docRef = doc(db, "users", user.uid);
+        const payload = { 
+            displayName: user.displayName, 
+            email: user.email, 
+            uid: user.uid, 
+            photoURL: user.photoURL, 
+            phone: values.phone,
+            isTeacher: values.isTeacher
+        };
+        await setDoc(docRef, payload);
+    }
+
+    console.log(error)
     // console.log(validPhone(values.phone))
 
     return (
         <Container maxWidth disableGutters={true}>
+            <NavBar />
             <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -176,7 +289,8 @@ export default function Register() {
                 />
                 </Grid>
 
-                <Grid container spacing={1}>
+                <Box sx={{display:'flex', alignItems:'center', padding:'0 3rem'}}>
+                <Grid container spacing={2}>
                     <Grid item xs={6} spacing={3}>
                         <Input
                             label = 'Firstname' 
@@ -184,6 +298,7 @@ export default function Register() {
                             onChange={e => handleChange(e)}
                             value = {values.firstName}
                             name='firstName'
+                            errorMessage={error.firstName}
                         />
                     </Grid>
                     <Grid item xs={6} spacing={3}>
@@ -193,6 +308,7 @@ export default function Register() {
                             onChange={e => handleChange(e)}
                             value = {values.lastName}
                             name='lastName'
+                            errorMessage = {error.lastName}
                         />
                     </Grid>
                     <Grid item xs={12} spacing={3}>
@@ -202,6 +318,7 @@ export default function Register() {
                             onChange={e => handleChange(e)}
                             value = {values.email}
                             name='email'
+                            errorMessage={error.email}
                         />
                     </Grid>
                     <Grid item xs={12} spacing={3}>
@@ -221,6 +338,7 @@ export default function Register() {
                             onChange={e => handleChange(e)}
                             value = {values.password}
                             name='password'
+                            errorMessage={error.password}
                         />
                     </Grid>
                     <Grid item xs={12} spacing={3}>
@@ -230,26 +348,47 @@ export default function Register() {
                             onChange={e => handleChange(e)}
                             value = {values.confirmPassword}
                             name='confirmPassword'
+                            errorMessage={error.confirmPassword}
                         />
                     </Grid>
-                    <Grid item display="flex" justifyContent="center" xs={12}>
+                    <Grid 
+                        container
+                        direction="column"
+                        justifyContent="space-around"
+                        alignItems="center"
+                    >
+                        <FormControlLabel 
+                        sx={{padding:'10px 0'}}
+                            control={
+                                <Switch 
+                                    defaultChecked 
+                                    checked={values.isTeacher}
+                                    onChange={e => handleChange(e)}
+                                    name='isTeacher'
+                                />
+                            } 
+                        label="Teacher" />
                         <Button 
                             variant="contained" 
-                            size="large"
                             onClick={signup}
                         >
                             Sign up
                         </Button>
-                        <FormControlLabel control={
-                            <Switch 
-                                defaultChecked 
-                                checked={values.isTeacher}
-                                onChange={e => handleChange(e)}
-                                name='isTeacher'
-                            />
-                        } label="Label" />
+                        <Typography noWrap component="div" sx={style.titleClass}>
+                            -- or --
+                        </Typography>
+                        <Button
+                            variant="outlined"
+                            startIcon={<GoogleIcon />}
+                            sx={{ ...style.marginStyle, ...style.btnColor }}
+                            onClick={btnSignInWithGoogle}
+                        >
+                            Sign In With Google+
+                        </Button>
                     </Grid>
                 </Grid>
+                </Box>
+                
             </Stack>
             
                 
@@ -427,6 +566,7 @@ export default function Register() {
                 </Box>
             </Grid>
         </Box> */}
+        <Footer />
         </Container>
     )
 }

@@ -58,7 +58,7 @@ export const loginInitiate = (email, password, history) => (dispatch) => {
           const user = userCredential.user;
           dispatch(loginSuccess(user));
           window.sessionStorage.setItem('id',user.uid)
-          history.push('/dashboarduser');
+          history.push('/classroom');
           // ...
         })
         .catch((error) => {
