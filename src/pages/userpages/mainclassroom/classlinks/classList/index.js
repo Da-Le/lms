@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
+import {getUser} from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector} from 'react-redux';
@@ -100,6 +101,7 @@ export default function ClassList() {
   const { user } = useSelector((state) => state);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isTeacher, setIsTeacher] = useState(false)
 
   const open = Boolean(anchorEl);
 
@@ -164,6 +166,11 @@ export default function ClassList() {
      
     if(Object.keys(user.currentUser).length !== 0){
         getClassData()
+        getUser().then(data => {
+            data.map(item => {
+                setIsTeacher(item.isTeacher)
+            })
+        })
       }
     
     
@@ -179,6 +186,8 @@ export default function ClassList() {
     )
     return unsubscribe;
   }
+
+  console.log(isTeacher)
 
   const classroomBody = () => {
     return (
@@ -213,14 +222,16 @@ export default function ClassList() {
           </Grid>
         
           <Grid xs={12} justifyContent='flex-end' container>
+          {isTeacher &&
             <Button 
-              variant="contained" 
-              color="primary" 
-              sx={{ marginTop: 2 }}
-              onClick={() => history.push(`/classannouncement/${item.classCode}`)}
+                variant="contained" 
+                color="primary" 
+                sx={{ marginTop: 2 }}
+                onClick={() => history.push(`/classannouncement/${item.classCode}`)}
             >
-              Create Announcment
+                Create Announcment
             </Button>
+          }
           </Grid>
         </Grid>
       )}
@@ -243,14 +254,17 @@ export default function ClassList() {
                             aria-expanded={open ? 'true' : undefined}
                             onClick={handleOpenJoinClass}
                         > Join</Button>
-                        <Button variant="outlined"
-                            sx={style.btnStyle}
-                            id="fade-button"
-                            aria-controls="fade-menu"
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleOpenClass}
-                        > Create</Button>
+                        {isTeacher &&
+                            <Button variant="outlined"
+                                sx={style.btnStyle}
+                                id="fade-button"
+                                aria-controls="fade-menu"
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleOpenClass}
+                            > Create</Button>
+                        }
+                        
                         {/* <Menu
                             id="fade-menu"
                             MenuListProps={{

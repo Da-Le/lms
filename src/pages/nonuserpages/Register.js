@@ -221,13 +221,14 @@ export default function Register() {
         // }
         if(validateForm()){
             const data = {
-                displayName: values.firstName + values.lastName, 
+                displayName: values.firstName + ' ' + values.lastName, 
                 email: values.email, 
                 isTeacher: values.isTeacher,
                 phone: values.phone
             }
             createUser(values.email, values.password, data).then(() => {
                 history.push('/classroom')
+                console.log('success')
             })
         }
             

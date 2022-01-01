@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc, orderBy, query} from "firebase/firestore"; 
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc, orderBy, query, where} from "firebase/firestore"; 
 
 
 
@@ -19,7 +19,15 @@ export const createUser = async (email, password, data) => {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    setDoc(doc(db, 'users', user.uid), data);
+    setDoc(doc(db, 'users', user.uid), 
+      {
+        displayName: data.firstName + ' ' + data.lastName, 
+        email: data.email, 
+        isTeacher: data.isTeacher,
+        phone: data.phone,
+        ownerId: user.uid
+      }
+    );
     return user
     // ...
   })
@@ -122,7 +130,10 @@ const user = await auth.currentUser;
 
 if (user) {
   console.log(user)
-  return user
+  const data = collection(db, 'users')
+  const q = query(data,where("ownerId", "==", user.uid))
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => doc.data())
   // User is signed in, see docs for a list of available properties
   // https://firebase.google.com/docs/reference/js/firebase.User
   // ...
