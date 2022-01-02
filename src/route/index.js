@@ -29,6 +29,7 @@ import DashboardAbout from '../pages/userpages/dashboardabout/DashboardAbout';
 
 //main classroom
 import ClassAnnouncement from '../pages/userpages/mainclassroom/classlinks/classannouncement/ClassAnnouncement';
+import ClassAnnouncementList from '../pages/userpages/mainclassroom/classlinks/classannouncement';
 import ClassJoinMeet from '../pages/userpages/mainclassroom/classlinks/classjoinmeet/ClassJoinMeet';
 import ClassPeople from '../pages/userpages/mainclassroom/classlinks/classpeople/ClassPeople';
 import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetting/ClassSetting';
@@ -83,6 +84,7 @@ export default function RouterComponent() {
                     <Route component={DashboardAbout} path="/dashboardabout" exact />
 
                     {/* mainclassroom */}
+                    <Route component={ClassAnnouncementList} path="/classannouncement/" exact />
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <Route component={ClassPeople} path="/classpeople/:id" exact />

@@ -190,7 +190,7 @@ const { user } = useSelector((state) => state);
                     <ListItem
                         button
                         component={Link}
-                        to={`/classannouncement/${classUser.classData.classCode}`}
+                        to={`/classannouncement`}
                     >
                         <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
                         <ListItemText>Announcement</ListItemText>
