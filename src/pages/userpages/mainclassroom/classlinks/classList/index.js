@@ -227,12 +227,20 @@ export default function ClassList() {
             <Button 
                 variant="contained" 
                 color="primary" 
-                sx={{ marginTop: 2 }}
+                sx={{ marginTop: 2, marginRight: 2 }}
                 onClick={() => history.push(`/classannouncement/${item.classCode}`)}
             >
                 Create Announcment
             </Button>
           }
+          <Button 
+                variant="contained" 
+                color="primary" 
+                sx={{ marginTop: 2 }}
+                onClick={() => history.push(`/laboratory/${item.classCode}`)}
+            >
+                Create Laboratory
+            </Button>
           </Grid>
         </Grid>
       )}
