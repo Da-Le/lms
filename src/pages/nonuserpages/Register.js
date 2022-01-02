@@ -18,6 +18,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Link, useHistory } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
+import { loginInitiate } from '../../redux/actions/userAction';
 
 import { registerInitiate } from '../../redux/actions/userAction';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -227,6 +228,7 @@ export default function Register() {
                 phone: values.phone
             }
             createUser(values.email, values.password, data).then(() => {
+                dispatch(loginInitiate(values.email, values.password, history));
                 history.push('/classroom')
                 console.log('success')
             })

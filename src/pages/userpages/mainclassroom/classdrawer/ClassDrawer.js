@@ -17,7 +17,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { LinearProgress } from '@mui/material';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from 'react-router';
+
 
 //React Router Dom
 import { Link } from 'react-router-dom'
@@ -29,6 +31,10 @@ import DuoIcon from '@mui/icons-material/Duo';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
+import { logoutInitiate } from '../../../../redux/actions/userAction';
+
+
 
 const drawerWidth = 240;
 
@@ -97,7 +103,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
+
+
+
+
+
+
 export default function MiniDrawer(props) {
+
+    const dispatch = useDispatch();
+const history = useHistory();
+const { user } = useSelector((state) => state);
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
@@ -121,6 +137,13 @@ export default function MiniDrawer(props) {
     }, [classUser])
 
     console.log(classUser);
+
+    const handleLogOut = () => {
+        if (user) {
+            dispatch(logoutInitiate());
+            history.push('/');
+        }
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -178,7 +201,7 @@ export default function MiniDrawer(props) {
                         to={`/classwork/${classUser.classData.classCode}`}
                     >
                         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                        <ListItemText>Classwork</ListItemText>
+                        <ListItemText>Dashboard</ListItemText>
                     </ListItem>
                     <ListItem
                         button
@@ -187,6 +210,14 @@ export default function MiniDrawer(props) {
                     >
                         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                         <ListItemText>Classroom</ListItemText>
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/laboratory`}
+                    >
+                        <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                        <ListItemText>Laboratory</ListItemText>
                     </ListItem>
                     <ListItem
                         button
@@ -215,10 +246,11 @@ export default function MiniDrawer(props) {
                     <ListItem
                         button
                         component={Link}
-                        to={'/dashboardclass'}
+                        to={'/'}
+                        onClick={() => handleLogOut()}
                     >
                         <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
-                        <ListItemText>Back</ListItemText>
+                        <ListItemText>Logout</ListItemText>
                     </ListItem>
                 </List>
             </Drawer>

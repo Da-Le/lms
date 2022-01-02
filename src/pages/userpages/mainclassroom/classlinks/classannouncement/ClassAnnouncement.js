@@ -61,16 +61,20 @@ export default function ClassAnnouncement() {
   const { user } = useSelector((state) => state);
 
   useEffect(() => {
-    getUser().then(user => {
-        if(user){
-            setUserId(user.uid)
-            setOwnerName(user.displayName)
-            getClassData()
-            
-        } return
-    })
+    
+    if(Object.keys(user.currentUser).length !== 0){
+      getUser().then(item => {
+        item.map(data => {
+          setUserId(data.ownerId)
+          setOwnerName(data.displayName)
+        })
+          
+      })
+      getClassData()
+      
+  }
     getDataAnnouncement()
-  }, []);
+  }, [user]);
 
   const getClassData = () => {
     getDocsByCollection('createclass')

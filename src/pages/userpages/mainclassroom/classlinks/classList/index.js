@@ -179,7 +179,8 @@ export default function ClassList() {
   const getClassData =  () => {
     const classCollection = collection(db, "createclass")
     const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
+    const unsubscribe = onSnapshot(isTeacher ? qTeacher : q, (snapshot) => {
         setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
         // setLoading(false);
     }
@@ -350,6 +351,7 @@ export default function ClassList() {
                 isJoinClassOpen={joinClassOpen}
                 toggleJoinClass={handleOpenJoinClass}
                 handleOpenJoinClass={handleOpenJoinClass}
+                userId={user.currentUser.uid}
             />
             <CreateActivityDialog
                 isCreateActivityOpen={createActivityOpen}

@@ -22,18 +22,18 @@ const style = {
     },
 }
 
-export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpenJoinClass }) {
-    const [userId, setUserId] = useState('');
+export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpenJoinClass, userId }) {
+    // const [userId, setUserId] = useState('');
     const [classCode, setClassCode] = useState('');
 
 
-    useEffect(() => {
-        getUser().then(user => {
-            if(user){
-                setUserId(user.uid)
-            } 
-        })
-      }, []);
+    // useEffect(() => {
+    //     getUser().then(user => {
+    //         if(user){
+    //             setUserId(user.uid)
+    //         } 
+    //     })
+    //   }, []);
 
     const hanldeJoinClass = () => {
         
