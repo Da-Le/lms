@@ -89,7 +89,7 @@ export default function RouterComponent() {
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <Route component={ClassPeople} path="/classpeople/:id" exact />
                     <Route component={ClassSetting} path="/classsetting/:id" exact />
-                    <Route component={ClassWork} path="/classwork/:id" exact />
+                    <Route component={ClassWork} path="/classwork/" exact />
                     <Route component={ClassList} path="/classroom" exact />
                     <Route component={Laboratory} path="/laboratory/:id" exact />
                     <Route component={LabList} path="/laboratory" exact />

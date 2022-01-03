@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     Typography,
@@ -6,8 +6,12 @@ import {
     Grid,
     Button,
     Menu,
-    MenuItem
+    MenuItem,
+    Paper
 } from '@mui/material';
+import {getDocsByCollection} from '../../../../../utils/firebaseUtil'
+import { useHistory } from 'react-router';
+import { useSelector} from 'react-redux';
 
 import Classdrawer from '../../classdrawer/ClassDrawer';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -33,6 +37,13 @@ const style = {
         borderBottom: 0.5,
         borderColor: (theme) => theme.palette.primary.main
     },
+    gridcontainerClass: {
+      display: "flex",
+      boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
+      marginTop: 2,
+      padding: 2,
+      maxWidth: 1000
+  },
     main: {
         display: "flex",
         cursor: "pointer",
@@ -73,10 +84,61 @@ const style = {
     },
     txtContainer: {
         width: 500
+    },
+    cardContainer: {
+      width: 900
+    },
+    paperContainer: {
+      padding: 4,
+      marginBottom: 2,
     }
 }
 
 export default function ClassWork() {
+
+  const [announcement, setAnnouncement] = useState([])
+  const [classroom, setClassroom] = useState([])
+  const [quiz, setQuiz] = useState([])
+  const [announcementNumber, setAnnouncementNumber] = useState(0)
+  const [classroomNumber, setClassroomNumber] = useState(0)
+  const [quizNumber, setQuizNumber] = useState(0)
+
+  const history = useHistory();
+  const { user } = useSelector((state) => state);
+
+  
+  useEffect(() => {
+     
+    if(Object.keys(user.currentUser).length !== 0){
+      getAnnouncement()
+      getClassroom()
+      getQuiz()
+    }
+  },[user]);
+
+  const getAnnouncement = () => {
+    getDocsByCollection('announcement').then(item => {
+      const data = item.filter(item => item.ownerId === user.currentUser.uid)
+      setAnnouncementNumber(item.length)
+      setAnnouncement(data.splice(0, 2))
+    })
+  }
+  
+  const getClassroom = () => {
+    getDocsByCollection('createclass').then(item => {
+      const data = item.filter(item => item.ownerId === user.currentUser.uid)
+      setClassroomNumber(item.length)
+      setClassroom(data.splice(0, 4))
+    })
+  }
+
+  const getQuiz = () => {
+    getDocsByCollection('quiz').then(item => {
+      const data = item.filter(item => item.ownerId === user.currentUser.uid)
+      setQuizNumber(item.length)
+      setQuiz(data)
+    })
+  }
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -122,6 +184,88 @@ export default function ClassWork() {
         setCreateExamOpen(!createExamOpen);
     }
 
+    const announcementBody = () => {
+      return (
+        
+          <Grid item xs={12}>
+            <Grid container justifyContent='space-between'>
+              <Typography variant='h6'>
+                  Announcement
+              </Typography>
+              <Typography variant='p' onClick={() => history.push('/classannouncement')}>
+                  See all ({announcementNumber})
+              </Typography>
+            </Grid>
+            {announcement && announcement.map(item => 
+              <Grid container sx={style.gridcontainerClass} justifyContent='space-between'>
+                <Grid xs={12} item>
+                  <Typography>{new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid xs={12} item>
+                  <Typography>{item.ownerName}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography sx={{ marginTop: 2 }}>{item.body}</Typography>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        
+      )
+    }
+
+    const classBody = () => {
+      return (
+          <Grid item xs={6}>
+            <Grid container justifyContent='space-between'>
+              <Typography variant='h6'>
+                  Classroom
+              </Typography>
+              <Typography variant='p' onClick={() => history.push('/classroom')}>
+                  See all ({classroomNumber})
+              </Typography>
+            </Grid>
+            {classroom && classroom.map(item => 
+            <Paper elevation={2} sx={style.paperContainer}>
+              <Grid container xs={12} direction='column'>
+              <Typography variant="h5" onClick={() => null}>{item.className}</Typography>
+              <Typography variant="p" sx={{ marginTop: 1 }}>section: {item.section}</Typography>
+              <Typography variant="p" sx={{ marginTop: 1 }}>subject: {item.subject}</Typography>
+              <Typography variant="p" sx={{ marginTop: 1 }}>room: {item.room}</Typography>
+            </Grid>
+            </Paper>
+            )}
+          </Grid>
+          
+      )
+      
+    }
+
+    const quizBody = () => {
+      return (
+          <Grid item xs={6}>
+            <Grid container justifyContent='space-between'>
+              <Typography variant='h6'>
+                  Quiz
+              </Typography>
+              <Typography variant='p'>
+                  See all ({quizNumber})
+              </Typography>
+            </Grid>
+            {quiz && quiz.map(item =>
+              <Paper elevation={2} sx={style.paperContainer}>
+                test
+              </Paper>
+            )}
+            
+          </Grid>
+        
+      )
+    }
+
+    console.log('announcement', announcement)
+    console.log('classroom', classroom)
+    console.log('quiz', quiz)
     return (
         <Classdrawer>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
@@ -191,7 +335,18 @@ export default function ClassWork() {
                     </Grid>
                 </Grid>
             </Box>
-            <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
+            {announcement.length !== 0 || classroom.length !== 0 || quiz.length !== 0 ?
+              <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
+                <Box component={Grid} container justifyContent="center" sx={style.cardContainer}>
+                  <Grid container spacing={2}>
+                    {announcementBody()}
+                    {classBody()}
+                    {quizBody()}
+                  </Grid>
+                </Box>
+              </Box>
+              :
+              <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
                 <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
                     <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
                 </Box>
@@ -206,7 +361,10 @@ export default function ClassWork() {
                         for the class, then organise it into topics
                     </Typography>
                 </Box>
-            </Box>
+              </Box>
+            }
+            
+            
             <CreateActivityDialog
                 isCreateActivityOpen={createActivityOpen}
                 toggleCreateActivity={handleCreateActivityOpen}

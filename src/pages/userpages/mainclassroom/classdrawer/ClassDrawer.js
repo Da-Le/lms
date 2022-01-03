@@ -198,7 +198,7 @@ const { user } = useSelector((state) => state);
                     <ListItem
                         button
                         component={Link}
-                        to={`/classwork/${classUser.classData.classCode}`}
+                        to={`/classwork`}
                     >
                         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                         <ListItemText>Dashboard</ListItemText>
