@@ -180,7 +180,7 @@ export default function ClassList() {
     const classCollection = collection(db, "createclass")
     const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
     const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
-    const unsubscribe = onSnapshot(isTeacher ? qTeacher : q, (snapshot) => {
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
         setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
         // setLoading(false);
     }
@@ -276,7 +276,15 @@ export default function ClassList() {
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Grid item>
-                        {isTeacher ?
+                    <Button variant="outlined"
+                                sx={style.btnStyle}
+                                id="fade-button"
+                                aria-controls="fade-menu"
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleOpenClass}
+                            > Create</Button>
+                        {/* {isTeacher ?
                             <Button variant="outlined"
                                 sx={style.btnStyle}
                                 id="fade-button"
@@ -294,7 +302,7 @@ export default function ClassList() {
                                 aria-expanded={open ? 'true' : undefined}
                                 onClick={handleOpenJoinClass}
                             > Join</Button>
-                        }
+                        } */}
                         
                         {/* <Menu
                             id="fade-menu"
