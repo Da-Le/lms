@@ -277,13 +277,13 @@ export default function ClassList() {
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Grid item>
                     <Button variant="outlined"
-                                sx={style.btnStyle}
-                                id="fade-button"
-                                aria-controls="fade-menu"
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleOpenClass}
-                            > Create</Button>
+                        sx={style.btnStyle}
+                        id="fade-button"
+                        aria-controls="fade-menu"
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleOpenClass}
+                    > Create</Button>
                         {/* {isTeacher ?
                             <Button variant="outlined"
                                 sx={style.btnStyle}
