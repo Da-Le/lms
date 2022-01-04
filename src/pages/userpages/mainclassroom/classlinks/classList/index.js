@@ -223,16 +223,37 @@ export default function ClassList() {
           </Grid>
         
           <Grid xs={12} justifyContent='flex-end' container>
-          {isTeacher &&
-            <Button 
-                variant="contained" 
-                color="primary" 
-                sx={{ marginTop: 2, marginRight: 2 }}
-                onClick={() => history.push(`/classannouncement/${item.classCode}`)}
-            >
-                Create Announcment
-            </Button>
-          }
+            {isTeacher ?
+                <>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        sx={{ marginTop: 2, marginRight: 2 }}
+                        onClick={() => history.push(`/classannouncement/${item.classCode}`)}
+                    >
+                        Create Announcment
+                    </Button>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        sx={{ marginTop: 2, marginRight: 2 }}
+                        onClick={() => history.push(`/quiz/${item.classCode}`)}
+                    >
+                        Create Quiz
+                    </Button>
+                </>
+                :
+                <>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        sx={{ marginTop: 2, marginRight: 2 }}
+                        onClick={() => history.push(`/quiz/${item.classCode}`)}
+                    >
+                        Answer Quiz
+                    </Button>
+                </>
+            }
           <Button 
                 variant="contained" 
                 color="primary" 
@@ -255,15 +276,7 @@ export default function ClassList() {
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Grid item>
-                        <Button variant="outlined"
-                            sx={style.btnStyle}
-                            id="fade-button"
-                            aria-controls="fade-menu"
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleOpenJoinClass}
-                        > Join</Button>
-                        {isTeacher &&
+                        {isTeacher ?
                             <Button variant="outlined"
                                 sx={style.btnStyle}
                                 id="fade-button"
@@ -272,6 +285,15 @@ export default function ClassList() {
                                 aria-expanded={open ? 'true' : undefined}
                                 onClick={handleOpenClass}
                             > Create</Button>
+                            :
+                            <Button variant="outlined"
+                                sx={style.btnStyle}
+                                id="fade-button"
+                                aria-controls="fade-menu"
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleOpenJoinClass}
+                            > Join</Button>
                         }
                         
                         {/* <Menu

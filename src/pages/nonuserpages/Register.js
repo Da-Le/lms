@@ -228,8 +228,8 @@ export default function Register() {
                 phone: values.phone
             }
             createUser(values.email, values.password, data).then(() => {
-                dispatch(loginInitiate(values.email, values.password, history));
-                history.push('/classroom')
+                // dispatch(loginInitiate(values.email, values.password, history));
+                // history.push('/classroom')
                 console.log('success')
             })
         }

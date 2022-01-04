@@ -21,7 +21,7 @@ export const createUser = async (email, password, data) => {
     const user = userCredential.user;
     setDoc(doc(db, 'users', user.uid), 
       {
-        displayName: data.firstName + ' ' + data.lastName, 
+        displayName: data.displayName, 
         email: data.email, 
         isTeacher: data.isTeacher,
         phone: data.phone,
