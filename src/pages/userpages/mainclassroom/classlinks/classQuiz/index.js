@@ -27,6 +27,7 @@ import { Timestamp } from 'firebase/firestore';
 import {getAnnouncement, getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
 import { useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { useHistory } from 'react-router';
 
 
 
@@ -73,10 +74,12 @@ export default function ClassQuiz() {
   const [students, setStudents] = useState([])
   const [duration, setDuration] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [subject, setSubject] = useState('')
 
 
   const params = useParams()
   const { user } = useSelector((state) => state);
+  const history = useHistory();
 
   useEffect(() => {
     if(Object.keys(user.currentUser).length !== 0){
@@ -97,6 +100,12 @@ export default function ClassQuiz() {
       const studentsRaw = data.filter(item => item.isTeacher === false)
       setStudents(studentsRaw)
       setStudentsList(students)
+    })
+    getDocsByCollection('createclass').then(data => {
+      data.filter(item => item.classCode === params.id).map(item => {
+        setSubject(item.subject)
+      })
+      
     })
   }
 
@@ -143,9 +152,9 @@ export default function ClassQuiz() {
   }
 
   const handleQuizChange = (e, index) => {
-    const updatedAreas = [...quizQuiestions];
-    updatedAreas[index][e.target.name] = e.target.value;
-    setQuizQuestions(updatedAreas);
+    const questionList = [...quizQuiestions];
+    questionList[index][e.target.name] = e.target.value;
+    setQuizQuestions(questionList);
   }
 
   const saveQuiz = () => {
@@ -156,11 +165,12 @@ export default function ClassQuiz() {
       questions: quizQuiestions,
       duration: duration,
       created: Timestamp.now(),
-      dueDate: Timestamp.fromDate(new Date(dueDate))
+      dueDate: Timestamp.fromDate(new Date(dueDate)),
+      subject: subject
     }
     console.log(data)
     createDoc('quiz',data).then(() => {
-      console.log('success')
+      history.push(`/quiz`)
     })
   }
 

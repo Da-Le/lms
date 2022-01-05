@@ -39,6 +39,7 @@ import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
 import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory'
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
+import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
 
 export default function RouterComponent() {
 
@@ -95,6 +96,7 @@ export default function RouterComponent() {
                     <Route component={Laboratory} path="/laboratory/:id" exact />
                     <Route component={LabList} path="/laboratory" exact />
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
+                    <Route component={ClassQuizList} path="/quiz/" exact />
                 </Switch>
             </Router>
         </ThemeProvider>
