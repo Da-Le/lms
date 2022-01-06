@@ -13,7 +13,7 @@ import {
     Switch,
     FormControlLabel
 } from '@mui/material';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
 import { Link, useHistory } from 'react-router-dom';
 
@@ -32,9 +32,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 
-import {createUser, createDoc} from '../../utils/firebaseUtil'
+import {createUser, createDoc, createUserGoogle} from '../../utils/firebaseUtil'
 
-import { setDoc, doc } from '@firebase/firestore';
+import { setDoc, doc, addDoc, collection } from '@firebase/firestore';
 
 import { db } from '../../utils/firebase';
 
@@ -229,7 +229,7 @@ export default function Register() {
             }
             createUser(values.email, values.password, data).then(() => {
                 // dispatch(loginInitiate(values.email, values.password, history));
-                // history.push('/classroom')
+                history.push('/classroom')
                 console.log('success')
             })
         }
@@ -240,12 +240,38 @@ export default function Register() {
         const provider = new GoogleAuthProvider()
         const auth = getAuth();
         signInWithPopup(auth, provider)
-            .then((result) => {
+            .then(async (result) => {
                 // This gives you a Google Access Token. You can use it to access the Google API.
                 // The signed-in user info.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // Check if user is new
+                const {isNewUser} = getAdditionalUserInfo(result)
+                const userId = result.user.uid
                 const user = result.user;
-                handleNew(user);
-                history.push('/classroom')
+                // await handleNew(user);
+                if (isNewUser) {
+                    // await handleNew(user);
+                    const payload = { 
+                        displayName: user.displayName, 
+                        email: user.email, 
+                        uid: user.uid, 
+                        photoURL: user.photoURL, 
+                        phone: values.phone,
+                        isTeacher: values.isTeacher
+                    };
+                    createUserGoogle(user.uid, payload).then(() => {
+                        // dispatch(loginInitiate(values.email, values.password, history));
+                        history.push('/classroom')
+                        console.log('success')
+                    })
+                    history.push('/classroom')
+                    }else {
+                    history.push('/classroom')
+                    }
+                
+                // handleNew(user);
+                
                 // ...
             }).catch((error) => {
                 // Handle Errors here.
@@ -260,9 +286,18 @@ export default function Register() {
                 alert(credential);
             });
     }
+    
 
     const handleNew = async(user) => {
-        const docRef = doc(db, "users", user.uid);
+        const docRef = doc(db, 'users', user.uid);
+        // await addDoc(collection(db, "users"), {
+        //     displayName: user.displayName, 
+        //     email: user.email, 
+        //     uid: user.uid, 
+        //     photoURL: user.photoURL, 
+        //     phone: values.phone,
+        //     isTeacher: values.isTeacher
+        //   });
         const payload = { 
             displayName: user.displayName, 
             email: user.email, 
@@ -271,7 +306,11 @@ export default function Register() {
             phone: values.phone,
             isTeacher: values.isTeacher
         };
+        // await setDoc(doc(db, "users", user.uid), payload);
         await setDoc(docRef, payload);
+        // await db.collection('users').doc(user.uid).set(payload, {merge:true})
+        // console.log(payload)
+        // console.log(user)
     }
 
     console.log(error)

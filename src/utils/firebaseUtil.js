@@ -37,6 +37,22 @@ export const createUser = async (email, password, data) => {
   return isUserCreated
 }
 
+export const createUserGoogle = async (userId, data) => {
+    // Signed in 
+  //   const user = setDoc(doc(db, 'users', user.uid), 
+  //   {
+  //     displayName: data.displayName, 
+  //     email: data.email, 
+  //     isTeacher: data.isTeacher,
+  //     phone: data.phone,
+  //     ownerId: user.uid
+  //   }
+  // );
+  const user = await setDoc(doc(db, 'users', userId), data);
+   
+  return user
+}
+
 /**
  * 
  * @param {string} collectionName 
