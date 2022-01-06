@@ -7,7 +7,14 @@ import {
     Button,
     Menu,
     MenuItem,
-    TextField
+    TextField,
+    OutlinedInput,
+    FormControl,
+    InputLabel,
+    Select,
+    Alert,
+    AlertTitle,
+    Snackbar
 } from '@mui/material';
 
 import {createDoc, getDocsByCollection, updateDocsByCollection} from '../../../../../utils/firebaseUtil'
@@ -15,6 +22,8 @@ import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
 import { useSelector} from 'react-redux';
+import { useHistory } from 'react-router';
+
 
 import Classdrawer from '../../classdrawer/ClassDrawer';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -102,9 +111,14 @@ export default function Laboratory() {
   const [srcDoc, setSrcDoc] = useState('')
   const [labTitle, setLabTitle] = useState('')
   const [isNew, setIsNew] = useState(false)
+  const [studentsList, setStudentsList] = useState([])
+  const [studentName, setStudentName] = useState([])
+  const [open, setOpen] = useState(false)
+
 
   const { user } = useSelector((state) => state);
   const params = useParams()
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -124,15 +138,42 @@ export default function Laboratory() {
   useEffect(() => {
      
     if(Object.keys(user.currentUser).length !== 0){
-      getAnnounement()
+      getLaboratory()
+      getStudentList()
       }
     
     
   }, [user]);
 
-  const getAnnounement = () => {
+  const getStudentList = () => {
+    getDocsByCollection('users').then(data => {
+      const students = data.map(item => {
+        let studentArr = []
+        studentArr = {label:item.displayName, value:item.ownerId}
+        return studentArr
+      })
+      setStudentsList(students)
+    })
+    getDocsByCollection('quiz').then(data => {
+      data.filter(item => item.classCode === params.id).map(item => {
+        setStudentName(item.students)
+      }) 
+    })
+  }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStudentName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+  const getLaboratory = () => {
     getDocsByCollection('laboratory').then(item => {
-      const data = item.filter(item => item.ownerId === user.currentUser.uid && item.classCode === params.id)
+      const data = item.filter(item => item.classCode === params.id)
       console.log(data)
       if(data.length !== 0){
         data.map(item => {
@@ -157,15 +198,28 @@ export default function Laboratory() {
       ownerId: user.currentUser.uid,
       classCode: params.id,
       created: Timestamp.now(),
-      title: labTitle
+      title: labTitle,
+      students: studentName
     }
     if(isNew){
       createDoc('laboratory', data).then(() => {
+        setOpen({ open: true});
         console.log('success')
+        const timeout = setTimeout(() => {
+          history.push(`/laboratory`)
+        }, 2000)
+    
+        return () => clearTimeout(timeout)
       })
     }else {
       updateDocsByCollection('laboratory', data).then(() => {
         console.log('success update')
+        setOpen({ open: true});
+        const timeout = setTimeout(() => {
+          history.push(`/laboratory`)
+        }, 2000)
+    
+        return () => clearTimeout(timeout)
       })
     }
     
@@ -175,11 +229,36 @@ export default function Laboratory() {
     setLabTitle(e.target.value)
   }
 
+  const handleClickSnack = () => {
+    setOpen({ open: true});
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   console.log(isNew)
   return (
-    <Classdrawer>
+    <Classdrawer>     
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={3000}
+        open={open}
+        onClose={handleClose}
+        message="I love snacks"
+        // key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Successfully Saved Lab
+        </Alert>
+      </Snackbar>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
         <>
+          <Grid xs={12} justifyContent='space-between' container>
           <Grid xs={12} justifyContent='flex-start' container>
             <TextField 
               label={labTitle === '' ? 'Title' : labTitle} 
@@ -196,6 +275,38 @@ export default function Laboratory() {
             >
               {isNew ? 'Save' : 'Update'}
             </Button>
+          </Grid>
+            
+            <FormControl sx={{ width: 500 , marginBottom: 2}}>
+                  <InputLabel id="select-student-label">Assign Student</InputLabel>
+                  <Select
+                    labelId="select-student-label"
+                    multiple
+                    value={studentName}
+                    onChange={handleChange}
+                    input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
+                    // renderValue={(selected, item) => (
+                    //   console.log(selected),
+                    //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    //     {selected.map((value) => (
+                    //       <Chip key={value} label={value}  />
+                    //     ))}
+                    //   </Box>
+                    // )}
+                    // MenuProps={MenuProps}
+                  >
+                    {studentsList.map((name) => (
+                      <MenuItem
+                        key={name.value}
+                        value={name.value}
+                        name={name.value}
+                        // style={getStyles(name, personName, theme)}
+                      >
+                        {name.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
           </Grid>
           <Box sx={style.pane, style.topPane}>
             <Editor

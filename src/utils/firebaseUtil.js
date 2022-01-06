@@ -102,9 +102,16 @@ export const updateDocsByCollection = async (collectionName, data) => {
   const getData = collection(db, collectionName)
   const querySnapshot = await getDocs(getData);
   let docId = ''
-  querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
-
-  const docInstance = doc(db, collectionName, docId)
+  console.log(data.ownerId)
+  console.log(collectionName)
+  // querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
+  docId = querySnapshot.docs.filter(item => item.data().ownerId === data.ownerId).map((doc) => {
+    // console.log(doc.id)
+    let docId = ''
+    return doc.id
+  })
+  console.log(docId)
+  const docInstance = doc(db, collectionName, docId[0])
   await updateDoc(docInstance, data);
   return docInstance
 
