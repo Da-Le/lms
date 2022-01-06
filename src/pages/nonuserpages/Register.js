@@ -229,7 +229,12 @@ export default function Register() {
             }
             createUser(values.email, values.password, data).then(() => {
                 // dispatch(loginInitiate(values.email, values.password, history));
-                history.push('/classroom')
+                if(data.isTeacher){
+                    history.push('/classroom')
+                }else {
+                    history.push('/studentclassroom')
+                }
+                
                 console.log('success')
             })
         }
@@ -262,7 +267,12 @@ export default function Register() {
                     };
                     createUserGoogle(user.uid, payload).then(() => {
                         // dispatch(loginInitiate(values.email, values.password, history));
-                        history.push('/classroom')
+                        if(payload.isTeacher){
+                            history.push('/classroom')
+                        }else {
+                            history.push('/studentclassroom')
+                        }
+                        
                         console.log('success')
                     })
                     history.push('/classroom')

@@ -131,7 +131,7 @@ export default function Login() {
                 // This gives you a Google Access Token. You can use it to access the Google API.
                 // The signed-in user info.
                 const user = result.user;
-                handleNew(user);
+                // handleNew(user);
                 history.push('/classroom')
                 // ...
             }).catch((error) => {
@@ -160,14 +160,14 @@ export default function Login() {
                         alt="Rendezvous Logo"
                         style={{ height: "100px", width: "100px" }}
                     />
-                    <Button
+                    {/* <Button
                         variant="outlined"
                         startIcon={<GoogleIcon />}
                         sx={{ ...style.marginStyle, ...style.btnColor }}
                         onClick={btnSignInWithGoogle}
                     >
                         Sign In With Google+
-                    </Button>
+                    </Button> */}
                     <Typography
                         variant="subtitle1"
                         sx={style.marginStyle}

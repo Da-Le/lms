@@ -2,6 +2,7 @@ import * as actionTypes from '../types';
 
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from '@firebase/firestore';
+import {getDocsByCollection} from '../../utils/firebaseUtil'
 
 import { db } from '../../utils/firebase';
 
@@ -58,7 +59,16 @@ export const loginInitiate = (email, password, history) => (dispatch) => {
           const user = userCredential.user;
           dispatch(loginSuccess(user));
           window.sessionStorage.setItem('id',user.uid)
-          history.push('/classroom');
+          getDocsByCollection('users').then(data => {
+            data.filter(data => data.ownerId === user.uid).map(data => {
+                if(data.isTeacher){
+                history.push('/classroom')
+                }else {
+                history.push('/studentclassroom')
+                }
+              })
+          })
+        //   history.push('/classroom');
           // ...
         })
         .catch((error) => {
