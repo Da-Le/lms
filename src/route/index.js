@@ -38,6 +38,7 @@ import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/Cla
 import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import ClassListStudent from '../pages/userpages/mainclassroom/classlinks/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
+import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
 import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory'
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
 import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
@@ -101,6 +102,7 @@ export default function RouterComponent() {
 
                     {/*student router */}
                     <Route component={ClassListStudent} path="/studentclassroom" exact />
+                    <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
                 </Switch>
             </Router>
         </ThemeProvider>

@@ -284,7 +284,7 @@ const { user } = useSelector((state) => state);
                         <ListItem
                             button
                             component={Link}
-                            to={`/classwork`}
+                            to={`/studentclassroom`}
                         >
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Classwork</ListItemText>

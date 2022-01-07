@@ -196,27 +196,28 @@ export default function Laboratory() {
       css : css,
       js: js,
       ownerId: user.currentUser.uid,
-      classCode: params.id,
+      // classCode: params.id,
       created: Timestamp.now(),
       title: labTitle,
-      students: studentName
+      isTeacher: false
+      // students: studentName
     }
     if(isNew){
       createDoc('laboratory', data).then(() => {
         setOpen({ open: true});
         console.log('success')
         const timeout = setTimeout(() => {
-          history.push(`/classroom`)
+          history.push(`/studentclassroom`)
         }, 2000)
     
         return () => clearTimeout(timeout)
       })
     }else {
-      updateDocsByCollection('laboratory', data).then(() => {
+      createDoc('laboratory', data).then(() => {
         console.log('success update')
         setOpen({ open: true});
         const timeout = setTimeout(() => {
-          history.push(`/classroom`)
+          history.push(`/studentclassroom`)
         }, 2000)
     
         return () => clearTimeout(timeout)
@@ -277,7 +278,7 @@ export default function Laboratory() {
             </Button>
           </Grid>
             
-            <FormControl sx={{ width: 500 , marginBottom: 2}}>
+            {/* <FormControl sx={{ width: 500 , marginBottom: 2}}>
                   <InputLabel id="select-student-label">Assign Student</InputLabel>
                   <Select
                     labelId="select-student-label"
@@ -306,7 +307,7 @@ export default function Laboratory() {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
           </Grid>
           <Box sx={style.pane, style.topPane}>
             <Editor

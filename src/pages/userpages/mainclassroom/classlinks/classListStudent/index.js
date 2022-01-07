@@ -188,6 +188,24 @@ export default function ClassList() {
     return unsubscribe;
   }
 
+  const redirectLab = (classCode) => {
+    const classCollection = collection(db, "laboratory")
+    const q =  query(classCollection, where('classCode', "==", classCode));
+    // const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
+    onSnapshot(q, (snapshot) => {
+        snapshot.docs.map(doc => {
+            if(doc.data().students.includes(user.currentUser.uid)){
+                history.push(`/studentlaboratory/${classCode}`)
+            }else {
+                console.log('not available')
+            }
+        })
+        // setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        // setLoading(false);
+    }
+    )
+  }
+
   console.log(isTeacher)
 
   const classroomBody = () => {
@@ -258,9 +276,9 @@ export default function ClassList() {
                 variant="contained" 
                 color="primary" 
                 sx={{ marginTop: 2 }}
-                onClick={() => history.push(`/laboratory/${item.classCode}`)}
+                onClick={() => redirectLab(item.classCode)}
             >
-                Create Laboratory
+                View Laboratory
             </Button>
           </Grid>
         </Grid>
