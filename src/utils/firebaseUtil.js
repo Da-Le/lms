@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, setDoc, orderBy, query, where} from "firebase/firestore"; 
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion,arrayRemove, setDoc, orderBy, query, where} from "firebase/firestore"; 
 
 
 
@@ -85,17 +85,73 @@ export const createClassDoc = async (collectionName, id, data) => {
  * @param {string} collectionName 
  * @param {string} id
  * @param {object} data
+ * @param {object} studentData
  */
-export const joinClass = async (collectionName, id, data) => {
+export const joinClass = async (collectionName, id, data, studentData) => {
   const addData = doc(db, collectionName, id);
 
 // Update field
   // await updateDoc(addData,data);
+  const studentObj = {...studentData, isJoin: false}
   await updateDoc(addData, {
-    students: arrayUnion(data)
+    students: arrayUnion(studentObj)
   });
 
   return addData
+}
+
+/**
+ * create doc
+ * @param {string} collectionName 
+ * @param {string} classCode
+ * @param {object} classData
+ * @param {object} studentData
+ */
+export const acceptStudent = async (collectionName, classCode, classData, studentData) => {
+  const addData = doc(db, collectionName, classCode);
+
+// Update field
+  // await updateDoc(addData,data);
+  const studentObj = {...studentData, isJoin: true}
+
+  await updateDoc(addData, {
+    students: arrayRemove(studentData)
+  });
+  await updateDoc(addData, {
+    students: arrayUnion(studentObj)
+  });
+  const studentRecord = doc(db, 'studentRecord', studentData.ownerId)
+  const classroomRecord = collection(studentRecord, 'classroom')
+  // await addDoc(collection(db,'studentRecord', studentData.ownerId),collection(db, 'classroom', classCode),classData)
+  // await setDoc(classroomRecord,classData)
+  const docRef = doc(db, "studentRecord", studentData.ownerId);
+  // const colRef = collection(docRef, "classroom", classCode)
+  const colRef = doc(db, "studentRecord", studentData.ownerId, "classroom", classCode)
+  setDoc(colRef, classData);
+  return addData
+}
+
+/**
+ * create doc
+ * @param {string} collectionName 
+ * @param {string} id
+ * @param {object} data
+ * @param {object} studentData
+ */
+export const removeStudent = async (collectionName, id, data, studentData) => {
+  const removeData = doc(db, collectionName, id);
+// Update field
+  // await updateDoc(addData,data);
+  const studentObj = {...studentData, isJoin: false}
+
+  await updateDoc(removeData, {
+    students: arrayRemove(studentData)
+  });
+  await updateDoc(removeData, {
+    students: arrayUnion(studentObj)
+  });
+
+  return removeData
 }
 
 /**

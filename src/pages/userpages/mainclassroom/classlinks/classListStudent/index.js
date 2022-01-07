@@ -102,6 +102,7 @@ export default function ClassList() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isTeacher, setIsTeacher] = useState(false)
+  const [studentData, setStudentData] = useState({})
 
   const open = Boolean(anchorEl);
 
@@ -169,18 +170,32 @@ export default function ClassList() {
         getUser().then(data => {
             data.map(item => {
                 setIsTeacher(item.isTeacher)
+                setStudentData(item)
             })
+            
         })
       }
     
     
   }, [user]);
 
-  const getClassData =  () => {
-    const classCollection = collection(db, "createclass")
-    const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
+//   const getClassData =  () => {
+//     const classCollection = collection(db, "createclass")
+//     const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
+//     // const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
+//     const unsubscribe = onSnapshot(q, (snapshot) => {
+//         setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+//         // setLoading(false);
+//     }
+//     )
+//     return unsubscribe;
+//   }
+const getClassData =  () => {
+    const classCollection = collection(db, "studentRecord", user.currentUser.uid, 'classroom')
+    // const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
     // const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(classCollection, (snapshot) => {
+        console.log(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
         setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
         // setLoading(false);
     }
@@ -214,7 +229,7 @@ export default function ClassList() {
       {classroom && classroom.map(item => 
         <Grid container sx={style.gridcontainerClass} >
           <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
-            <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>{item.className}</Typography>
+            <Typography variant="h5" sx={style.linkStyle} onClick={() => history}>{item.className}</Typography>
             <MoreHorizIcon sx={{ marginTop: 0.5, cursor: 'pointer' }} onClick={handleClick} />
             <Menu
                 id='simple-menu'
@@ -388,10 +403,10 @@ export default function ClassList() {
                     <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
                 </Box>
                 <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
-                    <Typography sx={style.linkStyle}>
+                    <Typography>
                         This is where you'll see classrooms.
                     </Typography>
-                    <Typography sx={style.linkStyle}>
+                    <Typography>
                         You can join class, see activities and check available quiz
                     </Typography>
                 </Box>
@@ -408,6 +423,7 @@ export default function ClassList() {
                 toggleJoinClass={handleOpenJoinClass}
                 handleOpenJoinClass={handleOpenJoinClass}
                 userId={user.currentUser.uid}
+                studentData={studentData}
             />
             <CreateActivityDialog
                 isCreateActivityOpen={createActivityOpen}

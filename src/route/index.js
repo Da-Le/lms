@@ -36,6 +36,7 @@ import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetti
 import { getClassroomData } from '../redux/actions/classAction';
 import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/ClassWork';
 import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
+import ClassListDetail from '../pages/userpages/mainclassroom/classlinks/classList/ClassDetail';
 import ClassListStudent from '../pages/userpages/mainclassroom/classlinks/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
 import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
@@ -100,6 +101,8 @@ export default function RouterComponent() {
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
                     <Route component={ClassQuizList} path="/quiz/" exact />
 
+                    {/*student router */}
+                    <Route component={ClassListDetail} path="/classroomdetail/:id" exact />
                     {/*student router */}
                     <Route component={ClassListStudent} path="/studentclassroom" exact />
                     <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />

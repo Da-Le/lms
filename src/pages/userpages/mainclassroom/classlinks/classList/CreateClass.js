@@ -59,7 +59,8 @@ export default function CreateClass({ isClassOpen, toggleClass }) {
                 ownerEmail: user.currentUser.email,
                 ownerName: user.currentUser.displayName,
                 ownerId: user.currentUser.uid,
-                classCode: id
+                classCode: id,
+                students: []
             };
             // await setDoc(docRef, payload);
             createClassDoc('createclass',id,payload)

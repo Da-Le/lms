@@ -130,7 +130,7 @@ export default function ClassAnnouncementList() {
           <Typography sx={{ marginTop: 2 }}>{item.body}</Typography>
         </Grid>
       
-        <Grid xs={12} justifyContent='flex-end' container>
+        {/* <Grid xs={12} justifyContent='flex-end' container>
           <Button 
             variant="contained" 
             color="primary" 
@@ -139,7 +139,7 @@ export default function ClassAnnouncementList() {
           >
             Delete
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     )
   }

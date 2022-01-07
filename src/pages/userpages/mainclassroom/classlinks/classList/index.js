@@ -49,7 +49,8 @@ const style = {
       boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
       marginTop: 5,
       padding: 2,
-      maxWidth: 1000
+      maxWidth: 1000,
+      cursor: 'pointer'
   },
     main: {
         display: "flex",
@@ -81,7 +82,7 @@ const style = {
         fontWeight: 400
     },
     linkStyle: {
-        paddingLeft: 2
+        cursor: 'pointer'
     },
     imgStyle: {
         height: 300,
@@ -194,10 +195,10 @@ export default function ClassList() {
     return (
       <Box component={Grid} container justifyContent="center" >
       {classroom && classroom.map(item => 
-        <Grid container sx={style.gridcontainerClass} >
+        <Grid container sx={style.gridcontainerClass} onClick={() => history.push(`/classroomdetail/${item.classCode}`)} >
           <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
-            <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>{item.className}</Typography>
-            <MoreHorizIcon sx={{ marginTop: 0.5, cursor: 'pointer' }} onClick={handleClick} />
+            <Typography variant="h5" sx={style.linkStyle} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}>{item.className}</Typography>
+            {/* <MoreHorizIcon sx={{ marginTop: 0.5, cursor: 'pointer' }} onClick={handleClick} />
             <Menu
                 id='simple-menu'
                 anchorEl={anchorEl}
@@ -211,18 +212,19 @@ export default function ClassList() {
               <MenuItem>
                 Unenroll
               </MenuItem>
-            </Menu>
-          </Grid>
-          <Grid container xs={12} direction='column'>
-            <Typography variant="p" sx={{ marginTop: 1 }}>section: {item.section}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1 }}>subject: {item.subject}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1 }}>room: {item.room}</Typography>
+            </Menu> */}
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ marginTop: 1 }}>{item.ownerEmail}</Typography>
+            <Typography variant="h6" sx={{ marginTop: 1 }}>no. of students: {item.students.length}</Typography>
           </Grid>
+          <Grid container xs={12} direction='row'>
+            <Typography variant="p" sx={{ marginTop: 1 , marginRight: 2}}><b>section:</b>s {item.section}</Typography>
+            <Typography variant="p" sx={{ marginTop: 1, marginRight: 2 }}><b>subject:</b> {item.subject}</Typography>
+            <Typography variant="p" sx={{ marginTop: 1 }}><b>room: </b>{item.room}</Typography>
+          </Grid>
+          
         
-          <Grid xs={12} justifyContent='flex-end' container>
+          {/* <Grid xs={12} justifyContent='flex-end' container>
             {isTeacher ?
                 <>
                     <Button 
@@ -262,7 +264,7 @@ export default function ClassList() {
             >
                 Create Laboratory
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       )}
       </Box>
@@ -370,10 +372,10 @@ export default function ClassList() {
                     <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
                 </Box>
                 <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
-                    <Typography sx={style.linkStyle}>
+                    <Typography>
                         This is where you'll see classrooms.
                     </Typography>
-                    <Typography sx={style.linkStyle}>
+                    <Typography>
                         You can join class, see activities and check available quiz
                     </Typography>
                 </Box>

@@ -22,7 +22,7 @@ const style = {
     },
 }
 
-export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpenJoinClass, userId }) {
+export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpenJoinClass, userId, studentData }) {
     // const [userId, setUserId] = useState('');
     const [classCode, setClassCode] = useState('');
 
@@ -34,10 +34,10 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpen
     //         } 
     //     })
     //   }, []);
-
+console.log(studentData)
     const hanldeJoinClass = () => {
         
-        joinClass('createclass', classCode, userId ).then(() => {
+        joinClass('createclass', classCode, userId, studentData ).then(() => {
             setClassCode('')
             handleOpenJoinClass()
         })
