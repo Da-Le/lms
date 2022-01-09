@@ -9,11 +9,19 @@ import {
     InputAdornment,
     FormControl,
     IconButton,
+    Stack,
+    Container,
+    FormControlLabel,
 } from '@mui/material';
 
 import { useDispatch } from 'react-redux';
 
 import { Link, useHistory } from 'react-router-dom';
+
+import Input from '../../components/Input'
+import NavBar from '../../components/navbarcomponent/NavBar'
+import Footer from '../../components/linkcomponent/Footer';
+
 
 import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg'
 import GoogleIcon from '@mui/icons-material/Google';
@@ -149,114 +157,187 @@ export default function Login() {
     }
 
     return (
-        <Box sx={style.root}>
-            <Grid container justifyContent="center">    
-                <Box sx={style.section1} boxShadow={12}>
-                    <Typography variant="subtitle1" color="textPrimary" sx={style.headingStyle1}>
-                        Sign in to your Rendezvous Account
-                    </Typography>
-                    <img
-                        src={logoRendezvous}
-                        alt="Rendezvous Logo"
-                        style={{ height: "100px", width: "100px" }}
+      <Container maxWidth >
+        <NavBar />
+        <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+        >
+            <Grid contanier xs={6} alignItems='center'>
+            <Grid container justifyContent='center' spacing={4}>
+                <Grid item xs={12} spacing={3}>
+                    <Input
+                        label = 'Email' 
+                        type='text'
+                        onChange={e => handleChange(e)}
+                        value = {values.firstName}
+                        name='firstName'
+                        // errorMessage={error.firstName}
                     />
-                    {/* <Button
+                </Grid>
+                <Grid item xs={12} spacing={3}>
+                    <Input 
+                        label = 'Password' 
+                        type='password'
+                        onChange={e => handleChange(e)}
+                        value = {values.lastName}
+                        name='lastName'
+                        // errorMessage = {error.lastName}
+                    />
+                </Grid>
+                <Grid 
+                    container
+                    direction="column"
+                    justifyContent="space-around"
+                    alignItems="center"
+                >
+                    <Typography noWrap component="div" sx={style.titleClass}>
+                        Don't have an account. 
+                      <Button 
+                        variant="text" 
+                        onClick={() => history.push('/register')}
+                      >Sign up
+                    </Button>
+                    </Typography>
+                    <Button 
+                        variant="contained" 
+                        // onClick={signup}
+                    >
+                        Sign in
+                    </Button>
+                    <Typography noWrap component="div" sx={style.titleClass}>
+                        -- or continue with --
+                    </Typography>
+                    <Button
                         variant="outlined"
                         startIcon={<GoogleIcon />}
                         sx={{ ...style.marginStyle, ...style.btnColor }}
                         onClick={btnSignInWithGoogle}
                     >
                         Sign In With Google+
-                    </Button> */}
-                    <Typography
-                        variant="subtitle1"
-                        sx={style.marginStyle}
-                    >
-                        OR
-                    </Typography>
-                    <FormControl sx={{ m: 1, backgroundColor: 'white' }} fullWidth variant="outlined">
-                        <TextField
-                            id="input-with-icon-textfield"
-                            variant="outlined"
-                            placeholder="Email Address"
-                            onChange={handleChange('email')}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <EmailIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            size="medium"
-                        />
-                    </FormControl>
-                    <FormControl sx={{ m: 1, backgroundColor: 'white' }} fullWidth variant="outlined">
-                        <TextField
-                            id="outlined-adornment-password"
-                            type={values.showPassword ? 'text' : 'password'}
-                            value={values.password}
-                            placeholder="Password"
-                            onChange={handleChange('password')}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <LockIcon />
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            edge="end"
-                                        >
-                                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                            InputLabelProps={{
-                                sx: style.labelStyle
-                            }}
-                        />
-                    </FormControl>
-                    <Grid container justifyContent='flex-end'>
-                        <Link to="/forgot" style={{ textDecoration: 'none' }}>
-                            <Typography
-                                sx={style.forgotStyle}
-                            >
-
-                                Forgot Password?
-                            </Typography>
-                        </Link>
-                    </Grid>
-                    <Button
-                        variant="outlined"
-                        startIcon={<ExitToAppIcon />}
-                        sx={{ ...style.marginStyle, ...style.btnColor }}
-                        onClick={btnSignIn}
-                    >
-                        Sign In
                     </Button>
-                    <Typography
-                        variant="subtitle1"
-                        sx={style.marginTopButton}
-                    >
-
-                        Don't have an Accoount
-                    </Typography>
-                    <Link to="/register" style={{ textDecoration: 'none' }}>
-                        <Button
-                            variant="outlined"
-                            startIcon={<PersonAddIcon />}
-                            sx={{ ...style.btnColor, ...style.marginTopButton }}
-                        >
-                            Register New Account
-                        </Button>
-                    </Link>
-                </Box>
+                </Grid>
             </Grid>
-        </Box>
+            </Grid>
+            <Grid container xs={6} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
+            <img
+                src={"assets/img/login_bg.png"}
+                alt="Rendezvous bg"
+                style={{ height: "100%", width: "100%", objectFit:'contain' }}
+            />
+            </Grid>
+        </Stack>
+        <Footer />
+      </Container>
+        // <Box sx={style.root}>
+        //     <Grid container justifyContent="center">    
+        //         <Box sx={style.section1} boxShadow={12}>
+        //             <Typography variant="subtitle1" color="textPrimary" sx={style.headingStyle1}>
+        //                 Sign in to your Rendezvous Account
+        //             </Typography>
+        //             <img
+        //                 src={logoRendezvous}
+        //                 alt="Rendezvous Logo"
+        //                 style={{ height: "100px", width: "100px" }}
+        //             />
+        //             {/* <Button
+        //                 variant="outlined"
+        //                 startIcon={<GoogleIcon />}
+        //                 sx={{ ...style.marginStyle, ...style.btnColor }}
+        //                 onClick={btnSignInWithGoogle}
+        //             >
+        //                 Sign In With Google+
+        //             </Button> */}
+        //             <Typography
+        //                 variant="subtitle1"
+        //                 sx={style.marginStyle}
+        //             >
+        //                 OR
+        //             </Typography>
+        //             <FormControl sx={{ m: 1, backgroundColor: 'white' }} fullWidth variant="outlined">
+        //                 <TextField
+        //                     id="input-with-icon-textfield"
+        //                     variant="outlined"
+        //                     placeholder="Email Address"
+        //                     onChange={handleChange('email')}
+        //                     InputProps={{
+        //                         startAdornment: (
+        //                             <InputAdornment position="start">
+        //                                 <EmailIcon />
+        //                             </InputAdornment>
+        //                         ),
+        //                     }}
+        //                     size="medium"
+        //                 />
+        //             </FormControl>
+        //             <FormControl sx={{ m: 1, backgroundColor: 'white' }} fullWidth variant="outlined">
+        //                 <TextField
+        //                     id="outlined-adornment-password"
+        //                     type={values.showPassword ? 'text' : 'password'}
+        //                     value={values.password}
+        //                     placeholder="Password"
+        //                     onChange={handleChange('password')}
+        //                     InputProps={{
+        //                         startAdornment: (
+        //                             <InputAdornment position="start">
+        //                                 <LockIcon />
+        //                             </InputAdornment>
+        //                         ),
+        //                         endAdornment: (
+        //                             <InputAdornment position="end">
+        //                                 <IconButton
+        //                                     aria-label="toggle password visibility"
+        //                                     onClick={handleClickShowPassword}
+        //                                     onMouseDown={handleMouseDownPassword}
+        //                                     edge="end"
+        //                                 >
+        //                                     {values.showPassword ? <VisibilityOff /> : <Visibility />}
+        //                                 </IconButton>
+        //                             </InputAdornment>
+        //                         )
+        //                     }}
+        //                     InputLabelProps={{
+        //                         sx: style.labelStyle
+        //                     }}
+        //                 />
+        //             </FormControl>
+        //             <Grid container justifyContent='flex-end'>
+        //                 <Link to="/forgot" style={{ textDecoration: 'none' }}>
+        //                     <Typography
+        //                         sx={style.forgotStyle}
+        //                     >
+
+        //                         Forgot Password?
+        //                     </Typography>
+        //                 </Link>
+        //             </Grid>
+        //             <Button
+        //                 variant="outlined"
+        //                 startIcon={<ExitToAppIcon />}
+        //                 sx={{ ...style.marginStyle, ...style.btnColor }}
+        //                 onClick={btnSignIn}
+        //             >
+        //                 Sign In
+        //             </Button>
+        //             <Typography
+        //                 variant="subtitle1"
+        //                 sx={style.marginTopButton}
+        //             >
+
+        //                 Don't have an Accoount
+        //             </Typography>
+        //             <Link to="/register" style={{ textDecoration: 'none' }}>
+        //                 <Button
+        //                     variant="outlined"
+        //                     startIcon={<PersonAddIcon />}
+        //                     sx={{ ...style.btnColor, ...style.marginTopButton }}
+        //                 >
+        //                     Register New Account
+        //                 </Button>
+        //             </Link>
+        //         </Box>
+        //     </Grid>
+        // </Box>
+
     )
 }

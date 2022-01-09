@@ -32,6 +32,7 @@ const style = {
         '&:hover': {
             color: (theme) => theme.colors.navButtonHover,
         },
+        borderRadius: 10,
     },
     logoStyle: {
         height: "100&",
@@ -51,7 +52,7 @@ const style = {
     },
     linkStyle: {
         textDecoration: "none",
-        marginRight: 2
+        marginRight: 2,
     },
     btnLinks: {
         marginLeft: 3,
@@ -100,7 +101,7 @@ export default function NavBar() {
                 <Grid container justifyContent="center">
                     <Toolbar sx={style.toolbarStyle}>
                         
-                        <Link href="#" sx={style.linkStyle}>
+                        <Link href="#">
                             <img
                                 src={'assets/img/logo.png'}
                                 alt="Rendezvous Logo"
