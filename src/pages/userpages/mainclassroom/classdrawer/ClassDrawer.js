@@ -237,22 +237,22 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Laboratory</ListItemText>
                         </ListItem> */}
-                        <ListItem
+                        {/* <ListItem
                             button
                             component={Link}
                             to={`/classjoinmeet/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
                             <ListItemText>Meeting</ListItemText>
-                        </ListItem>
-                        <ListItem
+                        </ListItem> */}
+                        {/* <ListItem
                             button
                             component={Link}
                             to={`/classpeople/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
-                        </ListItem>
+                        </ListItem> */}
                         <ListItem
                             button
                             component={Link}
@@ -305,22 +305,22 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Laboratory</ListItemText>
                         </ListItem> */}
-                        <ListItem
+                        {/* <ListItem
                             button
                             component={Link}
                             to={`/classjoinmeet/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
                             <ListItemText>Meeting</ListItemText>
-                        </ListItem>
-                        <ListItem
+                        </ListItem> */}
+                        {/* <ListItem
                             button
                             component={Link}
                             to={`/classpeople/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
-                        </ListItem>
+                        </ListItem> */}
                         <ListItem
                             button
                             component={Link}

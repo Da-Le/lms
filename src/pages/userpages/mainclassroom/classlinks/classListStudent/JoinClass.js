@@ -34,7 +34,6 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass, handleOpen
     //         } 
     //     })
     //   }, []);
-console.log(studentData)
     const hanldeJoinClass = () => {
         
         joinClass('createclass', classCode, userId, studentData ).then(() => {
@@ -49,6 +48,8 @@ console.log(studentData)
     }
 
       console.log(userId)
+
+      
 
     return (
         <div>

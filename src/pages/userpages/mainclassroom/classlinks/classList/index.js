@@ -215,7 +215,7 @@ export default function ClassList() {
             </Menu> */}
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ marginTop: 1 }}>no. of students: {item.students.length}</Typography>
+            <Typography variant="h6" sx={{ marginTop: 1 }}>no. of students: {item.students ? item.students.length : 0}</Typography>
           </Grid>
           <Grid container xs={12} direction='row'>
             <Typography variant="p" sx={{ marginTop: 1 , marginRight: 2}}><b>section:</b>s {item.section}</Typography>
