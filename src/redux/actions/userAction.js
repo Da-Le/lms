@@ -29,7 +29,7 @@ export const registerInitiate = (email, password, displayName, history) => (disp
                 }).then(() => {
                     handleNew(user);
                     dispatch(registerSuccess(user));
-                    history.push('/dashboarduser');
+                    history.push('/classroom');
                 }).catch((error) => {
                     alert(error);
                 });

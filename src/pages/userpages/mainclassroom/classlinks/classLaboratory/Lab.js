@@ -14,8 +14,16 @@ import {
     Select,
     Alert,
     AlertTitle,
-    Snackbar
+    Snackbar,
+    IconButton,
+    Stack,
+    Chip
 } from '@mui/material';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+
+
 
 import {createDoc, getDocsByCollection, updateDocsByCollection} from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
@@ -113,6 +121,7 @@ export default function Laboratory() {
   const [isNew, setIsNew] = useState(false)
   const [studentsList, setStudentsList] = useState([])
   const [studentName, setStudentName] = useState([])
+  const [selectedStudent, setSelectedStudent] = useState([])
   const [open, setOpen] = useState(false)
 
 
@@ -169,7 +178,14 @@ export default function Laboratory() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+    
+
+    
   };
+
+  const handleChangeName = (e, index) => {
+    console.log(index)
+  }
 
   const getLaboratory = () => {
     getDocsByCollection('laboratory').then(item => {
@@ -241,7 +257,8 @@ export default function Laboratory() {
     setOpen(false);
   };
 
-  console.log(isNew)
+  console.log(studentName)
+  console.log(studentsList)
   return (
     <Classdrawer>     
       <Snackbar
@@ -259,56 +276,109 @@ export default function Laboratory() {
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
         <>
           <Grid xs={12} justifyContent='space-between' container>
-          <Grid xs={12} justifyContent='flex-start' container>
-            <TextField 
-              label={labTitle === '' ? 'Title' : labTitle} 
-              variant="outlined" 
-              sx={{marginRight: 2}}
-              value={labTitle}
-              onChange={handleTitle}
-            />
-            <Button 
-              variant="contained" 
-              color="primary" 
-              sx={{ marginTop: 2, marginBottom: 2 }}
-              onClick={() => saveLab()}
-            >
-              {isNew ? 'Save' : 'Update'}
-            </Button>
-          </Grid>
+            <Grid xs={12} justifyContent='flex-start' container>
+              <TextField 
+                label={labTitle === '' ? 'Title' : labTitle} 
+                variant="outlined" 
+                sx={{marginRight: 2}}
+                value={labTitle}
+                onChange={handleTitle}
+              />
+              <Button 
+                variant="contained" 
+                color="primary" 
+                sx={{ marginTop: 2, marginBottom: 2 }}
+                onClick={() => saveLab()}
+              >
+                {isNew ? 'Save' : 'Update'}
+              </Button>
+            </Grid>
             
             <FormControl sx={{ width: 500 , marginBottom: 2}}>
-                  <InputLabel id="select-student-label">Assign Student</InputLabel>
-                  <Select
-                    labelId="select-student-label"
-                    multiple
-                    value={studentName}
-                    onChange={handleChange}
-                    input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
-                    // renderValue={(selected, item) => (
-                    //   console.log(selected),
-                    //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    //     {selected.map((value) => (
-                    //       <Chip key={value} label={value}  />
-                    //     ))}
-                    //   </Box>
-                    // )}
-                    // MenuProps={MenuProps}
+              <InputLabel id="select-student-label">Assign Student</InputLabel>
+              <Select
+                labelId="select-student-label"
+                multiple
+                value={studentName}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
+                // renderValue={(selected, item) => (
+                //   console.log(selected),
+                //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                //     {selected.map((value) => (
+                //       <Chip key={value} label={value}  />
+                //     ))}
+                //   </Box>
+                // )}
+                // MenuProps={MenuProps}
+              >
+                {studentsList.map((name, index) => (
+                  <MenuItem
+                    key={name.value}
+                    value={name.value}
+                    name={name.value}
+                    onClick={(e) => handleChangeName(e, index)}
+                    // style={getStyles(name, personName, theme)}
                   >
-                    {studentsList.map((name) => (
-                      <MenuItem
-                        key={name.value}
-                        value={name.value}
-                        name={name.value}
-                        // style={getStyles(name, personName, theme)}
-                      >
-                        {name.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    {name.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Grid xs={12} justifyContent='flex-start' container xs={{marginBottom: 2}}>
+            <Stack direction="row" spacing={1} xs={{width: 500}}>
+              {studentName && studentName.map(item => (
+                <Chip label={item} />
+              ))}
+              
+            </Stack>
+            </Grid>
+            <Grid xs={12} justifyContent='flex-start' container>
+              <Grid container>
+                <TextField
+                  variant="filled"
+                  multiline
+                  // value={announcementContent}
+                  // onChange={handleAnnoucement}
+                  fullWidth
+                  minRows={5}
+                />
+                <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
+                  <Grid item>
+                    <IconButton sx={style.iconStyle}>
+                      <AddToDriveIcon />
+                    </IconButton>
+                    <IconButton sx={style.iconStyle}>
+                      <FileUploadIcon />
+                    </IconButton>
+                    <IconButton sx={style.iconStyle}>
+                      <InsertLinkIcon />
+                    </IconButton>
+                    <IconButton sx={style.iconStyle}>
+                      <YouTubeIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid item sx={{ marginTop: 0.5 }}>
+                    <Button 
+                      style={style.btnStyle} 
+                      // onClick={cancelAnnouncement}
+                    > 
+                      cancel
+                    </Button>
+                    <Button 
+                      variant="contained" 
+                      // disabled={announcementContent ? false : true} 
+                      style={style.btnStyle}
+                      // onClick={saveAnnoucement}
+                    > 
+                      Post
+                    </Button>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
-          <Box sx={style.pane, style.topPane}>
+          {/* <Box sx={style.pane, style.topPane}>
             <Editor
               language="xml"
               displayName="HTML"
@@ -337,7 +407,7 @@ export default function Laboratory() {
               width="100%"
               height="100%"
             />
-          </Box>
+          </Box> */}
         </> 
       </Box>
     </Classdrawer>

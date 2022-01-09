@@ -282,7 +282,7 @@ export default function ClassListDetail() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {item.students.map((row) => (
+                {item.students && item.students.map((row) => (
                   <StyledTableRow key={row.name}>
                     <StyledTableCell component="th" scope="row">
                       {row.displayName}

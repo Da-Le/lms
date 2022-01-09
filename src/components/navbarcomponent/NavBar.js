@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 
 import { Link as ReactLink } from 'react-router-dom';
+import { HashLink} from 'react-router-hash-link';
+
 
 import Scroll from "react-scroll";
 
@@ -26,10 +28,10 @@ const style = {
     accountButton: {
         fontSize: '20px',
         width: '100%',
-        color: (theme) => theme.colors.navButton,
+        // color: (theme) => theme.colors.navButton,
         '&:hover': {
             color: (theme) => theme.colors.navButtonHover,
-        }
+        },
     },
     logoStyle: {
         height: "100&",
@@ -49,17 +51,22 @@ const style = {
     },
     linkStyle: {
         textDecoration: "none",
+        marginRight: 2
     },
     btnLinks: {
         marginLeft: 3,
         fontSize: '25px',
-        width: '100px',
+        width: 'auto',
         textDecoration: 'none',
         color: (theme) => theme.colors.navButton,
         textTransform: 'none',
         '&:hover': {
             color: (theme) => theme.colors.navButtonHover,
-        }
+        },
+        display:'inline-flex',
+        alignItems: 'center',
+        padding: '6px 8px',
+        lineHeight: '1.75'
     },
     linkContainer: {
         justifyContent: 'end',
@@ -111,9 +118,10 @@ export default function NavBar() {
                                             duration={500}
                                             to="Home"
                                         >
-                                            <Button sx={style.btnLinks} >
+                                            {/* <Button sx={style.btnLinks} >
                                                 Home
-                                            </Button>
+                                            </Button> */}
+                                            <HashLink style={style.btnLinks} to="/#Home">Home</HashLink>
                                         </ScrollLink>
                                         <ScrollLink
                                             className="navy"
@@ -121,9 +129,10 @@ export default function NavBar() {
                                             duration={500}
                                             to="Guide"
                                         >
-                                            <Button sx={style.btnLinks} >
-                                                Guide
-                                            </Button>
+                                            {/* <Button sx={style.btnLinks} > */}
+                                            <HashLink style={style.btnLinks} to="/#Guide">Guide</HashLink>
+                                                
+                                            {/* </Button> */}
                                         </ScrollLink>
                                         <ScrollLink
                                             className="navy"
@@ -131,9 +140,10 @@ export default function NavBar() {
                                             duration={500}
                                             to="About"
                                         >
-                                            <Button sx={style.btnLinks} >
+                                            {/* <Button sx={style.btnLinks} >
                                                 About
-                                            </Button>
+                                            </Button> */}
+                                            <HashLink style={style.btnLinks} to="/#About">About</HashLink>
                                         </ScrollLink>
                                         <ScrollLink
                                             className="navy"
@@ -141,20 +151,25 @@ export default function NavBar() {
                                             duration={500}
                                             to="Contact"
                                         >
-                                            <Button sx={style.btnLinks} >
+                                            {/* <Button sx={style.btnLinks} >
                                                 Contact
-                                            </Button>
+                                            </Button> */}
+                                            <HashLink style={style.btnLinks} to="/#Contact">Contact</HashLink>
                                         </ScrollLink>
-                                        <Link component={ReactLink} to="/login" sx={style.linkStyle}>
-                                            <Button sx={style.accountButton}>
-                                                Log in
-                                            </Button>
-                                        </Link>
-                                        <Link component={ReactLink} to="/register" sx={style.linkStyle}>
-                                            <Button sx={style.accountButton} >
-                                                Sign up
-                                            </Button>
-                                        </Link>
+
+                                        <Grid item style={{display:'flex', marginLeft: 8}}>
+                                            <Link component={ReactLink} to="/login" sx={style.linkStyle}>
+                                                <Button variant='contained' sx={style.accountButton}>
+                                                    Log in
+                                                </Button>
+                                            </Link>
+                                            <Link component={ReactLink} to="/register" sx={style.linkStyle}>
+                                                <Button variant='contained' sx={style.accountButton} >
+                                                    Sign up
+                                                </Button>
+                                            </Link>
+                                        </Grid>
+                                        
                                     </Grid>
                                 </Box>
 
