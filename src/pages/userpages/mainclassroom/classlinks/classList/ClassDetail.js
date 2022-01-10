@@ -27,7 +27,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 
 
-import Classdrawer from '../../classdrawer/ClassDrawer';
+import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 
@@ -326,7 +326,7 @@ export default function ClassListDetail() {
   console.log(user)
 
     return (
-        <Classdrawer>
+        <Teacherdrawer>
             {classroom ?
               <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
                   {classroomBody()}
@@ -374,6 +374,6 @@ export default function ClassListDetail() {
                 isCreateExamOpen={createExamOpen}
                 toggleCreateExam={handleCreateExamOpen}
             />
-        </Classdrawer >
+        </Teacherdrawer >
     )
 }

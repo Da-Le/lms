@@ -200,10 +200,10 @@ const { user } = useSelector((state) => state);
                         <ListItem
                             button
                             component={Link}
-                            to={`/classannouncement`}
+                            to={`/profile`}
                         >
                             <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Announcement</ListItemText>
+                            <ListItemText>Profile</ListItemText>
                         </ListItem>
                         <ListItem
                             button
@@ -211,7 +211,7 @@ const { user } = useSelector((state) => state);
                             to={`/classroom`}
                         >
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Classwork</ListItemText>
+                            <ListItemText>Classroom</ListItemText>
                         </ListItem>
                         {/* <ListItem
                             button
@@ -227,7 +227,7 @@ const { user } = useSelector((state) => state);
                             to={`/classroom`}
                         >
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Grades</ListItemText>
+                            <ListItemText>Calendar</ListItemText>
                         </ListItem>
                         {/* <ListItem
                             button
@@ -259,7 +259,15 @@ const { user } = useSelector((state) => state);
                             to={`/classsetting/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Settings</ListItemText>
+                            <ListItemText>Files</ListItemText>
+                        </ListItem>
+                        <ListItem
+                            button
+                            component={Link}
+                            to={`/classsetting/${classUser.classData.classCode}`}
+                        >
+                            <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                            <ListItemText>About</ListItemText>
                         </ListItem>
                         <ListItem
                             button
