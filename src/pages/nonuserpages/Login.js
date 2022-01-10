@@ -114,7 +114,7 @@ export default function Login() {
     };
 
     const btnSignIn = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (values.email === '' || values.password === '') {
             setValues({ ...values, errors: "Please Complete all fields", isLoading: false, password: "" })
             alert(values.errors);
@@ -155,6 +155,7 @@ export default function Login() {
                 alert(credential);
             });
     }
+    console.log(values)
 
     return (
       <Container maxWidth >
@@ -169,8 +170,8 @@ export default function Login() {
                     <Input
                         label = 'Email' 
                         type='text'
-                        onChange={e => handleChange(e)}
-                        value = {values.firstName}
+                        value={values.email}
+                        onChange={handleChange('email')}
                         name='firstName'
                         // errorMessage={error.firstName}
                     />
@@ -179,8 +180,8 @@ export default function Login() {
                     <Input 
                         label = 'Password' 
                         type='password'
-                        onChange={e => handleChange(e)}
-                        value = {values.lastName}
+                        onChange={handleChange('password')}
+                        value = {values.password}
                         name='lastName'
                         // errorMessage = {error.lastName}
                     />
@@ -202,6 +203,7 @@ export default function Login() {
                     <Button 
                         variant="contained" 
                         // onClick={signup}
+                        onClick={(e) => btnSignIn(e)}
                     >
                         Sign in
                     </Button>
