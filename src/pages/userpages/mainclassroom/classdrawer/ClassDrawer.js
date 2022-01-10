@@ -256,7 +256,7 @@ const { user } = useSelector((state) => state);
                         <ListItem
                             button
                             component={Link}
-                            to={`/classsetting/${classUser.classData.classCode}`}
+                            to={`/classroom`}
                         >
                             <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
                             <ListItemText>Files</ListItemText>
@@ -264,7 +264,7 @@ const { user } = useSelector((state) => state);
                         <ListItem
                             button
                             component={Link}
-                            to={`/classsetting/${classUser.classData.classCode}`}
+                            to={`/classroom`}
                         >
                             <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
                             <ListItemText>About</ListItemText>
@@ -329,14 +329,14 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
                         </ListItem> */}
-                        <ListItem
+                        {/* <ListItem
                             button
                             component={Link}
                             to={`/classsetting/${classUser.classData.classCode}`}
                         >
                             <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
                             <ListItemText>Settings</ListItemText>
-                        </ListItem>
+                        </ListItem> */}
                         <ListItem
                             button
                             component={Link}

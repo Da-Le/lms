@@ -45,6 +45,7 @@ import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
 import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
 import Profile from '../pages/userpages/mainclassroom/classlinks/profile'
 import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
+import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
 
 
 export default function RouterComponent() {
@@ -104,6 +105,7 @@ export default function RouterComponent() {
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
                     <Route component={ClassQuizList} path="/quiz/" exact />
                     <Route component={StudentList} path="/studentlist/:id" exact />
+                    <Route component={ClassGrade} path="/studentgrade/:id" exact />
 
                     <Route component={Profile} path="/profile/" exact />
 

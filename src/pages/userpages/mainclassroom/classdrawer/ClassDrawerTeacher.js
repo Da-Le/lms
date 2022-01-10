@@ -225,7 +225,7 @@ const { user } = useSelector((state) => state);
                       <ListItem
                           button
                           component={Link}
-                          to={`/classroom`}
+                          to={`/studentgrade/${props.classCode}`}
                       >
                           <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                           <ListItemText>Grades</ListItemText>
@@ -282,7 +282,7 @@ const { user } = useSelector((state) => state);
                           button
                           component={Link}
                           to={'/classroom'}
-                          // onClick={() => handleLogOut()}
+                          // onClick={() => history.goBack()}
                       >
                           <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
                           <ListItemText>Back</ListItemText>

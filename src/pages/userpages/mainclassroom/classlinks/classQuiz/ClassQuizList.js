@@ -10,7 +10,7 @@ import {
     IconButton
 } from '@mui/material';
 
-import Classdrawer from '../../classdrawer/ClassDrawer';
+import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
 import {getAnnouncement, getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
@@ -160,7 +160,7 @@ export default function ClassQuizList() {
   console.log(announcementData)
 
   return (
-    <Classdrawer headTitle='All Quiz'>
+    <Teacherdrawer headTitle='All Quiz' classCode={params.id}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         {/* <Grid container sx={style.gridcontainer}>
           {showInput ? (
@@ -217,6 +217,6 @@ export default function ClassQuizList() {
         </Grid> */}
         {announcementData && announcementBody() }
       </Box>
-    </Classdrawer>
+    </Teacherdrawer>
   )
 }
