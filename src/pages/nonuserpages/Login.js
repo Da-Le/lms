@@ -158,14 +158,14 @@ export default function Login() {
     console.log(values)
 
     return (
-      <Container maxWidth >
+      <Container maxWidth disableGutters={true}>
         <NavBar />
         <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={{ xs: 1, sm: 2, md: 4 }}
         >
-            <Grid contanier xs={6} alignItems='center'>
-            <Grid container justifyContent='center' spacing={4}>
+            <Grid contanier xs={6} style={{display:'flex'}} justifyContent='center' alignItems='center'>
+            <Grid container style={{width:'50%'}} justifyContent='center' spacing={4}>
                 <Grid item xs={12} spacing={3}>
                     <Input
                         label = 'Email' 
