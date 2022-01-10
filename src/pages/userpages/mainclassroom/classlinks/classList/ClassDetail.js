@@ -26,6 +26,7 @@ import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 
+import { useParams} from 'react-router-dom';
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -130,6 +131,7 @@ export default function ClassListDetail() {
 
   const history = useHistory();
   const { user } = useSelector((state) => state);
+  const params = useParams()
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isTeacher, setIsTeacher] = useState(false)
@@ -209,7 +211,7 @@ export default function ClassListDetail() {
 
   const getClassData =  () => {
     const classCollection = collection(db, "createclass")
-    const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
+    const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
         setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
         // setLoading(false);
