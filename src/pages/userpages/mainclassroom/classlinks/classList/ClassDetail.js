@@ -61,7 +61,7 @@ const style = {
       // boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
       marginTop: 5,
       padding: 2,
-      maxWidth: 1000
+      maxWidth: 900
   },
     main: {
         display: "flex",
@@ -226,108 +226,99 @@ export default function ClassListDetail() {
     return unsubscribe;
   }
 
-  const handleAccept= (classCode, userId, classData, studentData) => {
-    acceptStudent('createclass', classCode , classData, studentData)
-  }
-
-  const handleRemove = (classCode, userId, studentData) => {
-    removeStudent('createclass', classCode, userId , studentData)
-  }
-
-  console.log(isTeacher)
-
   const classroomBody = () => {
     return (
-      <Box component={Grid} container justifyContent="center" >
-      {classroom && classroom.map(item => 
-        <Grid container sx={style.gridcontainerClass} >
-          <Grid xs={12} justifyContent='flex-end' container>
-            <Button 
-                variant="contained" 
-                color="primary" 
-                sx={{ marginTop: 2, marginRight: 2 }}
-                onClick={() => history.push(`/classannouncement/${item.classCode}`)}
-            >
-                Create Announcment
-            </Button>
-            <Button 
-                variant="contained" 
-                color="primary" 
-                sx={{ marginTop: 2, marginRight: 2 }}
-                onClick={() => history.push(`/quiz/${item.classCode}`)}
-            >
-                Create Quiz
-            </Button>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              sx={{ marginTop: 2 }}
-              onClick={() => history.push(`/laboratory/${item.classCode}`)}
-            >
-                Create Laboratory
-            </Button>
-          </Grid>
-          <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
-            <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Classroom name : {item.className}</Typography>
-          </Grid>
-          <Grid container xs={12} direction='column'>
-            <Typography variant="p" sx={{ marginTop: 1 }}>section: {item.section}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1 }}>subject: {item.subject}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1 }}>room: {item.room}</Typography>
-          </Grid>
-          {/* <Grid item xs={12}>
-            <Typography variant="h6" sx={{ marginTop: 1 }}>{item.ownerEmail}</Typography>
-          </Grid> */}
-          <Grid item xs={12}>
-          <Typography variant="h6" sx={{ marginTop: 1 }}>Student List</Typography>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell align="left">Email</StyledTableCell>
-                  <StyledTableCell align="center">Action</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {item.students && item.students.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.displayName}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.email}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      {!row.isJoin ?
-                        <Button 
-                            variant="contained" 
-                            color="primary" 
-                            sx={{ marginTop: 2, marginRight: 2 }}
-                            onClick={() => handleAccept(item.classCode, user.currentUser.uid, item, row)}
+      classroom && classroom.map(item =>
+        <>
+          <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+                <Grid container sx={style.gridcontainer} justifyContent="space-between">
+                    <Grid item>
+                        <Button variant="outlined"
+                            sx={style.btnStyle}
+                            id="fade-button"
+                            aria-controls="fade-menu"
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                        > + Create</Button>
+                        <Menu
+                            id="fade-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'fade-button',
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            TransitionComponent={Fade}
+                            sx={{ marginTop: 1 }}
                         >
-                            Accept
-                        </Button>
-                        :
-                        <Button 
-                          variant="contained" 
-                          color="error" 
-                          sx={{ marginTop: 2, marginRight: 2 }}
-                          onClick={() => handleRemove(item.classCode, user.currentUser.uid, row)}
-                        >
-                            Remove
-                        </Button>
-                      }
-                      
-                      
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          </Grid>
-        </Grid>
-      )}
-      </Box>
+                            <MenuItem onClick={() => history.push(`/classannouncement/${item.classCode}`)} >
+                                <AssignmentIcon />
+                                <Typography sx={style.textStyle}>
+                                    Announcement
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => history.push(`/laboratory/${item.classCode}`)} >
+                                <AssignmentIcon />
+                                <Typography sx={style.textStyle}>
+                                    Laboratory
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}>
+                                <AssignmentIcon />
+                                <Typography sx={style.textStyle}>
+                                    Quiz
+                                </Typography>
+                            </MenuItem>
+                            <Divider />
+                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}>
+                                <AssignmentIcon />
+                                <Typography sx={style.textStyle}>
+                                    Exam
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => history.push(`/classannouncement/${item.classCode}`)} >
+                                <AssignmentIcon />
+                                <Typography sx={style.textStyle}>
+                                    Activity
+                                </Typography>
+                            </MenuItem>
+                        </Menu>
+                    </Grid>
+                    {/* <Grid item>
+                        <Grid Container sx={{ marginTop: -1.5 }}>
+                            <Button onClick={() => history.push(`/classannouncement/${item.classCode}`)}>
+                                <DateRangeIcon />
+                                <Typography sx={style.linkStyle}>
+                                    Laboratory
+                                </Typography>
+                            </Button>
+                            <Button>
+                                <AddToDriveIcon />
+                                <Typography sx={style.linkStyle}>
+                                    Class Drive Folder
+                                </Typography>
+                            </Button>
+                        </Grid>
+                    </Grid> */}
+                </Grid>
+          </Box>
+          <Box component={Grid} container justifyContent="center" >
+       
+            <Grid container sx={style.gridcontainerClass} >
+              <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Classroom name : {item.className}</Typography>
+              </Grid>
+              <Grid container xs={12} direction='column'>
+                <Typography variant="p" sx={{ marginTop: 1 }}>section: {item.section}</Typography>
+                <Typography variant="p" sx={{ marginTop: 1 }}>subject: {item.subject}</Typography>
+                <Typography variant="p" sx={{ marginTop: 1 }}>room: {item.room}</Typography>
+              </Grid>
+            </Grid>
+      
+          </Box>
+        </>
+      )
     )
   }
 

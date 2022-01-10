@@ -209,7 +209,7 @@ const { user } = useSelector((state) => state);
                       <ListItem
                           button
                           component={Link}
-                          to={`/classroom`}
+                          to={`/classroomdetail/${props.classCode}`}
                       >
                           <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                           <ListItemText>Classwork</ListItemText>
@@ -257,7 +257,23 @@ const { user } = useSelector((state) => state);
                       <ListItem
                           button
                           component={Link}
-                          to={`/classsetting/${classUser.classData.classCode}`}
+                          to={`/classjoinmeet/${classUser.classData.classCode}`}
+                      >
+                          <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Meeting</ListItemText>
+                      </ListItem>
+                      <ListItem
+                          button
+                          component={Link}
+                          to={`/studentlist/${props.classCode}`}
+                      >
+                          <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                          <ListItemText>People</ListItemText>
+                      </ListItem>
+                      <ListItem
+                          button
+                          component={Link}
+                          to={`/settings`}
                       >
                           <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
                           <ListItemText>Settings</ListItemText>

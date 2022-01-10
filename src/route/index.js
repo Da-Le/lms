@@ -44,6 +44,7 @@ import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
 import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
 import Profile from '../pages/userpages/mainclassroom/classlinks/profile'
+import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
 
 
 export default function RouterComponent() {
@@ -95,13 +96,14 @@ export default function RouterComponent() {
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <Route component={ClassPeople} path="/classpeople/:id" exact />
-                    <Route component={ClassSetting} path="/classsetting/:id" exact />
+                    {/* <Route component={ClassSetting} path="/classsetting/:id" exact /> */}
                     <Route component={ClassWork} path="/classwork/" exact />
                     <Route component={ClassList} path="/classroom" exact />
                     <Route component={Laboratory} path="/laboratory/:id" exact />
                     <Route component={LabList} path="/laboratory" exact />
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
                     <Route component={ClassQuizList} path="/quiz/" exact />
+                    <Route component={StudentList} path="/studentlist/:id" exact />
 
                     <Route component={Profile} path="/profile/" exact />
 
