@@ -10,7 +10,7 @@ import {
     IconButton
 } from '@mui/material';
 
-import Classdrawer from '../../classdrawer/ClassDrawer';
+import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
 import {getAnnouncement, getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
@@ -145,7 +145,7 @@ export default function ClassAnnouncement() {
   }
 
   return (
-    <Classdrawer headTitle={className}>
+    <Teacherdrawer headTitle={className}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer}>
           {showInput ? (
@@ -202,6 +202,6 @@ export default function ClassAnnouncement() {
         </Grid>
         {announcementData && announcementBody() }
       </Box>
-    </Classdrawer>
+    </Teacherdrawer>
   )
 }

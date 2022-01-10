@@ -135,6 +135,7 @@ export default function ClassListDetail() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isTeacher, setIsTeacher] = useState(false)
+  const [classCode, setClassCode] = useState('')
 
   const open = Boolean(anchorEl);
 
@@ -213,7 +214,12 @@ export default function ClassListDetail() {
     const classCollection = collection(db, "createclass")
     const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
-        setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        setClassroom(
+          snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+        );
+        snapshot.docs.map(doc => {
+          setClassCode(doc.data().classCode)
+        })
         // setLoading(false);
     }
     )
@@ -326,9 +332,10 @@ export default function ClassListDetail() {
   }
 
   console.log(user)
+  console.log(classCode)
 
     return (
-        <Teacherdrawer>
+        <Teacherdrawer classCode={classCode}>
             {classroom ?
               <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
                   {classroomBody()}

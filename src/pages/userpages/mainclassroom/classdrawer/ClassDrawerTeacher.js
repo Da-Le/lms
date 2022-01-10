@@ -154,6 +154,8 @@ const { user } = useSelector((state) => state);
             history.push('/');
         }
     }
+
+    console.log(props)
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -199,7 +201,7 @@ const { user } = useSelector((state) => state);
                       <ListItem
                           button
                           component={Link}
-                          to={`/classannouncement`}
+                          to={`/classannouncement/${props.classCode}`}
                       >
                           <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
                           <ListItemText>Announcement</ListItemText>
@@ -267,7 +269,7 @@ const { user } = useSelector((state) => state);
                           // onClick={() => handleLogOut()}
                       >
                           <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
-                          <ListItemText>Logout</ListItemText>
+                          <ListItemText>Back</ListItemText>
                       </ListItem>
                   </List>
             </Drawer>
