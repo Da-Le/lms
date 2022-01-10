@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import {getUser, acceptStudent, removeStudent} from '../../../../../utils/firebaseUtil'
+import {getUser, acceptStudent, removeStudent, getDocsByCollection} from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector} from 'react-redux';
@@ -27,6 +27,8 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 
 import { useParams} from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -62,6 +64,14 @@ const style = {
       marginTop: 5,
       padding: 2,
       maxWidth: 900
+  },
+  gridcontainerCard: {
+    display: "flex",
+    boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
+    marginTop: 2,
+    padding: 2,
+    maxWidth: 900,
+    cursor: 'pointer'
   },
     main: {
         display: "flex",
@@ -132,10 +142,13 @@ export default function ClassListDetail() {
   const history = useHistory();
   const { user } = useSelector((state) => state);
   const params = useParams()
+  const id = (uuidv4().slice(-8));
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isTeacher, setIsTeacher] = useState(false)
   const [classCode, setClassCode] = useState('')
+  const [labList, setLabList] = useState([])
 
   const open = Boolean(anchorEl);
 
@@ -200,6 +213,7 @@ export default function ClassListDetail() {
      
     if(Object.keys(user.currentUser).length !== 0){
         getClassData()
+        getLabList()
         getUser().then(data => {
             data.map(item => {
                 setIsTeacher(item.isTeacher)
@@ -209,6 +223,20 @@ export default function ClassListDetail() {
     
     
   }, [user]);
+
+  const getLabList = () => {
+    const labCollection = collection(db, "laboratory")
+    const qTeacher = query(labCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+        setLabList(
+          snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+        );
+    }
+    )
+    return unsubscribe;
+  }
+
+  console.log(labList)
 
   const getClassData =  () => {
     const classCollection = collection(db, "createclass")
@@ -258,7 +286,7 @@ export default function ClassListDetail() {
                                     Announcement
                                 </Typography>
                             </MenuItem>
-                            <MenuItem onClick={() => history.push(`/laboratory/${item.classCode}`)} >
+                            <MenuItem onClick={() => history.push(`/laboratory/${item.classCode}/${id}`)} >
                                 <AssignmentIcon />
                                 <Typography sx={style.textStyle}>
                                     Laboratory
@@ -315,8 +343,28 @@ export default function ClassListDetail() {
                 <Typography variant="p" sx={{ marginTop: 1 }}>room: {item.room}</Typography>
               </Grid>
             </Grid>
-      
+            
           </Box>
+
+          <Box component={Grid} container justifyContent="center" >
+            <Grid container sx={style.gridcontainerClass}>
+              <Typography variant="h6">Laboratory List</Typography>
+            </Grid>
+            
+            {labList && labList.map(item => 
+              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/laboratorydetail/${item.classCode}`)}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Laboratory name : {item.title}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                  <Typography variant="p" sx={{ marginTop: 1 }}>No. of student: {item.students.length !== 0 ? item.students.length : 0}</Typography>
+                </Grid>
+              </Grid>
+            )}
+            
+          </Box>
+          
         </>
       )
     )

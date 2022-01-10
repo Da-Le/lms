@@ -39,6 +39,7 @@ import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import ClassListDetail from '../pages/userpages/mainclassroom/classlinks/classList/ClassDetail';
 import ClassListStudent from '../pages/userpages/mainclassroom/classlinks/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
+import LaboratoryDetail from '../pages/userpages/mainclassroom/classlinks/classLaboratory/LabDetails'
 import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
 import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory'
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
@@ -98,9 +99,10 @@ export default function RouterComponent() {
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <Route component={ClassPeople} path="/classpeople/:id" exact />
                     {/* <Route component={ClassSetting} path="/classsetting/:id" exact /> */}
-                    <Route component={ClassWork} path="/classwork/" exact />
+                    <Route component={ClassWork} path="/classwork" exact />
                     <Route component={ClassList} path="/classroom" exact />
-                    <Route component={Laboratory} path="/laboratory/:id" exact />
+                    <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
+                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id" exact />
                     <Route component={LabList} path="/laboratory" exact />
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
                     <Route component={ClassQuizList} path="/quiz/" exact />

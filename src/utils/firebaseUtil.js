@@ -81,6 +81,22 @@ export const createClassDoc = async (collectionName, id, data) => {
 }
 
 /**
+ * 
+ * @param {string} collectionName
+ * @param {string} id 
+ * @param {object} data
+ */
+// Create a document
+export const saveLabStudent = async (data) => {
+  console.log(data)
+  const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'laboratory', data.labId)
+  setDoc(colRef,data);
+
+  return colRef
+}
+
+
+/**
  * create doc
  * @param {string} collectionName 
  * @param {string} id
@@ -174,7 +190,7 @@ export const updateDocsByCollection = async (collectionName, data) => {
   const getData = collection(db, collectionName)
   const querySnapshot = await getDocs(getData);
   let docId = ''
-  console.log(data.ownerId)
+  console.log(data.labId)
   console.log(collectionName)
   // querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
   docId = querySnapshot.docs.filter(item => item.data().ownerId === data.ownerId).map((doc) => {
@@ -183,7 +199,7 @@ export const updateDocsByCollection = async (collectionName, data) => {
     return doc.id
   })
   console.log(docId)
-  const docInstance = doc(db, collectionName, docId[0])
+  const docInstance = doc(db, collectionName, data.labId)
   await updateDoc(docInstance, data);
   return docInstance
 
