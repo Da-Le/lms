@@ -1,12 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {getDocsByCollection} from '../../utils/firebaseUtil'
+import React, { useEffect, useState } from 'react';
+import { getDocsByCollection } from '../../utils/firebaseUtil'
+
+import { useTheme } from '@mui/material/styles';
+import aboutImage from '../../assets/img/jpg/about.jpg'
 import {
     Box,
     Button,
     Typography,
     Grid,
+    useMediaQuery
 } from '@mui/material';
 
+import NavBar from '../navbarcomponent/NavBar'
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 
 const style = {
@@ -30,22 +35,6 @@ const style = {
             color: (theme) => theme.palette.secondary.main,
         }
     },
-    section1: {
-        padding: "140px 0px 0px 0px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        // height: "320px",
-        width: 1800,
-        marginLeft: {
-            xs: 0,
-            sm: 5,
-            md: 10
-        }
-    },
-
     headingStyle1: {
         textAlign: "center",
         fontWeight: 700,
@@ -63,11 +52,6 @@ const style = {
             sm: "1.2rem",
             md: "1.5rem",
         },
-    },
-    section2: {
-        backgroundColor: (theme) => theme.palette.primary.main,
-        padding: "26px 0",
-        width: '100%',
     },
     userImage: {
         height: {
@@ -95,10 +79,155 @@ const style = {
             },
             color: (theme) => theme.colors.textColor
         }
+    },
+    homeContainer: {
+        flexDirection: {
+            md: 'row',
+            sm: 'column',
+            xs: 'column'
+        },
+        display: 'flex'
+    },
+    //helper
+    marginStyle: {
+        margin: {
+            xs: 3,
+            sm: 6,
+            md: 10
+        },
+    },
+    textAlignStyle: {
+        textAlign: 'center',
+    },
+    textStyle: {
+        fontSize: 25,
+        fontWeight: 500,
+        color: (theme) => theme.palette.primary.main
+    },
+    descriptStyle: {
+        fontSize: 18,
+        fontWeight: 200
+    },
+
+    section1: {
+        padding: "150px 0px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    cardStyle: {
+        maxWidth: 345,
+        height: 420,
+        marginTop: 10,
+    },
+    imgStyle: {
+        height: {
+            xs: 200,
+            sm: 300,
+            md: 500,
+        },
+        width: {
+            xs: 300,
+            sm: 500,
+            md: 700,
+        },
+    },
+    columnContainer: {
+        display: "flex",
+        justifyContent: "center",
+        padding: 5
+    },
+    title: {
+        fontSize: 40,
+        fontWeight: 500
+    },
+    titleContainer: {
+        paddingTop: {
+            xs: 0,
+            sm: 0,
+            md: 10
+        },
+        paddingLeft: {
+            xs: 0,
+            sm: 0,
+            md: 10
+        },
+        paddingRight: {
+            xs: 0,
+            sm: 0,
+            md: 10
+        },
+        textAlign: 'center'
+    },
+    text: {
+        marginTop: 0.5,
+        fontSize: 20
+    },
+    textContainer: {
+        marginTop: 2,
+        flexDirection: 'column',
+        textAlign: 'center'
+    },
+    button: {
+        height: 50,
+        width: 180,
+        borderRadius: 20,
+        backgroundColor: '#FFBD1F',
+        color: '#000000',
+        fontSize: 18,
+        fontWeight: 600
+    },
+    buttonContainer: {
+        marginTop: 3,
+    },
+    aboutContainer: {
+        flexDirection: {
+            md: 'row',
+            sm: 'column',
+            xs: 'column'
+        },
+        display: 'flex',
+    },
+    imgContainer: {
+        padding: {
+            xs: 0,
+            sm: 5,
+            md: 10
+        },
+    },
+    section2container :{
+        flexDirection: {
+            md: 'row',
+            sm: 'column',
+            xs: 'column'
+        },
+        display: 'flex',
+        width: {
+            md: '1000px'
+        }
+    },
+    section2 : {
+        padding: {
+            xs:"100px 0px",
+            md:"150px 0px"
+        },
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: '100%',
+        backgroundColor: '#4BAEA6',
+    },
+    textsection2: {
+        fontSize: 45,
+        fontWeight: 500,
+        color: '#fff'
     }
 }
 
 export default function HomeComponent() {
+
+    const theme = useTheme();
+
     const [users, setUsers] = useState(0)
     const [classRooms, setClassRooms] = useState(0)
 
@@ -109,42 +238,52 @@ export default function HomeComponent() {
         getDocsByCollection('createclass').then(item => {
             setClassRooms(item.length)
         })
-      }, []);
+    }, []);
+
+    const matchMD = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
-        <Box component={Grid} container justifyContent="center" id="Home">
+        <Box id="Home">
+            <NavBar />
             <Box sx={style.section1}>
-                <Grid container justifyContent="flex-start">
-                    <Grid item xs={6}>
-                        <Typography variant="h1" color="textPrimary" sx={{ ...style.headingStyle1, ...style.marginTop3, ...style.marginLeft1 }}>
-                            Learning never exhausts the mind
-                        </Typography>
-                        <Typography variant="subtitle1" color="textPrimary" sx={{ ...style.subtitle1, ...style.marginTop3 }}>
-                            Rendezvous aims to create an innovative e-learning environment for the teachers and students
-                        </Typography>
-                        <div style={{ display: 'flex', justifyContent:'center' }}>
-                            <Button variant="contained">Start Now</Button>
-                        </div>
-                        
-                    </Grid>
-                    <Grid item xs={6}>
-                    <img
-                        src={"assets/img/section1.png"}
-                    />
-                    </Grid>
-                    
-                </Grid>
+                <Box sx={style.homeContainer}>
+                    <Box sx={style.marginStyle}>
+                        <Box component={Grid} container justifyContent="center" sx={style.titleContainer}>
+                            <Typography sx={style.title}>Learning never exhausts the mind</Typography>
+                        </Box>
+                        <Box component={Grid} container justifyContent="flex-start" sx={style.textContainer}>
+                            <Typography sx={style.text}>  Rendezvous aims to create an innovative e-learning environment for the teachers and students</Typography>
+                        </Box>
+                        <Box component={Grid} container justifyContent="center" sx={style.buttonContainer}>
+                            <Button
+                                variant="contained"
+                                sx={style.button}
+                            >
+                                Start Now
+                            </Button>
+                        </Box>
+                    </Box>
+                    <Box sx={style.imgContainer}>
+                        <Box component={Grid} container justifyContent="center" alignItems="center">
+                            <Box
+                                component="img"
+                                src={"assets/img/section1.png"}
+                                alt="imagecontact"
+                                sx={style.imgStyle}
+                            />
+                        </Box>
+                    </Box>
+                </Box>
             </Box>
-            {/* This is a component section 2 */}
             <Box sx={style.section2}>
-                <Grid container justifyContent="center">
-                    <Grid sm item sx={style.columnContainer}>
-                        <Typography variant="h2">{users} Users</Typography>
-                    </Grid>
-                    <Grid sm item sx={style.columnContainer}>
-                        <Typography variant="h2">{classRooms} Classrooms</Typography>
-                    </Grid>
-                </Grid>
+                <Box component={Grid} justifyContent="space-between" sx={style.section2container}>
+                    <Box sx={{textAlign: 'center'}}>
+                        <Typography sx={style.textsection2}>{users} Users</Typography>
+                    </Box>
+                    <Box sx={{textAlign: 'center', marginTop: { sm: 10, xs : 10, md: 0}}}>
+                        <Typography sx={style.textsection2}>{classRooms} Classrooms</Typography>
+                    </Box>
+                </Box>
             </Box>
         </Box>
     )
