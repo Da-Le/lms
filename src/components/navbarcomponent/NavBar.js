@@ -1,18 +1,16 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Box,
     Button,
     AppBar,
     Toolbar,
-    Typography,
     Grid,
     useMediaQuery,
     Link
 } from '@mui/material';
 
 import { Link as ReactLink } from 'react-router-dom';
-import { HashLink} from 'react-router-hash-link';
-
+import { HashLink } from 'react-router-hash-link';
 
 import Scroll from "react-scroll";
 
@@ -26,16 +24,22 @@ const ScrollLink = Scroll.Link;
 
 const style = {
     accountButton: {
-        fontSize: '20px',
-        width: '100%',
+        fontSize: '18px',
+        width: 120,
+        height: 40,
+        backgroundColor: '#FFBD1F',
+        textTransform: 'none',
+        marginLeft: 1,
+        color: '#000000',
         // color: (theme) => theme.colors.navButton,
         '&:hover': {
-            color: (theme) => theme.colors.navButtonHover,
+            color: "#fff",
+            backgroundColor: '#FFBD1F',
         },
         borderRadius: 10,
     },
     logoStyle: {
-        height: "100&",
+        height: "100%",
         width: "auto",
     },
     title: {
@@ -53,18 +57,20 @@ const style = {
     linkStyle: {
         textDecoration: "none",
         marginRight: 2,
+        marginTop: 0.5,
     },
     btnLinks: {
-        marginLeft: 3,
-        fontSize: '25px',
+        marginLeft: 15,
+        fontSize: '22px',
         width: 'auto',
         textDecoration: 'none',
-        color: (theme) => theme.colors.navButton,
+        color: "#fff",
+        fontWeight: 500,
         textTransform: 'none',
         '&:hover': {
             color: (theme) => theme.colors.navButtonHover,
         },
-        display:'inline-flex',
+        display: 'inline-flex',
         alignItems: 'center',
         padding: '6px 8px',
         lineHeight: '1.75'
@@ -75,7 +81,7 @@ const style = {
             xs: '1',
             sm: '1',
             md: '0'
-        }
+        },
     },
     toolbarStyle: {
         padding: {
@@ -83,24 +89,52 @@ const style = {
             sm: 1,
             md: 2
         },
-        width: 1800
+        height: 35,
+        width: 1500,
+        justifyContent: {
+            xs: 'space-between',
+            sm: 'space-between'
+        }
+    },
+    appBarTransparent: {
+        height: 90,
+    },
+    appBarSolid: {
+        backgroundColor: 'rgba(67, 129, 168)',
     }
 }
 
 export default function NavBar() {
 
+    const [navBackground, setNavBackground] = useState('appBarTransparent');
+
     const theme = useTheme();
 
     const matchMD = useMediaQuery(theme.breakpoints.up('md'));
 
-    
+    const navRef = React.useRef();
+    navRef.current = navBackground
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const show = window.scrollY > 310
+            if (show) {
+                setNavBackground('appBarSolid');
+            } else {
+                setNavBackground('appBarTransparent');
+            }
+        }
+        document.addEventListener('scroll', handleScroll)
+        return () => {
+            document.removeEventListener('scroll', handleScroll)
+        }
+    }, [])
 
     return (
         <Box component={Grid} container justifyContent="center">
-            <AppBar position="relative" color="transparent" elevation={0}>
+            <AppBar position="fixed" elevation={0} style={style.appBarTransparent}>
                 <Grid container justifyContent="center">
                     <Toolbar sx={style.toolbarStyle}>
-                        
                         <Link href="#">
                             <img
                                 src={'assets/img/logo.png'}
@@ -132,7 +166,7 @@ export default function NavBar() {
                                         >
                                             {/* <Button sx={style.btnLinks} > */}
                                             <HashLink style={style.btnLinks} to="/#Guide">Guide</HashLink>
-                                                
+
                                             {/* </Button> */}
                                         </ScrollLink>
                                         <ScrollLink
@@ -158,7 +192,7 @@ export default function NavBar() {
                                             <HashLink style={style.btnLinks} to="/#Contact">Contact</HashLink>
                                         </ScrollLink>
 
-                                        <Grid item style={{display:'flex', marginLeft: 8}}>
+                                        <Grid item style={{ display: 'flex', marginLeft: 8 }}>
                                             <Link component={ReactLink} to="/login" sx={style.linkStyle}>
                                                 <Button variant='contained' sx={style.accountButton}>
                                                     Log in
@@ -170,11 +204,8 @@ export default function NavBar() {
                                                 </Button>
                                             </Link>
                                         </Grid>
-                                        
                                     </Grid>
                                 </Box>
-
-                                
                             </>
                         }
                     </Toolbar>

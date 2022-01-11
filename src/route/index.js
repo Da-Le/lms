@@ -16,7 +16,8 @@ import { setUser , getUserId} from '../redux/actions/userAction';
 import Login from '../pages/nonuserpages/Login';
 import Register from '../pages/nonuserpages/Register';
 import Home from '../pages/nonuserpages/Home';
-import Forgot from '../pages/nonuserpages/Forgot';
+import NewForgot from '../pages/nonuserpages/NewForgot';
+import NotFound from '../pages/nonuserpages/NotFound';
 
 //userhomepage
 import DashboardUser from '../pages/userpages/dashboarduser/DashboarduUser';
@@ -39,6 +40,7 @@ import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import ClassListDetail from '../pages/userpages/mainclassroom/classlinks/classList/ClassDetail';
 import ClassListStudent from '../pages/userpages/mainclassroom/classlinks/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
+import LaboratoryDetail from '../pages/userpages/mainclassroom/classlinks/classLaboratory/LabDetails'
 import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
 import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory'
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
@@ -46,6 +48,10 @@ import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz
 import Profile from '../pages/userpages/mainclassroom/classlinks/profile'
 import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
 import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
+
+
+//This are the links for the new design of studentdashboard 
+import StudentDashboard from '../pages/userpages/studentdashboardnewdesign/StudentDashboard'
 
 
 export default function RouterComponent() {
@@ -79,9 +85,10 @@ export default function RouterComponent() {
                 <Switch>
                     {/* noneuser */}
                     <Route component={Home} path="/" exact />
+                    <Route component={NewForgot} path="/forgot" exact />
                     <Route component={Login} path="/login" exact />
                     <Route component={Register} path="/register" exact />
-                    <Route component={Forgot} path="/forgot" exact />
+                    <Route component={NewForgot} path="/forgot" exact />
 
                     {/* userhomepage */}
                     <Route component={DashboardUser} path="/dashboarduser" exact />
@@ -92,15 +99,20 @@ export default function RouterComponent() {
                     <Route component={DashboardFile} path="/dashboardfile" exact />
                     <Route component={DashboardAbout} path="/dashboardabout" exact />
 
+                    {/* This is the new design ui for user dashboard */}
+                    <Route component={StudentDashboard} path="/studentdashboard" exact />
+
                     {/* mainclassroom */}
                     <Route component={ClassAnnouncementList} path="/classannouncement/" exact />
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <Route component={ClassPeople} path="/classpeople/:id" exact />
+
                     {/* <Route component={ClassSetting} path="/classsetting/:id" exact /> */}
-                    <Route component={ClassWork} path="/classwork/" exact />
+                    <Route component={ClassWork} path="/classwork" exact />
                     <Route component={ClassList} path="/classroom" exact />
-                    <Route component={Laboratory} path="/laboratory/:id" exact />
+                    <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
+                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id" exact />
                     <Route component={LabList} path="/laboratory" exact />
                     <Route component={ClassQuiz} path="/quiz/:id" exact />
                     <Route component={ClassQuizList} path="/quiz/" exact />
@@ -114,6 +126,8 @@ export default function RouterComponent() {
                     {/*student router */}
                     <Route component={ClassListStudent} path="/studentclassroom" exact />
                     <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
+
+                    <Route component={NotFound} path='/'/>
                 </Switch>
             </Router>
         </ThemeProvider>

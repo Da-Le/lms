@@ -5,26 +5,18 @@ import {
     Button,
     Typography,
     Grid,
-    TextField,
-    InputAdornment,
-    FormControl,
-    IconButton,
     Stack,
     Switch,
     FormControlLabel
 } from '@mui/material';
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-import { loginInitiate } from '../../redux/actions/userAction';
 
-import { registerInitiate } from '../../redux/actions/userAction';
 import GoogleIcon from '@mui/icons-material/Google';
 
-import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg'
-import EmailIcon from '@mui/icons-material/Email';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
@@ -32,7 +24,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 
-import {createUser, createDoc, createUserGoogle} from '../../utils/firebaseUtil'
+import { createUser, createDoc, createUserGoogle } from '../../utils/firebaseUtil'
 
 import { setDoc, doc, addDoc, collection } from '@firebase/firestore';
 
@@ -43,8 +35,7 @@ import Input from '../../components/Input'
 // import {validPhone} from '../../utils/validations'
 
 import NavBar from '../../components/navbarcomponent/NavBar'
-import Footer from '../../components/linkcomponent/Footer';
-
+import NewFooter from '../../components/linkcomponent/NewFooter';
 
 
 const style = {
@@ -65,12 +56,10 @@ const style = {
         }
     },
     section1: {
-        backgroundColor: "#f3f3f3",
+        padding: "150px 0px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "40px 40px",
-        borderRadius: 2
     },
     headingStyle1: {
         marginTop: "-10px",
@@ -93,7 +82,52 @@ const style = {
             backgroundColor: (theme) => theme.colors.buttonColor,
             color: (theme) => theme.colors.navButtonHover,
         }
-    }
+    },
+    margin: {
+        marginTop: {
+            xs: -10,
+            md: 1
+        },
+        maxWidth: 600
+    },
+    registerContainer: {
+        marginTop: {
+            xs: 15,
+            sm: 12,
+            md: 0
+        },
+        flexDirection: {
+            md: 'row',
+            sm: 'column',
+            xs: 'column'
+        },
+        display: 'flex'
+    },
+    textStyle: {
+        fontSize: 20,
+        fontWeight: 700,
+        marginBottom: 2,
+        marginLeft: 1
+    },
+    imgContainer: {
+        padding: {
+            xs: 0,
+            sm: 5,
+            md: 5
+        },
+    },
+    imgStyle: {
+        height: {
+            xs: 200,
+            sm: 300,
+            md: 500,
+        },
+        width: {
+            xs: 300,
+            sm: 500,
+            md: 700,
+        },
+    },
 }
 
 
@@ -104,10 +138,10 @@ export default function Register() {
     const dispatch = useDispatch();
 
     const [values, setValues] = useState({
-        firstName:'',
-        lastName:'',
+        firstName: '',
+        lastName: '',
         email: '',
-        phone:'',
+        phone: '',
         password: '',
         confirmPassword: '',
         showPassword: false,
@@ -116,27 +150,27 @@ export default function Register() {
 
     const [error, setError] = useState({
         firstName: '',
-        lastName:'',
-        email:'',
-        phone:'',
-        password:''
+        lastName: '',
+        email: '',
+        phone: '',
+        password: ''
     })
 
     const history = useHistory();
 
     const handleChange = (e) => {
-        if(e.target.name === 'isTeacher'){
+        if (e.target.name === 'isTeacher') {
             setValues({
                 ...values,
                 [e.target.name]: e.target.checked
             })
-        }else {
+        } else {
             setValues({
                 ...values,
                 [e.target.name]: e.target.value
             })
         }
-        
+
     }
 
     // const handleChange = (prop) => (event) => {
@@ -158,41 +192,41 @@ export default function Register() {
         let isValid = true
         let error = {
             firstName: '',
-            lastName:'',
-            email:'',
-            phone:'',
-            password:''
+            lastName: '',
+            email: '',
+            phone: '',
+            password: ''
         }
         //validate first name
-        if(!values.firstName){
+        if (!values.firstName) {
             error.firstName = 'Please enter firstname'
             isValid = false
         }
 
         //validate last name
-        if(!values.lastName){
+        if (!values.lastName) {
             error.lastName = 'Please enter lastname'
             isValid = false
         }
 
         //validate email
-        if(!values.email){
+        if (!values.email) {
             error.email = 'Please enter email'
             isValid = false
         }
 
         //validate password
-        if(!values.password){
+        if (!values.password) {
             error.password = 'Please enter password'
             isValid = false
         }
-        if(values.password !== values.confirmPassword){
+        if (values.password !== values.confirmPassword) {
             error.password = 'Password is not matched'
             isValid = false
         }
 
         //validate confirm password
-        if(!values.confirmPassword){
+        if (!values.confirmPassword) {
             error.confirmPassword = 'Please enter password'
             isValid = false
         }
@@ -220,25 +254,25 @@ export default function Register() {
         //     // setValues({ ...values, errors: "", isLoading: true });
         //     // dispatch(registerInitiate(values.email, values.password, values.displayName, history));
         // }
-        if(validateForm()){
+        if (validateForm()) {
             const data = {
-                displayName: values.firstName + ' ' + values.lastName, 
-                email: values.email, 
+                displayName: values.firstName + ' ' + values.lastName,
+                email: values.email,
                 isTeacher: values.isTeacher,
                 phone: values.phone
             }
             createUser(values.email, values.password, data).then(() => {
                 // dispatch(loginInitiate(values.email, values.password, history));
-                if(data.isTeacher){
+                if (data.isTeacher) {
                     history.push('/classroom')
-                }else {
+                } else {
                     history.push('/studentclassroom')
                 }
-                
+
                 console.log('success')
             })
         }
-            
+
     }
 
     const btnSignInWithGoogle = () => {
@@ -251,37 +285,37 @@ export default function Register() {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // Check if user is new
-                const {isNewUser} = getAdditionalUserInfo(result)
+                const { isNewUser } = getAdditionalUserInfo(result)
                 const userId = result.user.uid
                 const user = result.user;
                 // await handleNew(user);
                 if (isNewUser) {
                     // await handleNew(user);
-                    const payload = { 
-                        displayName: user.displayName, 
-                        email: user.email, 
-                        uid: user.uid, 
-                        photoURL: user.photoURL, 
+                    const payload = {
+                        displayName: user.displayName,
+                        email: user.email,
+                        uid: user.uid,
+                        photoURL: user.photoURL,
                         phone: values.phone,
                         isTeacher: values.isTeacher
                     };
                     createUserGoogle(user.uid, payload).then(() => {
                         // dispatch(loginInitiate(values.email, values.password, history));
-                        if(payload.isTeacher){
+                        if (payload.isTeacher) {
                             history.push('/classroom')
-                        }else {
+                        } else {
                             history.push('/studentclassroom')
                         }
-                        
+
                         console.log('success')
                     })
                     history.push('/classroom')
-                    }else {
+                } else {
                     history.push('/classroom')
-                    }
-                
+                }
+
                 // handleNew(user);
-                
+
                 // ...
             }).catch((error) => {
                 // Handle Errors here.
@@ -296,9 +330,9 @@ export default function Register() {
                 alert(credential);
             });
     }
-    
 
-    const handleNew = async(user) => {
+
+    const handleNew = async (user) => {
         const docRef = doc(db, 'users', user.uid);
         // await addDoc(collection(db, "users"), {
         //     displayName: user.displayName, 
@@ -308,11 +342,11 @@ export default function Register() {
         //     phone: values.phone,
         //     isTeacher: values.isTeacher
         //   });
-        const payload = { 
-            displayName: user.displayName, 
-            email: user.email, 
-            uid: user.uid, 
-            photoURL: user.photoURL, 
+        const payload = {
+            displayName: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            photoURL: user.photoURL,
             phone: values.phone,
             isTeacher: values.isTeacher
         };
@@ -329,121 +363,140 @@ export default function Register() {
     return (
         <Container maxWidth disableGutters={true}>
             <NavBar />
-            <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={{ xs: 1, sm: 2, md: 4 }}
-            >
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
-                <img
-                    src={"assets/img/signup_bg.png"}
-                    alt="Rendezvous bg"
-                    style={{ height: "100%", width: "100%", objectFit:'contain' }}
-                />
-                </Grid>
-
-                <Box sx={{display:'flex', alignItems:'center', padding:'0 3rem'}}>
-                <Grid container spacing={2}>
-                    <Grid item xs={6} spacing={3}>
-                        <Input
-                            label = 'Firstname' 
-                            type='text'
-                            onChange={e => handleChange(e)}
-                            value = {values.firstName}
-                            name='firstName'
-                            errorMessage={error.firstName}
-                        />
-                    </Grid>
-                    <Grid item xs={6} spacing={3}>
-                        <Input 
-                            label = 'Lastname' 
-                            type='text'
-                            onChange={e => handleChange(e)}
-                            value = {values.lastName}
-                            name='lastName'
-                            errorMessage = {error.lastName}
-                        />
-                    </Grid>
-                    <Grid item xs={12} spacing={3}>
-                        <Input 
-                            label = 'Email' 
-                            type='email'
-                            onChange={e => handleChange(e)}
-                            value = {values.email}
-                            name='email'
-                            errorMessage={error.email}
-                        />
-                    </Grid>
-                    <Grid item xs={12} spacing={3}>
-                        <Input 
-                            label = 'Phone number' 
-                            type='tel'
-                            patern='^(09|\+639)\d{9}$'
-                            onChange={e => handleChange(e)}
-                            value = {values.phone}
-                            name='phone'
-                        />
-                    </Grid>
-                    <Grid item xs={12} spacing={3}>
-                        <Input 
-                            label = 'Password' 
-                            type='password'
-                            onChange={e => handleChange(e)}
-                            value = {values.password}
-                            name='password'
-                            errorMessage={error.password}
-                        />
-                    </Grid>
-                    <Grid item xs={12} spacing={3}>
-                        <Input 
-                            label = 'Confirm Password' 
-                            type='password'
-                            onChange={e => handleChange(e)}
-                            value = {values.confirmPassword}
-                            name='confirmPassword'
-                            errorMessage={error.confirmPassword}
-                        />
-                    </Grid>
-                    <Grid 
-                        container
-                        direction="column"
-                        justifyContent="space-around"
-                        alignItems="center"
-                    >
-                        <FormControlLabel 
-                        sx={{padding:'10px 0'}}
-                            control={
-                                <Switch 
-                                    defaultChecked 
-                                    checked={values.isTeacher}
-                                    onChange={e => handleChange(e)}
-                                    name='isTeacher'
-                                />
-                            } 
-                        label="Teacher" />
-                        <Button 
-                            variant="contained" 
-                            onClick={signup}
-                        >
-                            Sign up
-                        </Button>
-                        <Typography noWrap component="div" sx={style.titleClass}>
-                            -- or --
-                        </Typography>
-                        <Button
-                            variant="outlined"
-                            startIcon={<GoogleIcon />}
-                            sx={{ ...style.marginStyle, ...style.btnColor }}
-                            onClick={btnSignInWithGoogle}
-                        >
-                            Sign In With Google+
-                        </Button>
-                    </Grid>
-                </Grid>
+            <Box sx={style.section1}>
+                <Box component={Grid} container justifyContent="center">
+                    <Typography sx={{
+                        fontSize: {
+                            xs: 30,
+                            sm: 40,
+                            md: 50
+                        },
+                        marginBottom: {
+                            xs: 2,
+                            sm: 0,
+                            md: 0
+                        }
+                    }}>Create Account</Typography>
                 </Box>
-                
-            </Stack>
-            
-                
+                <Grid container justifyContent="center" sx={{ display: "flex" }}>
+                    <Box sx={style.imgContainer}>
+                        <Box component={Grid} container justifyContent="center" alignItems="center">
+                            <Box
+                                component="img"
+                                src={"assets/img/signup_bg.png"}
+                                alt="imagecontact"
+                                sx={style.imgStyle}
+                            />
+                        </Box>
+                    </Box>
+                    <Box sx={style.registerContainer}>
+                        <Box sx={style.margin}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', padding: '0 3rem' }}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6} spacing={3}>
+                                        <Input
+                                            label='Firstname'
+                                            type='text'
+                                            onChange={e => handleChange(e)}
+                                            value={values.firstName}
+                                            name='firstName'
+                                            errorMessage={error.firstName}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6} spacing={3}>
+                                        <Input
+                                            label='Lastname'
+                                            type='text'
+                                            onChange={e => handleChange(e)}
+                                            value={values.lastName}
+                                            name='lastName'
+                                            errorMessage={error.lastName}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} spacing={3}>
+                                        <Input
+                                            label='Email'
+                                            type='email'
+                                            onChange={e => handleChange(e)}
+                                            value={values.email}
+                                            name='email'
+                                            errorMessage={error.email}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} spacing={3}>
+                                        <Input
+                                            label='Phone number'
+                                            type='tel'
+                                            patern='^(09|\+639)\d{9}$'
+                                            onChange={e => handleChange(e)}
+                                            value={values.phone}
+                                            name='phone'
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} spacing={3}>
+                                        <Input
+                                            label='Password'
+                                            type='password'
+                                            onChange={e => handleChange(e)}
+                                            value={values.password}
+                                            name='password'
+                                            errorMessage={error.password}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} spacing={3}>
+                                        <Input
+                                            label='Confirm Password'
+                                            type='password'
+                                            onChange={e => handleChange(e)}
+                                            value={values.confirmPassword}
+                                            name='confirmPassword'
+                                            errorMessage={error.confirmPassword}
+                                        />
+                                    </Grid>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        justifyContent="space-around"
+                                        alignItems="center"
+                                    >
+                                        <FormControlLabel
+                                            sx={{ padding: '10px 0' }}
+                                            control={
+                                                <Switch
+                                                    defaultChecked
+                                                    checked={values.isTeacher}
+                                                    onChange={e => handleChange(e)}
+                                                    name='isTeacher'
+                                                />
+                                            }
+                                            label="Teacher" />
+                                        <Button
+                                            variant="contained"
+                                            onClick={signup}
+                                        >
+                                            Sign up
+                                        </Button>
+                                        <Typography noWrap component="div" sx={style.titleClass}>
+                                            -- or --
+                                        </Typography>
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<GoogleIcon />}
+                                            sx={{ ...style.marginStyle, ...style.btnColor }}
+                                            onClick={btnSignInWithGoogle}
+                                        >
+                                            Sign In With Google+
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Grid>
+            </Box>
+
+
+
             {/* <Box 
                 style={{border:'1px solid red'}} 
                 display="flex" 
@@ -498,8 +551,8 @@ export default function Register() {
                 </Grid>
             
             </Box> */}
-        
-        {/* <Box sx={style.root}>
+
+            {/* <Box sx={style.root}>
             <Grid container justifyContent="center">
                 <Box sx={style.section1} boxShadow={12}>
                     <Typography variant="subtitle1" color="textPrimary" sx={style.headingStyle1}>
@@ -618,7 +671,7 @@ export default function Register() {
                 </Box>
             </Grid>
         </Box> */}
-        <Footer />
+            <NewFooter />
         </Container>
     )
 }

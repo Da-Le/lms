@@ -150,7 +150,7 @@ export default function Laboratory() {
   useEffect(() => {
      
     if(Object.keys(user.currentUser).length !== 0){
-      // getLaboratory()
+      getLaboratory()
       getStudentList()
       }
     
@@ -221,7 +221,34 @@ export default function Laboratory() {
       labId: params.id
     }
     // if(isNew){
-      createClassDoc('laboratory',id, data).then(() => {
+      // createClassDoc('laboratory',id, data).then(() => {
+      //   setOpen({ open: true});
+      //   studentName.map(student => {
+      //     const studentData = {
+      //       html: html,
+      //       css : css,
+      //       js: js,
+      //       ownerId: user.currentUser.uid,
+      //       classCode: params.id,
+      //       created: Timestamp.now(),
+      //       title: labTitle,
+      //       studentId: student,
+      //       instruction: instruction,
+      //       labId: params.labId
+      //     }
+      //     saveLabStudent(studentData)
+      //   })
+      //   console.log('success')
+      //   const timeout = setTimeout(() => {
+      //     history.push(`/classroomdetail/${params.id}`)
+      //   }, 2000)
+    
+      //   return () => clearTimeout(timeout)
+      // })
+    // }
+    // else {
+      updateDocsByCollection('laboratory', data).then(() => {
+        console.log('success update')
         setOpen({ open: true});
         studentName.map(student => {
           const studentData = {
@@ -234,44 +261,17 @@ export default function Laboratory() {
             title: labTitle,
             studentId: student,
             instruction: instruction,
-            labId: params.labId
+            labId: labId ? labId : id
           }
           saveLabStudent(studentData)
-        })
-        console.log('success')
-        const timeout = setTimeout(() => {
-          history.push(`/classroomdetail/${params.id}`)
-        }, 2000)
-    
-        return () => clearTimeout(timeout)
-      })
-    // }
-    // else {
-    //   updateDocsByCollection('laboratory', data).then(() => {
-    //     console.log('success update')
-    //     setOpen({ open: true});
-    //     studentName.map(student => {
-    //       const studentData = {
-    //         html: html,
-    //         css : css,
-    //         js: js,
-    //         ownerId: user.currentUser.uid,
-    //         classCode: params.id,
-    //         created: Timestamp.now(),
-    //         title: labTitle,
-    //         studentId: student,
-    //         instruction: instruction,
-    //         labId: labId ? labId : id
-    //       }
-    //       saveLabStudent(studentData)
-    //       const timeout = setTimeout(() => {
-    //         history.push(`/classroomdetail/${params.id}`)
-    //       }, 2000)
+          const timeout = setTimeout(() => {
+            history.push(`/classroomdetail/${params.id}`)
+          }, 2000)
       
-    //       return () => clearTimeout(timeout)
-    //     })
+          return () => clearTimeout(timeout)
+        })
        
-    //   })
+      })
     // }
     
   }

@@ -8,7 +8,7 @@ import HomeComponent from '../../components/linkcomponent/HomeComponent';
 import GuideComponent from '../../components/linkcomponent/GuideComponent';
 import AboutComponent from '../../components/linkcomponent/AboutComponent';
 import ContactComponent from '../../components/linkcomponent/ContactComponent';
-import Footer from '../../components/linkcomponent/Footer';
+import NewFooter from '../../components/linkcomponent/NewFooter';
 
 export default function Home() {
     return (
@@ -18,7 +18,7 @@ export default function Home() {
             <GuideComponent />
             <AboutComponent />
             <ContactComponent />
-            <Footer />
+            <NewFooter />
         </Box>
     )
 }
