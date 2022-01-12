@@ -125,7 +125,7 @@ const style = {
         width: {
             xs: 300,
             sm: 500,
-            md: 700,
+            md: 600,
         },
     },
 }

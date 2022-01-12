@@ -46,12 +46,11 @@ import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
 import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
 import Profile from '../pages/userpages/mainclassroom/classlinks/profile'
+import Calendar from '../pages/userpages/mainclassroom/classlinks/calendar'
+import Files from '../pages/userpages/mainclassroom/classlinks/files'
+import About from '../pages/userpages/mainclassroom/classlinks/about'
 import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
 import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
-
-
-//This are the links for the new design of studentdashboard 
-import StudentDashboard from '../pages/userpages/studentdashboardnewdesign/StudentDashboard'
 
 
 export default function RouterComponent() {
@@ -99,9 +98,6 @@ export default function RouterComponent() {
                     <Route component={DashboardFile} path="/dashboardfile" exact />
                     <Route component={DashboardAbout} path="/dashboardabout" exact />
 
-                    {/* This is the new design ui for user dashboard */}
-                    <Route component={StudentDashboard} path="/studentdashboard" exact />
-
                     {/* mainclassroom */}
                     <Route component={ClassAnnouncementList} path="/classannouncement/" exact />
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
@@ -120,6 +116,9 @@ export default function RouterComponent() {
                     <Route component={ClassGrade} path="/studentgrade/:id" exact />
 
                     <Route component={Profile} path="/profile/" exact />
+                    <Route component={Calendar} path="/calendar/" exact />
+                    <Route component={Files} path="/files/" exact />
+                    <Route component={About} path="/about/" exact />
 
                     {/*student router */}
                     <Route component={ClassListDetail} path="/classroomdetail/:id" exact />

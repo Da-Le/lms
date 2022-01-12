@@ -31,12 +31,15 @@ import DuoIcon from '@mui/icons-material/Duo';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import PersonIcon from '@mui/icons-material/Person';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ArticleIcon from '@mui/icons-material/Article';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { logoutInitiate } from '../../../../redux/actions/userAction';
-
-import {getUser} from '../../../../utils/firebaseUtil'
-
-
+import { getUser } from '../../../../utils/firebaseUtil';
+import LogoDash from '../../../../assets/img/png/LogoUserDash.png'
 
 const drawerWidth = 240;
 
@@ -105,17 +108,30 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-
-
-
-
-
+const style = {
+    logoStyle: {
+        height: "100%",
+        width: "auto",
+        paddingRight: 10
+    },
+    textStyle: {
+        fontSize: 18,
+        fontWeight: 650
+    },
+    iconStyle: {
+        fontSize: 30
+    },
+    headerTitle: {
+        fontSize: 27,
+        fontWeight: 600
+    }
+}
 
 export default function MiniDrawer(props) {
 
     const dispatch = useDispatch();
-const history = useHistory();
-const { user } = useSelector((state) => state);
+    const history = useHistory();
+    const { user } = useSelector((state) => state);
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
@@ -137,7 +153,7 @@ const { user } = useSelector((state) => state);
         if (classUser) {
             setLoading(false);
         }
-        if(Object.keys(user.currentUser).length !== 0){
+        if (Object.keys(user.currentUser).length !== 0) {
             getUser().then(data => {
                 data.map(item => {
                     setIsTeacher(item.isTeacher)
@@ -154,11 +170,12 @@ const { user } = useSelector((state) => state);
             history.push('/');
         }
     }
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
-                <Toolbar>
+                <Toolbar sx={{ height: 70 }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -172,7 +189,7 @@ const { user } = useSelector((state) => state);
                         <MenuIcon />
                     </IconButton>
                     <Grid container justifyContent="flex-start">
-                        <Typography variant="h6" noWrap component="div">
+                        <Typography sx={style.headerTitle} noWrap component="div">
                             {/* {classUser.classData.className} */}
                             {props.headTitle}
                             {/* test */}
@@ -189,31 +206,46 @@ const { user } = useSelector((state) => state);
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                    <Typography variant="h5" sx={{ color: 'black', marginRight: 2 }}>Rendezvous</Typography>
+                    <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
+                        <img
+                            src={LogoDash}
+                            alt="Rendezvous Logo"
+                            style={style.logoStyle}
+                        />
+                    </Box>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                {isTeacher ?
-                    <List>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/profile`}
-                        >
-                            <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Profile</ListItemText>
-                        </ListItem>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Classroom</ListItemText>
-                        </ListItem>
-                        {/* <ListItem
+
+                <List>
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/profile`}
+                        sx={{ marginTop: 4 }}
+                    >
+                        <ListItemIcon> <PersonIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                Profile
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/classroom`}
+                    >
+                        <ListItemIcon> <MeetingRoomIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                Classroom
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                    {/* <ListItem
                             button
                             component={Link}
                             to={`/classroom`}
@@ -221,15 +253,19 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Classroom</ListItemText>
                         </ListItem> */}
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Calendar</ListItemText>
-                        </ListItem>
-                        {/* <ListItem
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/calendar`}
+                    >
+                        <ListItemIcon> <CalendarTodayIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                Calendar
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                    {/* <ListItem
                             button
                             component={Link}
                             to={`/laboratory`}
@@ -237,7 +273,7 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Laboratory</ListItemText>
                         </ListItem> */}
-                        {/* <ListItem
+                    {/* <ListItem
                             button
                             component={Link}
                             to={`/classjoinmeet/${classUser.classData.classCode}`}
@@ -245,7 +281,7 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
                             <ListItemText>Meeting</ListItemText>
                         </ListItem> */}
-                        {/* <ListItem
+                    {/* <ListItem
                             button
                             component={Link}
                             to={`/classpeople/${classUser.classData.classCode}`}
@@ -253,169 +289,44 @@ const { user } = useSelector((state) => state);
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
                         </ListItem> */}
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Files</ListItemText>
-                        </ListItem>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
-                            <ListItemText>About</ListItemText>
-                        </ListItem>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={'/'}
-                            onClick={() => handleLogOut()}
-                        >
-                            <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Logout</ListItemText>
-                        </ListItem>
-                    </List>
-                    :
-                    <List>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/classannouncement`}
-                        >
-                            <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Announcement</ListItemText>
-                        </ListItem>
-                        <ListItem
-                            button
-                            component={Link}
-                            to={`/studentclassroom`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Classwork</ListItemText>
-                        </ListItem>
-                        {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Classroom</ListItemText>
-                        </ListItem> */}
-                        {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/laboratory`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Laboratory</ListItemText>
-                        </ListItem> */}
-                        {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classjoinmeet/${classUser.classData.classCode}`}
-                        >
-                            <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Meeting</ListItemText>
-                        </ListItem> */}
-                        {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classpeople/${classUser.classData.classCode}`}
-                        >
-                            <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
-                            <ListItemText>People</ListItemText>
-                        </ListItem> */}
-                        {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classsetting/${classUser.classData.classCode}`}
-                        >
-                            <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Settings</ListItemText>
-                        </ListItem> */}
-                        <ListItem
-                            button
-                            component={Link}
-                            to={'/'}
-                            onClick={() => handleLogOut()}
-                        >
-                            <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Logout</ListItemText>
-                        </ListItem>
-                    </List>
-                    // <List>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classannouncement`}
-                    //     >
-                    //         <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Announcement</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classwork`}
-                    //     >
-                    //         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Dashboard</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classroom`}
-                    //     >
-                    //         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Classroom</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/laboratory`}
-                    //     >
-                    //         <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Laboratory</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classjoinmeet/${classUser.classData.classCode}`}
-                    //     >
-                    //         <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Join Meeting</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classpeople/${classUser.classData.classCode}`}
-                    //     >
-                    //         <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>People</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={`/classsetting/${classUser.classData.classCode}`}
-                    //     >
-                    //         <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Settings</ListItemText>
-                    //     </ListItem>
-                    //     <ListItem
-                    //         button
-                    //         component={Link}
-                    //         to={'/'}
-                    //         onClick={() => handleLogOut()}
-                    //     >
-                    //         <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
-                    //         <ListItemText>Logout</ListItemText>
-                    //     </ListItem>
-                    // </List>
-                }
-                
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/files`}
+                    >
+                        <ListItemIcon> <ArticleIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                Files
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
+                        to={`/about`}
+                    >
+                        <ListItemIcon> <InfoIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                About
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                    <ListItem
+                        button
+                        component={Link}
+                        to={'/'}
+                        onClick={() => handleLogOut()}
+                    >
+                        <ListItemIcon> <ExitToAppIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemText>
+                            <Typography sx={style.textStyle}>
+                                Logout
+                            </Typography>
+                        </ListItemText>
+                    </ListItem>
+                </List>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 {props.children}
