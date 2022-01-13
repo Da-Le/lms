@@ -1,10 +1,10 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import {getUser} from '../../../../../utils/firebaseUtil'
+import { getUser } from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 import {
@@ -38,20 +38,16 @@ import JoinClass from './JoinClass';
 const style = {
     gridcontainer: {
         display: "flex",
-        marginTop: 5,
         padding: 2,
-        maxWidth: 900,
-        borderBottom: 0.5,
+        borderBottom: 3,
         borderColor: (theme) => theme.palette.primary.main
     },
     gridcontainerClass: {
-      display: "flex",
-      boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
-      marginTop: 5,
-      padding: 2,
-      maxWidth: 1000,
-      cursor: 'pointer'
-  },
+        display: "flex",
+        padding: 2,
+        cursor: 'pointer',
+        marginTop: -3
+    },
     main: {
         display: "flex",
         cursor: "pointer",
@@ -65,7 +61,6 @@ const style = {
         borderRadius: 20,
         fontSize: 20,
         width: 150,
-        marginTop: -2,
         marginRight: 2,
         marginBottom: 4,
         textTransform: 'none',
@@ -82,210 +77,171 @@ const style = {
         fontWeight: 400
     },
     linkStyle: {
-        cursor: 'pointer'
+        cursor: 'pointer',
+        color: 'white',
+        fontSize: 25,
+        textAlign: 'center',
+        fontWeight: 600
     },
     imgStyle: {
         height: 300,
-        width: 300
+        width: 300,
+
     },
     imgContainer: {
         width: 200
     },
     txtContainer: {
         width: 500
+    },
+    headerClass : {
+        backgroundColor: '#4BAEA6',
+        width: '112%',
+        marginLeft: -2,
+        height: 70,
+        marginTop: -2,
+        paddingTop: 2
     }
 }
 
 export default function ClassList() {
 
-  const history = useHistory();
-  const { user } = useSelector((state) => state);
+    const history = useHistory();
+    const { user } = useSelector((state) => state);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [isTeacher, setIsTeacher] = useState(false)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [isTeacher, setIsTeacher] = useState(false)
 
-  const open = Boolean(anchorEl);
+    const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-  };
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  const handleClose = () => {
-      setAnchorEl(null);
-  };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-  const [classroom, setClassroom] = useState([]);
+    const [classroom, setClassroom] = useState([]);
 
-  //Create Class Dialog
-  const [classOpen, setClassOpen] = useState(false);
+    //Create Class Dialog
+    const [classOpen, setClassOpen] = useState(false);
 
-  const handleOpenClass = () => {
-      setClassOpen(!classOpen);
-  }
-
-  //Join Class Dialog
-  const [joinClassOpen, setOpenJoinClass] = useState(false);
-
-  const handleOpenJoinClass = () => {
-      setOpenJoinClass(!joinClassOpen);
-  }
-
-  //Create Activity Dialog
-  const [createActivityOpen, setCreateActivityOpen] = useState(false);
-
-  const handleCreateActivityOpen = () => {
-      handleClose();
-      setCreateActivityOpen(!createActivityOpen);
-  }
-
-  //Create Lab Dialog
-  const [createLabOpen, setCreateLabOpen] = useState(false);
-
-  const handleCreateLabOpen = () => {
-      handleClose();
-      setCreateLabOpen(!createLabOpen);
-  }
-
-  //Create Quiz Dialog
-  const [createQuizOpen, setCreateQuizOpen] = useState(false);
-
-  const handleCreateQuizOpen = () => {
-      handleClose();
-      setCreateQuizOpen(!createQuizOpen);
-  }
-
-  //Create Exam Dialog
-  const [createExamOpen, setCreateExamOpen] = useState(false);
-
-  const handleCreateExamOpen = () => {
-      handleClose();
-      setCreateExamOpen(!createExamOpen);
-  }
-
-  //Load classrooms
-  useEffect(() => {
-     
-    if(Object.keys(user.currentUser).length !== 0){
-        getClassData()
-        getUser().then(data => {
-            data.map(item => {
-                setIsTeacher(item.isTeacher)
-            })
-        })
-      }
-    
-    
-  }, [user]);
-
-  const getClassData =  () => {
-    const classCollection = collection(db, "createclass")
-    const q =  query(classCollection, where('students', "array-contains", user.currentUser.uid));
-    const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
-    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
-        setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-        // setLoading(false);
+    const handleOpenClass = () => {
+        setClassOpen(!classOpen);
     }
-    )
-    return unsubscribe;
-  }
 
-  console.log(isTeacher)
+    //Join Class Dialog
+    const [joinClassOpen, setOpenJoinClass] = useState(false);
 
-  const classroomBody = () => {
+    const handleOpenJoinClass = () => {
+        setOpenJoinClass(!joinClassOpen);
+    }
+
+    //Create Activity Dialog
+    const [createActivityOpen, setCreateActivityOpen] = useState(false);
+
+    const handleCreateActivityOpen = () => {
+        handleClose();
+        setCreateActivityOpen(!createActivityOpen);
+    }
+
+    //Create Lab Dialog
+    const [createLabOpen, setCreateLabOpen] = useState(false);
+
+    const handleCreateLabOpen = () => {
+        handleClose();
+        setCreateLabOpen(!createLabOpen);
+    }
+
+    //Create Quiz Dialog
+    const [createQuizOpen, setCreateQuizOpen] = useState(false);
+
+    const handleCreateQuizOpen = () => {
+        handleClose();
+        setCreateQuizOpen(!createQuizOpen);
+    }
+
+    //Create Exam Dialog
+    const [createExamOpen, setCreateExamOpen] = useState(false);
+
+    const handleCreateExamOpen = () => {
+        handleClose();
+        setCreateExamOpen(!createExamOpen);
+    }
+
+    //Load classrooms
+    useEffect(() => {
+
+        if (Object.keys(user.currentUser).length !== 0) {
+            getClassData()
+            getUser().then(data => {
+                data.map(item => {
+                    setIsTeacher(item.isTeacher)
+                })
+            })
+        }
+
+
+    }, [user]);
+
+    const getClassData = () => {
+        const classCollection = collection(db, "createclass")
+        const q = query(classCollection, where('students', "array-contains", user.currentUser.uid));
+        const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
+        const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+            setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            // setLoading(false);
+        }
+        )
+        return unsubscribe;
+    }
+
+    console.log(isTeacher)
+
+    const classroomBody = () => {
+        return (
+            <Box component={Grid} container justifyContent="center">
+                <Box component={Grid} container justifyContent="center">
+                    <Grid container sx={style.gridcontainerClass}>
+                        {classroom && classroom.map(item =>
+                            <Box sx={{ minWidth: 300, boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)', padding: 2, margin: 2, }}>
+                                <Box sx={style.headerClass} key={item.id} container justifyContent="center">
+                                    <Typography sx={style.linkStyle} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}>
+                                        {item.className}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ marginTop: 5 }}>
+                                    <Typography variant="h6" sx={{ marginTop: 1 }}>{item.section}</Typography>
+                                    <Typography variant="h6" sx={{ marginTop: 1 }}>{item.subject}</Typography>
+                                    <Typography variant="h6" sx={{ marginTop: 1 }}>{item.room}</Typography>
+                                </Box>
+                                <Box component={Grid} container justifyContent="center" sx={{ marginTop: 5 }}>
+                                    <Button variant="contained" sx={{backgroundColor: '#FFBD1F'}}> Go inside </Button>
+                                </Box>
+                            </Box>
+                        )}
+                    </Grid>
+                </Box>
+            </Box>
+        )
+    }
+
+    console.log(user)
+
     return (
-      <Box component={Grid} container justifyContent="center" >
-      {classroom && classroom.map(item => 
-        <Grid container sx={style.gridcontainerClass} onClick={() => history.push(`/classroomdetail/${item.classCode}`)} >
-          <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
-            <Typography variant="h5" sx={style.linkStyle} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}>{item.className}</Typography>
-            {/* <MoreHorizIcon sx={{ marginTop: 0.5, cursor: 'pointer' }} onClick={handleClick} />
-            <Menu
-                id='simple-menu'
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                sx={{
-                    marginTop: -1
-                }}
-            >
-              <MenuItem>
-                Unenroll
-              </MenuItem>
-            </Menu> */}
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6" sx={{ marginTop: 1 }}>no. of students: {item.students ? item.students.length : 0}</Typography>
-          </Grid>
-          <Grid container xs={12} direction='row'>
-            <Typography variant="p" sx={{ marginTop: 1 , marginRight: 2}}><b>section:</b>s {item.section}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1, marginRight: 2 }}><b>subject:</b> {item.subject}</Typography>
-            <Typography variant="p" sx={{ marginTop: 1 }}><b>room: </b>{item.room}</Typography>
-          </Grid>
-          
-        
-          {/* <Grid xs={12} justifyContent='flex-end' container>
-            {isTeacher ?
-                <>
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
-                        sx={{ marginTop: 2, marginRight: 2 }}
-                        onClick={() => history.push(`/classannouncement/${item.classCode}`)}
-                    >
-                        Create Announcment
-                    </Button>
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
-                        sx={{ marginTop: 2, marginRight: 2 }}
-                        onClick={() => history.push(`/quiz/${item.classCode}`)}
-                    >
-                        Create Quiz
-                    </Button>
-                </>
-                :
-                <>
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
-                        sx={{ marginTop: 2, marginRight: 2 }}
-                        onClick={() => history.push(`/quiz/${item.classCode}`)}
-                    >
-                        Answer Quiz
-                    </Button>
-                </>
-            }
-          <Button 
-                variant="contained" 
-                color="primary" 
-                sx={{ marginTop: 2 }}
-                onClick={() => history.push(`/laboratory/${item.classCode}`)}
-            >
-                Create Laboratory
-            </Button>
-          </Grid> */}
-        </Grid>
-      )}
-      </Box>
-    )
-  }
-
-  console.log(user)
-
-    return (
-        <Classdrawer>
-            <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+        <Classdrawer headTitle='Classroom'>
+            <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Grid item>
-                    <Button variant="outlined"
-                        sx={style.btnStyle}
-                        id="fade-button"
-                        aria-controls="fade-menu"
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={handleOpenClass}
-                    > Create</Button>
+                        <Button variant="outlined"
+                            sx={style.btnStyle}
+                            id="fade-button"
+                            aria-controls="fade-menu"
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleOpenClass}
+                        > Create</Button>
                         {/* {isTeacher ?
                             <Button variant="outlined"
                                 sx={style.btnStyle}
@@ -305,7 +261,7 @@ export default function ClassList() {
                                 onClick={handleOpenJoinClass}
                             > Join</Button>
                         } */}
-                        
+
                         {/* <Menu
                             id="fade-menu"
                             MenuListProps={{
@@ -363,26 +319,26 @@ export default function ClassList() {
                 </Grid>
             </Box>
             {classroom ?
-              <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
-                  {classroomBody()}
-              </Box>
-              :
-              <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
-                <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
-                    <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+                <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
+                    {classroomBody()}
                 </Box>
-                <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
-                    <Typography>
-                        This is where you'll see classrooms.
-                    </Typography>
-                    <Typography>
-                        You can join class, see activities and check available quiz
-                    </Typography>
+                :
+                <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
+                    <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
+                        <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+                    </Box>
+                    <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
+                        <Typography>
+                            This is where you'll see classrooms.
+                        </Typography>
+                        <Typography>
+                            You can join class, see activities and check available quiz
+                        </Typography>
+                    </Box>
                 </Box>
-              </Box>
             }
-           
-            
+
+
             <CreateClass
                 isClassOpen={classOpen}
                 toggleClass={handleOpenClass}
