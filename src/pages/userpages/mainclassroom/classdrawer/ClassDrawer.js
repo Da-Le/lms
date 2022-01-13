@@ -226,7 +226,7 @@ export default function MiniDrawer(props) {
                         to={`/profile`}
                         sx={{ marginTop: 4 }}
                     >
-                        <ListItemIcon> <PersonIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <PersonIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 Profile
@@ -238,7 +238,7 @@ export default function MiniDrawer(props) {
                         component={Link}
                         to={`/classroom`}
                     >
-                        <ListItemIcon> <MeetingRoomIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <MeetingRoomIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 Classroom
@@ -258,7 +258,7 @@ export default function MiniDrawer(props) {
                         component={Link}
                         to={`/calendar`}
                     >
-                        <ListItemIcon> <CalendarTodayIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <CalendarTodayIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 Calendar
@@ -294,7 +294,7 @@ export default function MiniDrawer(props) {
                         component={Link}
                         to={`/files`}
                     >
-                        <ListItemIcon> <ArticleIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <ArticleIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 Files
@@ -306,7 +306,7 @@ export default function MiniDrawer(props) {
                         component={Link}
                         to={`/about`}
                     >
-                        <ListItemIcon> <InfoIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <InfoIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 About
@@ -319,7 +319,7 @@ export default function MiniDrawer(props) {
                         to={'/'}
                         onClick={() => handleLogOut()}
                     >
-                        <ListItemIcon> <ExitToAppIcon sx={style.iconStyle} /></ListItemIcon>
+                        <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                         <ListItemText>
                             <Typography sx={style.textStyle}>
                                 Logout

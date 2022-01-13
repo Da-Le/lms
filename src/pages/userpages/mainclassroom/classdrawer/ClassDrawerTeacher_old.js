@@ -36,9 +36,6 @@ import { logoutInitiate } from '../../../../redux/actions/userAction';
 
 import {getUser} from '../../../../utils/firebaseUtil'
 
-import LogoDash from '../../../../assets/img/png/LogoUserDash.png'
-
-
 
 
 const drawerWidth = 240;
@@ -108,24 +105,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-const style = {
-  logoStyle: {
-      height: "100%",
-      width: "auto",
-      paddingRight: 10
-  },
-  textStyle: {
-      fontSize: 18,
-      fontWeight: 650
-  },
-  iconStyle: {
-      fontSize: 30
-  },
-  headerTitle: {
-      fontSize: 27,
-      fontWeight: 600
-  }
-}
+
 
 
 
@@ -211,13 +191,7 @@ const { user } = useSelector((state) => state);
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                  <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
-                        <img
-                            src={LogoDash}
-                            alt="Rendezvous Logo"
-                            style={style.logoStyle}
-                        />
-                    </Box>
+                    <Typography variant="h5" sx={{ color: 'black', marginRight: 2 }}>Rendezvous</Typography>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
@@ -229,24 +203,16 @@ const { user } = useSelector((state) => state);
                           component={Link}
                           to={`/classannouncement/${props.classCode}`}
                       >
-                          <ListItemIcon> <AnnouncementIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Announcement
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <AnnouncementIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Announcement</ListItemText>
                       </ListItem>
                       <ListItem
                           button
                           component={Link}
                           to={`/classroomdetail/${props.classCode}`}
                       >
-                          <ListItemIcon> <AssessmentIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Classwork
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Classwork</ListItemText>
                       </ListItem>
                       {/* <ListItem
                           button
@@ -261,12 +227,8 @@ const { user } = useSelector((state) => state);
                           component={Link}
                           to={`/studentgrade/${props.classCode}`}
                       >
-                          <ListItemIcon> <AssessmentIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Grades
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Grades</ListItemText>
                       </ListItem>
                       {/* <ListItem
                           button
@@ -297,36 +259,24 @@ const { user } = useSelector((state) => state);
                           component={Link}
                           to={`/classjoinmeet/${classUser.classData.classCode}`}
                       >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Meeting
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Meeting</ListItemText>
                       </ListItem>
                       <ListItem
                           button
                           component={Link}
                           to={`/studentlist/${props.classCode}`}
                       >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              People
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                          <ListItemText>People</ListItemText>
                       </ListItem>
                       <ListItem
                           button
                           component={Link}
                           to={`/settings`}
                       >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Settings
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <SettingsIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Settings</ListItemText>
                       </ListItem>
                       <ListItem
                           button
@@ -334,12 +284,8 @@ const { user } = useSelector((state) => state);
                           to={'/classroom'}
                           // onClick={() => history.goBack()}
                       >
-                          <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Back
-                            </Typography>
-                          </ListItemText>
+                          <ListItemIcon> <ExitToAppIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Back</ListItemText>
                       </ListItem>
                   </List>
             </Drawer>
