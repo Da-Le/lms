@@ -402,7 +402,7 @@ export default function Laboratory() {
                   <Grid item sx={{ marginTop: 0.5 }}>
                     <Button 
                       style={style.btnStyle} 
-                      // onClick={saveLab}
+                      onClick={() => history.push(`/classroomdetail/${params.id}`)}
                     > 
                       cancel
                     </Button>

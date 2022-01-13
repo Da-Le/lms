@@ -292,7 +292,8 @@ export default function ClassListDetail() {
                                     Laboratory
                                 </Typography>
                             </MenuItem>
-                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}>
+                            {/* <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}> */}
+                            <MenuItem onClick={() => history.push(`/quiz`)}>
                                 <AssignmentIcon />
                                 <Typography sx={style.textStyle}>
                                     Quiz
@@ -351,7 +352,7 @@ export default function ClassListDetail() {
               <Typography variant="h6">Laboratory List</Typography>
             </Grid>
             
-            {labList && labList.map(item => 
+            {labList.length !== 0 ? labList.map(item => 
               <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/laboratorydetail/${item.classCode}`)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Laboratory name : {item.title}</Typography>
@@ -361,7 +362,14 @@ export default function ClassListDetail() {
                   <Typography variant="p" sx={{ marginTop: 1 }}>No. of student: {item.students.length !== 0 ? item.students.length : 0}</Typography>
                 </Grid>
               </Grid>
-            )}
+            ) :
+              <Grid container sx={style.gridcontainerCard}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Laboratory{item.title}</Typography>
+                </Grid>
+              </Grid>
+            }
+              
             
           </Box>
           
