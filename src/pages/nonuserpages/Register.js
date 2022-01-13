@@ -469,7 +469,7 @@ export default function Register() {
                                                     name='isTeacher'
                                                 />
                                             }
-                                            label="Teacher" />
+                                            label={values.isTeacher ? "Teacher" : "Student"} />
                                         <Button
                                             variant="contained"
                                             onClick={signup}
