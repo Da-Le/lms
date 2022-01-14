@@ -91,44 +91,47 @@ export default function RouterComponent() {
                     <Route component={NewForgot} path="/forgot" exact />
 
                     {/* userhomepage */}
-                    <Route component={DashboardUser} path="/dashboarduser" exact />
+                    {/* <Route component={DashboardUser} path="/dashboarduser" exact />
                     <Route component={DashboardProfile} path="/dashboardprofile" exact />
                     <Route component={DashboardClass} path="/dashboardclass" exact />
                     <Route component={Announcement} path="/announcement/:id" exact />
                     <Route component={DashboardCalendar} path="/dashboardcalendar" exact />
                     <Route component={DashboardFile} path="/dashboardfile" exact />
-                    <Route component={DashboardAbout} path="/dashboardabout" exact />
-
-                    {/* mainclassroom */}
-                    <Route component={ClassAnnouncementList} path="/classannouncement/" exact />
-                    <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
-                    <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
-                    <Route component={ClassPeople} path="/classpeople/:id" exact />
-
+                    <Route component={DashboardAbout} path="/dashboardabout" exact /> */}
                     {/* <Route component={ClassSetting} path="/classsetting/:id" exact /> */}
-                    <Route component={ClassWork} path="/classwork" exact />
-                    <Route component={ClassList} path="/classroom" exact />
-                    <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
-                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id" exact />
-                    <Route component={LabList} path="/laboratory" exact />
-                    <Route component={ClassQuiz} path="/quiz/:id" exact />
-                    <Route component={ClassNewQuiz} path="/quiz" exact />
-                    <Route component={ClassQuizList} path="/quiz/" exact />
-                    <Route component={StudentList} path="/studentlist/:id" exact />
-                    <Route component={ClassGrade} path="/studentgrade/:id" exact />
 
+                    
+                    {/* <Route component={ClassAnnouncementList} path="/classannouncement/" exact /> */}
+                    {/* <Route component={ClassQuizList} path="/quiz/" exact /> */}
+                    {/* <Route component={ClassWork} path="/classwork" exact /> */}
+                    
+                    {/* teacher router */}
                     <Route component={Profile} path="/profile/" exact />
                     <Route component={Calendar} path="/calendar/" exact />
-                    <Route component={Files} path="/files/" exact />
                     <Route component={About} path="/about/" exact />
+                    <Route component={ClassList} path="/classroom" exact />
+                    <Route component={Files} path="/files/" exact />
 
-                    {/*student router */}
+                    {/* teacher mainclassroom */}
                     <Route component={ClassListDetail} path="/classroomdetail/:id" exact />
+                    <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
+                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id" exact />
+                    <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
+                    <Route component={ClassGrade} path="/studentgrade/:id" exact />
+                    <Route component={StudentList} path="/studentlist/:id" exact />
+                    <Route component={ClassNewQuiz} path="/quiz" exact />
+                    <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+                    
                     {/*student router */}
                     <Route component={ClassListStudent} path="/studentclassroom" exact />
                     <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
 
                     <Route component={NotFound} path='/'/>
+
+                    {/* common user page */}
+                    {/* <Route component={LabList} path="/laboratory" exact /> */}
+                    {/* <Route component={ClassQuiz} path="/quiz/:id" exact /> */}
+                    {/* <Route component={ClassPeople} path="/classpeople/:id" exact /> */}
                 </Switch>
             </Router>
         </ThemeProvider>
