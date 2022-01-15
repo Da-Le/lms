@@ -28,7 +28,9 @@ const style = {
     marginTop: 5,
     maxWidth: 1000,
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5
   },
   main: {
     display: "flex",
@@ -84,7 +86,6 @@ export default function ClassAnnouncementList() {
 
   const params = useParams()
   const { user } = useSelector((state) => state);
-
 
   useEffect(() => {
 

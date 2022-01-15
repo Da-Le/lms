@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { LinearProgress } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 //React Router Dom
 import { Link } from 'react-router-dom'
@@ -40,6 +40,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { logoutInitiate } from '../../../../redux/actions/userAction';
 import { getUser } from '../../../../utils/firebaseUtil';
 import LogoDash from '../../../../assets/img/png/LogoUserDash.png'
+import MobileViewClassDrawer from './MobileViewClassDrawer';
 
 const drawerWidth = 240;
 
@@ -109,6 +110,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const style = {
+    //helper
+    listHover: {
+        '&:hover': {
+            color: "#fff",
+            backgroundColor: '#35D6C9',
+            borderRadius: 2,
+        }
+    },
+    listItemStyle: {
+        height: 46
+    },
     logoStyle: {
         height: "100%",
         width: "auto",
@@ -116,10 +128,10 @@ const style = {
     },
     textStyle: {
         fontSize: 18,
-        fontWeight: 650
+        fontWeight: 650,
     },
     iconStyle: {
-        fontSize: 30
+        fontSize: 30,
     },
     headerTitle: {
         fontSize: 27,
@@ -134,6 +146,7 @@ export default function MiniDrawer(props) {
     const { user } = useSelector((state) => state);
 
     const theme = useTheme();
+    const matchMD = useMediaQuery(theme.breakpoints.down('sm'));
     const [open, setOpen] = React.useState(true);
 
     const [loading, setLoading] = useState(true)
@@ -174,20 +187,24 @@ export default function MiniDrawer(props) {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar position="fixed" open={matchMD ? false : open}>
                 <Toolbar sx={{ height: 70 }}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            marginRight: '36px',
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    {matchMD ? <MobileViewClassDrawer /> :
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                sx={{
+                                    marginRight: '36px',
+                                    ...(open && { display: 'none' }),
+                                }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </>
+                    }
                     <Grid container justifyContent="flex-start">
                         <Typography sx={style.headerTitle} noWrap component="div">
                             {/* {classUser.classData.className} */}
@@ -204,48 +221,58 @@ export default function MiniDrawer(props) {
                         ""
                     )}
             </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
-                    <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
-                        <img
-                            src={LogoDash}
-                            alt="Rendezvous Logo"
-                            style={style.logoStyle}
-                        />
-                    </Box>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                    </IconButton>
-                </DrawerHeader>
-                <Divider />
+            {matchMD ? "" :
+                <>
+                    <Drawer variant="permanent" open={matchMD ? false : open}>
+                        <DrawerHeader>
+                            <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
+                                <img
+                                    src={LogoDash}
+                                    alt="Rendezvous Logo"
+                                    style={style.logoStyle}
+                                />
+                            </Box>
+                            <IconButton onClick={handleDrawerClose}>
+                                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                            </IconButton>
+                        </DrawerHeader>
+                        <Divider sx={{ display: open === true ? 'block' : 'none' }} />
 
-                <List>
-                    <ListItem
-                        button
-                        component={Link}
-                        to={`/profile`}
-                        sx={{ marginTop: 4 }}
-                    >
-                        <ListItemIcon> <PersonIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                Profile
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                    <ListItem
-                        button
-                        component={Link}
-                        to={`/classroom`}
-                    >
-                        <ListItemIcon> <MeetingRoomIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                Classroom
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                    {/* <ListItem
+                        <List sx={{ paddingLeft: 1, paddingRight: 1 }}>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/profile`}
+                                    sx={{
+                                        marginTop: open === true ? 4 : -5, height: 46
+                                    }}
+                                >
+                                    <ListItemIcon> <PersonIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Profile
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/classroom`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <MeetingRoomIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Classroom
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+
+                            {/* <ListItem
                             button
                             component={Link}
                             to={`/classroom`}
@@ -253,19 +280,22 @@ export default function MiniDrawer(props) {
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Classroom</ListItemText>
                         </ListItem> */}
-                    <ListItem
-                        button
-                        component={Link}
-                        to={`/calendar`}
-                    >
-                        <ListItemIcon> <CalendarTodayIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                Calendar
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                    {/* <ListItem
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/calendar`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <CalendarTodayIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Calendar
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem></Box>
+
+                            {/* <ListItem
                             button
                             component={Link}
                             to={`/laboratory`}
@@ -273,7 +303,7 @@ export default function MiniDrawer(props) {
                             <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                             <ListItemText>Laboratory</ListItemText>
                         </ListItem> */}
-                    {/* <ListItem
+                            {/* <ListItem
                             button
                             component={Link}
                             to={`/classjoinmeet/${classUser.classData.classCode}`}
@@ -281,7 +311,7 @@ export default function MiniDrawer(props) {
                             <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
                             <ListItemText>Meeting</ListItemText>
                         </ListItem> */}
-                    {/* <ListItem
+                            {/* <ListItem
                             button
                             component={Link}
                             to={`/classpeople/${classUser.classData.classCode}`}
@@ -289,45 +319,58 @@ export default function MiniDrawer(props) {
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
                         </ListItem> */}
-                    <ListItem
-                        button
-                        component={Link}
-                        to={`/files`}
-                    >
-                        <ListItemIcon> <ArticleIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                Files
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                    <ListItem
-                        button
-                        component={Link}
-                        to={`/about`}
-                    >
-                        <ListItemIcon> <InfoIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                About
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                    <ListItem
-                        button
-                        component={Link}
-                        to={'/'}
-                        onClick={() => handleLogOut()}
-                    >
-                        <ListItemIcon> <ExitToAppIcon sx={style.iconStyle} /></ListItemIcon>
-                        <ListItemText>
-                            <Typography sx={style.textStyle}>
-                                Logout
-                            </Typography>
-                        </ListItemText>
-                    </ListItem>
-                </List>
-            </Drawer>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/files`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <ArticleIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Files
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/about`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <InfoIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            About
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={'/'}
+                                    onClick={() => handleLogOut()}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Logout
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+
+                        </List>
+                    </Drawer>
+                </>
+            }
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 {props.children}
             </Box>

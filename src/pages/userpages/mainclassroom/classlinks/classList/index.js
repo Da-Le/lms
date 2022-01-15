@@ -181,8 +181,6 @@ export default function ClassList() {
                 })
             })
         }
-
-
     }, [user]);
 
     const getClassData = () => {
@@ -197,7 +195,9 @@ export default function ClassList() {
         return unsubscribe;
     }
 
-    console.log(isTeacher)
+    console.log(isTeacher);
+
+    console.log(classroom)
 
     const classroomBody = () => {
         return (
