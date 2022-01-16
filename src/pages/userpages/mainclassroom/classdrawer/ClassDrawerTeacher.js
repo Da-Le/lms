@@ -19,6 +19,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { LinearProgress } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import MobileViewTeachersDrawer from './MobileViewTeachersDrawer';
 
 
 //React Router Dom
@@ -32,9 +34,15 @@ import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import GradingIcon from '@mui/icons-material/Grading';
+import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+
 import { logoutInitiate } from '../../../../redux/actions/userAction';
 
-import {getUser} from '../../../../utils/firebaseUtil'
+import { getUser } from '../../../../utils/firebaseUtil'
 
 import LogoDash from '../../../../assets/img/png/LogoUserDash.png'
 
@@ -109,22 +117,32 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const style = {
-  logoStyle: {
-      height: "100%",
-      width: "auto",
-      paddingRight: 10
-  },
-  textStyle: {
-      fontSize: 18,
-      fontWeight: 650
-  },
-  iconStyle: {
-      fontSize: 30
-  },
-  headerTitle: {
-      fontSize: 27,
-      fontWeight: 600
-  }
+    logoStyle: {
+        height: "100%",
+        width: "auto",
+        paddingRight: 10
+    },
+    textStyle: {
+        fontSize: 18,
+        fontWeight: 650
+    },
+    iconStyle: {
+        fontSize: 30
+    },
+    headerTitle: {
+        fontSize: 27,
+        fontWeight: 600
+    },
+    listHover: {
+        '&:hover': {
+            color: "#fff",
+            backgroundColor: '#35D6C9',
+            borderRadius: 2,
+        }
+    },
+    listItemStyle: {
+        height: 46
+    },
 }
 
 
@@ -134,10 +152,11 @@ const style = {
 export default function TeacherDrawer(props) {
 
     const dispatch = useDispatch();
-const history = useHistory();
-const { user } = useSelector((state) => state);
+    const history = useHistory();
+    const { user } = useSelector((state) => state);
 
     const theme = useTheme();
+    const matchMD = useMediaQuery(theme.breakpoints.down('sm'));
     const [open, setOpen] = React.useState(true);
 
     const [loading, setLoading] = useState(true)
@@ -157,7 +176,7 @@ const { user } = useSelector((state) => state);
         if (classUser) {
             setLoading(false);
         }
-        if(Object.keys(user.currentUser).length !== 0){
+        if (Object.keys(user.currentUser).length !== 0) {
             getUser().then(data => {
                 data.map(item => {
                     setIsTeacher(item.isTeacher)
@@ -179,20 +198,24 @@ const { user } = useSelector((state) => state);
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar position="fixed" open={matchMD ? false : open}>
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            marginRight: '36px',
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    {matchMD ? <MobileViewTeachersDrawer props={props}/> :
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                sx={{
+                                    marginRight: '36px',
+                                    ...(open && { display: 'none' }),
+                                }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </>
+                    }
                     <Grid container justifyContent="flex-start">
                         <Typography variant="h6" noWrap component="div">
                             {/* {classUser.classData.className} */}
@@ -209,46 +232,59 @@ const { user } = useSelector((state) => state);
                         ""
                     )}
             </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
-                  <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
-                        <img
-                            src={LogoDash}
-                            alt="Rendezvous Logo"
-                            style={style.logoStyle}
-                        />
-                    </Box>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                    </IconButton>
-                </DrawerHeader>
-                  <Divider />
-                  <List>
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/classannouncement/${props.classCode}`}
-                      >
-                          <ListItemIcon> <AnnouncementIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Announcement
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/classroomdetail/${props.classCode}`}
-                      >
-                          <ListItemIcon> <AssessmentIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Classwork
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      {/* <ListItem
+            {matchMD ? "" :
+                <>
+                    <Drawer variant="permanent" open={matchMD ? false : open}>
+                        <DrawerHeader>
+                            <Box component={Grid} sx={{ height: 110, marginBottom: 1 }}>
+                                <img
+                                    src={LogoDash}
+                                    alt="Rendezvous Logo"
+                                    style={style.logoStyle}
+                                />
+                            </Box>
+                            <IconButton onClick={handleDrawerClose}>
+                                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                            </IconButton>
+                        </DrawerHeader>
+
+                        <Divider sx={{ display: open === true ? 'block' : 'none' }} />
+
+                        <List sx={{ paddingLeft: 1, paddingRight: 1 }}>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/classannouncement/${props.classCode}`}
+                                    sx={{
+                                        marginTop: open === true ? 4 : -5, height: 46
+                                    }}
+                                >
+                                    <ListItemIcon> <ListAltIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Announcement
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/classroomdetail/${props.classCode}`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <LibraryBooksIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Classwork
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+
+                            {/* <ListItem
                           button
                           component={Link}
                           to={`/classroom`}
@@ -256,19 +292,23 @@ const { user } = useSelector((state) => state);
                           <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                           <ListItemText>Classroom</ListItemText>
                       </ListItem> */}
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/studentgrade/${props.classCode}`}
-                      >
-                          <ListItemIcon> <AssessmentIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Grades
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      {/* <ListItem
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/studentgrade/${props.classCode}`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <GradingIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Grades
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+
+                            {/* <ListItem
                           button
                           component={Link}
                           to={`/laboratory`}
@@ -276,7 +316,7 @@ const { user } = useSelector((state) => state);
                           <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                           <ListItemText>Laboratory</ListItemText>
                       </ListItem> */}
-                      {/* <ListItem
+                            {/* <ListItem
                           button
                           component={Link}
                           to={`/classjoinmeet/${classUser.classData.classCode}`}
@@ -284,7 +324,7 @@ const { user } = useSelector((state) => state);
                           <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
                           <ListItemText>Meeting</ListItemText>
                       </ListItem> */}
-                      {/* <ListItem
+                            {/* <ListItem
                           button
                           component={Link}
                           to={`/classpeople/${classUser.classData.classCode}`}
@@ -292,57 +332,72 @@ const { user } = useSelector((state) => state);
                           <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                           <ListItemText>People</ListItemText>
                       </ListItem> */}
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/classjoinmeet/${classUser.classData.classCode}`}
-                      >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Meeting
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/studentlist/${props.classCode}`}
-                      >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              People
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      <ListItem
-                          button
-                          component={Link}
-                          to={`/settings`}
-                      >
-                          <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Settings
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                      <ListItem
-                          button
-                          component={Link}
-                          to={'/classroom'}
-                          // onClick={() => history.goBack()}
-                      >
-                          <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle}/></ListItemIcon>
-                          <ListItemText>
-                            <Typography sx={style.textStyle}>
-                              Back
-                            </Typography>
-                          </ListItemText>
-                      </ListItem>
-                  </List>
-            </Drawer>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/classjoinmeet/${props.classCode}`}
+                                    sx={style.listItemStyle}
+
+                                >
+                                    <ListItemIcon> <PhotoCameraFrontIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Meeting
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/studentlist/${props.classCode}`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <PeopleAltIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            People
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/settings`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Settings
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={'/classroom'}
+                                    sx={style.listItemStyle}
+                                // onClick={() => history.goBack()}
+                                >
+                                    <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Back
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                        </List>
+                    </Drawer>
+                </>
+            }
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 {props.children}
             </Box>

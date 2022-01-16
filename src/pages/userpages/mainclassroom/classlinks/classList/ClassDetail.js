@@ -219,9 +219,7 @@ export default function ClassListDetail() {
                 setIsTeacher(item.isTeacher)
             })
         })
-      }
-    
-    
+      } 
   }, [user]);
 
   const getLabList = () => {
@@ -253,7 +251,7 @@ export default function ClassListDetail() {
     )
     return unsubscribe;
   }
-
+  
   const classroomBody = () => {
     return (
       classroom && classroom.map(item =>
