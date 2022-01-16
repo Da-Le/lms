@@ -293,7 +293,7 @@ export default function ClassListDetail() {
                                 </Typography>
                             </MenuItem>
                             {/* <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}> */}
-                            <MenuItem onClick={() => history.push(`/quiz`)}>
+                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}>
                                 <AssignmentIcon />
                                 <Typography sx={style.textStyle}>
                                     Quiz

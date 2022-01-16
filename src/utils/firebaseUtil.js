@@ -86,10 +86,23 @@ export const createClassDoc = async (collectionName, id, data) => {
  * @param {string} id 
  * @param {object} data
  */
-// Create a document
+// save laboratory
 export const saveLabStudent = async (data) => {
-  console.log(data)
   const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'laboratory', data.labId)
+  setDoc(colRef,data);
+
+  return colRef
+}
+
+/**
+ * 
+ * @param {string} collectionName
+ * @param {string} id 
+ * @param {object} data
+ */
+// save quiz
+export const saveQuizStudent = async (data) => {
+  const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'quiz', data.quizId)
   setDoc(colRef,data);
 
   return colRef

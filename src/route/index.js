@@ -20,13 +20,13 @@ import NewForgot from '../pages/nonuserpages/NewForgot';
 import NotFound from '../pages/nonuserpages/NotFound';
 
 //userhomepage
-import DashboardUser from '../pages/userpages/dashboarduser/DashboarduUser';
-import DashboardProfile from '../pages/userpages/dashboardprofile/DashboardProfile';
-import DashboardClass from '../pages/userpages/dashboardclassfolder/DashboardClass';
-import Announcement from '../pages/userpages/announcement'
-import DashboardCalendar from '../pages/userpages/dashboardcalendar/DashboardCalendar';
-import DashboardFile from '../pages/userpages/dashboardfile/DashboardFile';
-import DashboardAbout from '../pages/userpages/dashboardabout/DashboardAbout';
+// import DashboardUser from '../pages/userpages/dashboarduser/DashboarduUser';
+// import DashboardProfile from '../pages/userpages/dashboardprofile/DashboardProfile';
+// import DashboardClass from '../pages/userpages/dashboardclassfolder/DashboardClass';
+// import Announcement from '../pages/userpages/announcement'
+// import DashboardCalendar from '../pages/userpages/dashboardcalendar/DashboardCalendar';
+// import DashboardFile from '../pages/userpages/dashboardfile/DashboardFile';
+// import DashboardAbout from '../pages/userpages/dashboardabout/DashboardAbout';
 
 //main classroom
 import ClassAnnouncement from '../pages/userpages/mainclassroom/classlinks/classannouncement/ClassAnnouncement';
@@ -119,7 +119,7 @@ export default function RouterComponent() {
                     <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
                     <Route component={ClassGrade} path="/studentgrade/:id" exact />
                     <Route component={StudentList} path="/studentlist/:id" exact />
-                    <Route component={ClassNewQuiz} path="/quiz" exact />
+                    <Route component={ClassNewQuiz} path="/quiz/:id" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     
                     {/*student router */}

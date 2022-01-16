@@ -24,12 +24,11 @@ import DatePicker from '@mui/lab/DatePicker';
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
-import {getAnnouncement, getDocsByCollection, getUser, createDoc} from '../../../../../utils/firebaseUtil';
+import {getAnnouncement, getDocsByCollection, saveQuizStudent, createDoc} from '../../../../../utils/firebaseUtil';
 import { useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
-
-
+import { v4 as uuidv4 } from 'uuid';
 
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -80,6 +79,8 @@ export default function ClassQuiz() {
   const params = useParams()
   const { user } = useSelector((state) => state);
   const history = useHistory();
+  const id = (uuidv4().slice(-8));
+
 
   useEffect(() => {
     if(Object.keys(user.currentUser).length !== 0){
@@ -166,11 +167,32 @@ export default function ClassQuiz() {
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
-      subject: subject
+      subject: subject,
+      quizId: id
     }
-    console.log(data)
+    // console.log(data)
     createDoc('quiz',data).then(() => {
-      history.push(`/quiz`)
+      // studentName.map(student => {
+      //   const studentData = {
+      //     html: html,
+      //     css : css,
+      //     js: js,
+      //     ownerId: user.currentUser.uid,
+      //     classCode: params.id,
+      //     created: Timestamp.now(),
+      //     title: labTitle,
+      //     studentId: student,
+      //     instruction: instruction,
+      //     labId: params.labId
+      //   }
+      //   saveLabStudent(studentData)
+      //   saveQuizStudent(data)
+      // })
+      const timeout = setTimeout(() => {
+        history.push(`/classroomdetail/${params.id}`)
+      }, 2000)
+      return () => clearTimeout(timeout)
+     
     })
   }
 
