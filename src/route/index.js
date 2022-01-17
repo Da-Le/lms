@@ -38,7 +38,7 @@ import { getClassroomData } from '../redux/actions/classAction';
 import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/ClassWork';
 import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import ClassListDetail from '../pages/userpages/mainclassroom/classlinks/classList/ClassDetail';
-import ClassListStudent from '../pages/userpages/mainclassroom/student/classListStudent';
+// import ClassListStudent from '../pages/userpages/mainclassroom/student/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
 import LaboratoryDetail from '../pages/userpages/mainclassroom/classlinks/classLaboratory/LabDetails'
 import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
