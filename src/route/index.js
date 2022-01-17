@@ -38,7 +38,7 @@ import { getClassroomData } from '../redux/actions/classAction';
 import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/ClassWork';
 import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
 import ClassListDetail from '../pages/userpages/mainclassroom/classlinks/classList/ClassDetail';
-import ClassListStudent from '../pages/userpages/mainclassroom/classlinks/classListStudent';
+import ClassListStudent from '../pages/userpages/mainclassroom/student/classListStudent';
 import Laboratory from '../pages/userpages/mainclassroom/classlinks/classLaboratory/Lab'
 import LaboratoryDetail from '../pages/userpages/mainclassroom/classlinks/classLaboratory/LabDetails'
 import LaboratoryStudent from '../pages/userpages/mainclassroom/classlinks/studentLaboratory/Lab'
@@ -52,6 +52,12 @@ import Files from '../pages/userpages/mainclassroom/classlinks/files'
 import About from '../pages/userpages/mainclassroom/classlinks/about'
 import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
 import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
+
+//student components
+import StudentClassList from '../pages/userpages/mainclassroom/student/classList'
+import StudentClassListDetail from '../pages/userpages/mainclassroom/student/classList/ClassDetail';
+import StudentLaboratoryDetail from '../pages/userpages/mainclassroom/student/classLaboratory/LabDetails'
+
 
 
 export default function RouterComponent() {
@@ -115,7 +121,7 @@ export default function RouterComponent() {
                     {/* teacher mainclassroom */}
                     <Route component={ClassListDetail} path="/classroomdetail/:id" exact />
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
-                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id" exact />
+                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id/:labId" exact />
                     <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
                     <Route component={ClassGrade} path="/studentgrade/:id" exact />
                     <Route component={StudentList} path="/studentlist/:id" exact />
@@ -123,10 +129,15 @@ export default function RouterComponent() {
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     
                     {/*student router */}
-                    <Route component={ClassListStudent} path="/studentclassroom" exact />
+                    {/* <Route component={ClassListStudent} path="/studentclassroom" exact /> */}
                     <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
+                    <Route component={StudentClassList} path="/studentclassroom" exact />
+                    <Route component={StudentClassListDetail} path="/studentclassroomdetail/:id" exact />
+                    <Route component={StudentLaboratoryDetail} path="/studentlaboratorydetail/:id/:labId" exact />
+                    
 
                     <Route component={NotFound} path='/'/>
+                    
 
                     {/* common user page */}
                     {/* <Route component={LabList} path="/laboratory" exact /> */}

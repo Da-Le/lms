@@ -20,6 +20,8 @@ import { LinearProgress } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import MobileViewTeachersDrawer from './MobileViewTeachersDrawer';
+
 
 //React Router Dom
 import { Link } from 'react-router-dom'
@@ -31,16 +33,21 @@ import DuoIcon from '@mui/icons-material/Duo';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import PersonIcon from '@mui/icons-material/Person';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ArticleIcon from '@mui/icons-material/Article';
-import InfoIcon from '@mui/icons-material/Info';
+
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import GradingIcon from '@mui/icons-material/Grading';
+import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 import { logoutInitiate } from '../../../../redux/actions/userAction';
-import { getUser } from '../../../../utils/firebaseUtil';
+
+import { getUser } from '../../../../utils/firebaseUtil'
+
 import LogoDash from '../../../../assets/img/png/LogoUserDash.png'
-import MobileViewClassDrawer from './MobileViewClassDrawer';
+
+
+
 
 const drawerWidth = 240;
 
@@ -110,7 +117,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const style = {
-    //helper
+    logoStyle: {
+        height: "100%",
+        width: "auto",
+        paddingRight: 10
+    },
+    textStyle: {
+        fontSize: 18,
+        fontWeight: 650
+    },
+    iconStyle: {
+        fontSize: 30
+    },
+    headerTitle: {
+        fontSize: 27,
+        fontWeight: 600
+    },
     listHover: {
         '&:hover': {
             color: "#fff",
@@ -121,25 +143,13 @@ const style = {
     listItemStyle: {
         height: 46
     },
-    logoStyle: {
-        height: "100%",
-        width: "auto",
-        paddingRight: 10
-    },
-    textStyle: {
-        fontSize: 18,
-        fontWeight: 650,
-    },
-    iconStyle: {
-        fontSize: 30,
-    },
-    headerTitle: {
-        fontSize: 27,
-        fontWeight: 600
-    }
 }
 
-export default function MiniDrawer(props) {
+
+
+
+
+export default function StudentDrawer(props) {
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -184,12 +194,13 @@ export default function MiniDrawer(props) {
         }
     }
 
+    console.log(props)
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={matchMD ? false : open}>
-                <Toolbar sx={{ height: 70 }}>
-                    {matchMD ? <MobileViewClassDrawer /> :
+                <Toolbar>
+                    {matchMD ? <MobileViewTeachersDrawer props={props}/> :
                         <>
                             <IconButton
                                 color="inherit"
@@ -206,7 +217,7 @@ export default function MiniDrawer(props) {
                         </>
                     }
                     <Grid container justifyContent="flex-start">
-                        <Typography sx={style.headerTitle} noWrap component="div">
+                        <Typography variant="h6" noWrap component="div">
                             {/* {classUser.classData.className} */}
                             {props.headTitle}
                             {/* test */}
@@ -236,6 +247,7 @@ export default function MiniDrawer(props) {
                                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                             </IconButton>
                         </DrawerHeader>
+
                         <Divider sx={{ display: open === true ? 'block' : 'none' }} />
 
                         <List sx={{ paddingLeft: 1, paddingRight: 1 }}>
@@ -243,15 +255,15 @@ export default function MiniDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={`/profile`}
+                                    to={`/classannouncement/${props.classCode}`}
                                     sx={{
                                         marginTop: open === true ? 4 : -5, height: 46
                                     }}
                                 >
-                                    <ListItemIcon> <PersonIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemIcon> <ListAltIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
-                                            Profile
+                                            Announcement
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
@@ -260,92 +272,78 @@ export default function MiniDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={isTeacher ? `/classroom` : `/studentclassroom`}
+                                    to={`/studentclassroomdetail/${props.classCode}`}
                                     sx={style.listItemStyle}
                                 >
-                                    <ListItemIcon> <MeetingRoomIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemIcon> <LibraryBooksIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
-                                            Classroom
+                                            Classwork
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
                             </Box>
 
                             {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classroom`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Classroom</ListItemText>
-                        </ListItem> */}
+                          button
+                          component={Link}
+                          to={`/classroom`}
+                      >
+                          <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Classroom</ListItemText>
+                      </ListItem> */}
                             <Box sx={style.listHover}>
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={`/calendar`}
+                                    to={`/studentgrade/${props.classCode}`}
                                     sx={style.listItemStyle}
                                 >
-                                    <ListItemIcon> <CalendarTodayIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemIcon> <GradingIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
-                                            Calendar
-                                        </Typography>
-                                    </ListItemText>
-                                </ListItem></Box>
-
-                            {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/laboratory`}
-                        >
-                            <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Laboratory</ListItemText>
-                        </ListItem> */}
-                            {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classjoinmeet/${classUser.classData.classCode}`}
-                        >
-                            <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
-                            <ListItemText>Meeting</ListItemText>
-                        </ListItem> */}
-                            {/* <ListItem
-                            button
-                            component={Link}
-                            to={`/classpeople/${classUser.classData.classCode}`}
-                        >
-                            <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
-                            <ListItemText>People</ListItemText>
-                        </ListItem> */}
-                            <Box sx={style.listHover}>
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to={`/files`}
-                                    sx={style.listItemStyle}
-                                >
-                                    <ListItemIcon> <ArticleIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
-                                    <ListItemText>
-                                        <Typography sx={style.textStyle}>
-                                            Files
+                                            Grades
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
-
                             </Box>
+
+                            {/* <ListItem
+                          button
+                          component={Link}
+                          to={`/laboratory`}
+                      >
+                          <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Laboratory</ListItemText>
+                      </ListItem> */}
+                            {/* <ListItem
+                          button
+                          component={Link}
+                          to={`/classjoinmeet/${classUser.classData.classCode}`}
+                      >
+                          <ListItemIcon> <DuoIcon color="primary" /></ListItemIcon>
+                          <ListItemText>Meeting</ListItemText>
+                      </ListItem> */}
+                            {/* <ListItem
+                          button
+                          component={Link}
+                          to={`/classpeople/${classUser.classData.classCode}`}
+                      >
+                          <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
+                          <ListItemText>People</ListItemText>
+                      </ListItem> */}
                             <Box sx={style.listHover}>
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={`/about`}
+                                    to={`/classjoinmeet/${props.classCode}`}
                                     sx={style.listItemStyle}
+
                                 >
-                                    <ListItemIcon> <InfoIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemIcon> <PhotoCameraFrontIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
-                                            About
+                                            Meeting
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
@@ -354,19 +352,48 @@ export default function MiniDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={'/'}
-                                    onClick={() => handleLogOut()}
+                                    to={`/studentlist/${props.classCode}`}
                                     sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <PeopleAltIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            People
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={`/settings`}
+                                    sx={style.listItemStyle}
+                                >
+                                    <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemText>
+                                        <Typography sx={style.textStyle}>
+                                            Settings
+                                        </Typography>
+                                    </ListItemText>
+                                </ListItem>
+                            </Box>
+                            <Box sx={style.listHover}>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to={'/studentclassroom'}
+                                    sx={style.listItemStyle}
+                                // onClick={() => history.goBack()}
                                 >
                                     <ListItemIcon> <ExitToAppIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
-                                            Logout
+                                            Back
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
                             </Box>
-
                         </List>
                     </Drawer>
                 </>

@@ -26,7 +26,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import {createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent, getStudentByAssigned} from '../../../../../utils/firebaseUtil'
+import {createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent} from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
@@ -150,7 +150,7 @@ export default function Laboratory() {
   useEffect(() => {
      
     if(Object.keys(user.currentUser).length !== 0){
-      getLaboratory()
+      // getLaboratory()
       getStudentList()
       }
     
@@ -158,22 +158,14 @@ export default function Laboratory() {
   }, [user]);
 
   const getStudentList = () => {
-    getStudentByAssigned(params.id).then(item => {
-        const students = item.students.filter(item => item.isJoin === true).map(item => {
-          let studentArr = []
-          studentArr = {label:item.displayName, value:item.ownerId}
-          return studentArr
-        })
-        setStudentsList(students)
+    getDocsByCollection('users').then(data => {
+      const students = data.map(item => {
+        let studentArr = []
+        studentArr = {label:item.displayName, value:item.ownerId}
+        return studentArr
+      })
+      setStudentsList(students)
     })
-    // getDocsByCollection('users').then(data => {
-    //   const students = data.map(item => {
-    //     let studentArr = []
-    //     studentArr = {label:item.displayName, value:item.ownerId}
-    //     return studentArr
-    //   })
-    //   setStudentsList(students)
-    // })
     getDocsByCollection('quiz').then(data => {
       data.filter(item => item.classCode === params.id).map(item => {
         setStudentName(item.students)
@@ -204,7 +196,7 @@ export default function Laboratory() {
           setJs(item.js)
           setSrcDoc(item.body)
           setLabTitle(item.title)
-          setLabId(params.labId)
+          setLabId(item.labId)
           setStudentName(item.students)
           setInstruction(item.instruction)
         })
@@ -226,37 +218,10 @@ export default function Laboratory() {
       title: labTitle,
       students: studentName,
       instruction: instruction,
-      labId: labId
+      labId: params.id
     }
     // if(isNew){
-      // createClassDoc('laboratory',id, data).then(() => {
-      //   setOpen({ open: true});
-      //   studentName.map(student => {
-      //     const studentData = {
-      //       html: html,
-      //       css : css,
-      //       js: js,
-      //       ownerId: user.currentUser.uid,
-      //       classCode: params.id,
-      //       created: Timestamp.now(),
-      //       title: labTitle,
-      //       studentId: student,
-      //       instruction: instruction,
-      //       labId: params.labId
-      //     }
-      //     saveLabStudent(studentData)
-      //   })
-      //   console.log('success')
-      //   const timeout = setTimeout(() => {
-      //     history.push(`/classroomdetail/${params.id}`)
-      //   }, 2000)
-    
-      //   return () => clearTimeout(timeout)
-      // })
-    // }
-    // else {
-      updateDocsByCollection('laboratory', data).then(() => {
-        console.log('success update')
+      createClassDoc('laboratory',id, data).then(() => {
         setOpen({ open: true});
         studentName.map(student => {
           const studentData = {
@@ -269,17 +234,44 @@ export default function Laboratory() {
             title: labTitle,
             studentId: student,
             instruction: instruction,
-            labId: labId
+            labId: params.labId
           }
           saveLabStudent(studentData)
-          const timeout = setTimeout(() => {
-            history.push(`/classroomdetail/${params.id}`)
-          }, 2000)
-      
-          return () => clearTimeout(timeout)
         })
-       
+        console.log('success')
+        const timeout = setTimeout(() => {
+          history.push(`/classroomdetail/${params.id}`)
+        }, 2000)
+    
+        return () => clearTimeout(timeout)
       })
+    // }
+    // else {
+    //   updateDocsByCollection('laboratory', data).then(() => {
+    //     console.log('success update')
+    //     setOpen({ open: true});
+    //     studentName.map(student => {
+    //       const studentData = {
+    //         html: html,
+    //         css : css,
+    //         js: js,
+    //         ownerId: user.currentUser.uid,
+    //         classCode: params.id,
+    //         created: Timestamp.now(),
+    //         title: labTitle,
+    //         studentId: student,
+    //         instruction: instruction,
+    //         labId: labId ? labId : id
+    //       }
+    //       saveLabStudent(studentData)
+    //       const timeout = setTimeout(() => {
+    //         history.push(`/classroomdetail/${params.id}`)
+    //       }, 2000)
+      
+    //       return () => clearTimeout(timeout)
+    //     })
+       
+    //   })
     // }
     
   }
@@ -306,7 +298,6 @@ export default function Laboratory() {
 
   console.log(studentName)
   console.log(studentsList)
-  console.log(labId)
   return (
     <Teacherdrawer classCode={params.id}>     
       <Snackbar
@@ -411,7 +402,7 @@ export default function Laboratory() {
                   <Grid item sx={{ marginTop: 0.5 }}>
                     <Button 
                       style={style.btnStyle} 
-                      onClick={() => history.push(`/classroomdetail/${params.id}`)}
+                      // onClick={saveLab}
                     > 
                       cancel
                     </Button>
@@ -421,7 +412,7 @@ export default function Laboratory() {
                       style={style.btnStyle}
                       onClick={saveLab}
                     > 
-                      Update
+                      Save
                     </Button>
                   </Grid>
                 </Box>

@@ -4,7 +4,7 @@ import {
   auth 
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion,arrayRemove, setDoc, orderBy, query, where} from "firebase/firestore"; 
+import { collection, addDoc, getDocs,getDoc, updateDoc, doc, arrayUnion,arrayRemove, setDoc, orderBy, query, where, deleteDoc} from "firebase/firestore"; 
 
 
 
@@ -82,6 +82,19 @@ export const createClassDoc = async (collectionName, id, data) => {
 
 /**
  * 
+ * @param {string} classCode
+ * @param {string} studentId
+ * @param {string} labId
+ */
+// save laboratory
+export const getLabStudent = async (classCode, studentId, labId) => {
+  const docRef = doc(db, "createclass", classCode, "students", studentId, "laboratory", labId);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data()
+}
+
+/**
+ * 
  * @param {string} collectionName
  * @param {string} id 
  * @param {object} data
@@ -112,21 +125,29 @@ export const saveQuizStudent = async (data) => {
 /**
  * create doc
  * @param {string} collectionName 
- * @param {string} id
- * @param {object} data
+ * @param {string} classCode
  * @param {object} studentData
  */
-export const joinClass = async (collectionName, id, data, studentData) => {
-  const addData = doc(db, collectionName, id);
+export const joinClass = async (collectionName, classCode, studentData) => {
+  // const addData = doc(db, collectionName, id);
 
 // Update field
   // await updateDoc(addData,data);
-  const studentObj = {...studentData, isJoin: false}
-  await updateDoc(addData, {
+  // const studentObj = {...studentData, isJoin: false}
+  let studentObj = {}
+  studentData.map(student => {
+    studentObj = {...student , isJoin:false}
+  })
+  // await updateDoc(addData, {
+  //   students: arrayUnion(studentObj)
+  // });
+
+  // const docInstance = await setDoc(doc(db, collectionName, id), studentObj);
+  const docInstance = await updateDoc(doc(db, collectionName, classCode), {
     students: arrayUnion(studentObj)
   });
 
-  return addData
+  return docInstance
 }
 
 /**
@@ -180,6 +201,8 @@ export const removeStudent = async (collectionName, id, data, studentData) => {
     students: arrayUnion(studentObj)
   });
 
+  await deleteDoc(doc(db, "studentRecord", studentData.ownerId, 'classroom', id));
+
   return removeData
 }
 
@@ -197,21 +220,32 @@ export const getDocsByCollection = async (collectionName) => {
 /**
  * 
  * @param {string} collectionName 
+ * @param {string} classCode
+ */
+export const getStudentByAssigned = async (classCode) => {
+  const docRef = doc(db, "createclass", classCode);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data()
+}
+
+/**
+ * 
+ * @param {string} collectionName 
  * @param {object} data
  */
 export const updateDocsByCollection = async (collectionName, data) => {
   const getData = collection(db, collectionName)
   const querySnapshot = await getDocs(getData);
   let docId = ''
-  console.log(data.labId)
-  console.log(collectionName)
+  // console.log(data.labId)
+  // console.log(collectionName)
   // querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
   docId = querySnapshot.docs.filter(item => item.data().ownerId === data.ownerId).map((doc) => {
     // console.log(doc.id)
     let docId = ''
     return doc.id
   })
-  console.log(docId)
+  // console.log(docId)
   const docInstance = doc(db, collectionName, data.labId)
   await updateDoc(docInstance, data);
   return docInstance

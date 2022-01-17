@@ -171,8 +171,8 @@ export default function StudentList() {
     acceptStudent('createclass', classCode , classData, studentData)
   }
 
-  const handleRemove = (classCode, userId, studentData) => {
-    removeStudent('createclass', classCode, userId , studentData)
+  const handleRemove = (classCode, classData, studentData) => {
+    removeStudent('createclass', classCode, classData , studentData)
   }
 
   const classroomBody = () => {
@@ -224,7 +224,7 @@ export default function StudentList() {
                           variant="contained" 
                           color="error" 
                           sx={{ marginTop: 2, marginRight: 2 }}
-                          onClick={() => handleRemove(item.classCode, user.currentUser.uid, row)}
+                          onClick={() => handleRemove(item.classCode, item, row)}
                         >
                             Remove
                         </Button>

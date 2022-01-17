@@ -217,7 +217,7 @@ export default function ClassList() {
                                     <Typography variant="h6" sx={{ marginTop: 1 }}>{item.room}</Typography>
                                 </Box>
                                 <Box component={Grid} container justifyContent="center" sx={{ marginTop: 5 }}>
-                                    <Button variant="contained" sx={{backgroundColor: '#FFBD1F'}}> Go inside </Button>
+                                    <Button variant="contained" sx={{backgroundColor: '#FFBD1F'}} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}> Go inside </Button>
                                 </Box>
                             </Box>
                         )}
