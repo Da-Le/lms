@@ -24,7 +24,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
-import {getAnnouncement, getDocsByCollection, saveQuizStudent, createDoc} from '../../../../../utils/firebaseUtil';
+import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc} from '../../../../../utils/firebaseUtil';
 import { useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
@@ -74,6 +74,7 @@ export default function ClassQuiz() {
   const [duration, setDuration] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [subject, setSubject] = useState('')
+  const [quizTitle, setQuizTitle] = ('')
 
 
   const params = useParams()
@@ -92,16 +93,24 @@ export default function ClassQuiz() {
   // }, []);
 
   const getStudentList = () => {
-    getDocsByCollection('users').then(data => {
-      const students = data.filter(item => item.isTeacher === false).map(item => {
+    // getDocsByCollection('users').then(data => {
+    //   const students = data.filter(item => item.isTeacher === false).map(item => {
+    //     let studentArr = []
+    //     studentArr = {label:item.displayName, value:item.ownerId}
+    //     return studentArr
+    //   })
+    //   const studentsRaw = data.filter(item => item.isTeacher === false)
+    //   setStudents(studentsRaw)
+    //   setStudentsList(students)
+    // })
+    getStudentByAssigned(params.id).then(item => {
+      const students = item.students.filter(item => item.isJoin === true).map(item => {
         let studentArr = []
         studentArr = {label:item.displayName, value:item.ownerId}
         return studentArr
       })
-      const studentsRaw = data.filter(item => item.isTeacher === false)
-      setStudents(studentsRaw)
       setStudentsList(students)
-    })
+  })
     getDocsByCollection('createclass').then(data => {
       data.filter(item => item.classCode === params.id).map(item => {
         setSubject(item.subject)
@@ -117,26 +126,6 @@ export default function ClassQuiz() {
       setQuizData(item)
     })
   }
-
-  
-  // const saveAnnoucement = () => {
-  //   const data = {
-  //     body: announcementContent,
-  //     classCode: params.id,
-  //     created: Timestamp.now(),
-  //     ownerId: user.currentUser.uid,
-  //     ownerName: user.currentUser.displayName
-  //   }
-  //   createDoc('announcement',data).then(() => {
-  //     setAnnoucncementContent('')
-  //     getDataAnnouncement()
-  //   })
-  // }
-
-  // const cancelAnnouncement = () => {
-  //   setShowInput(false)
-  //   setAnnoucncementContent('')
-  // }
 
   const addQuestion = () => {
     let questions = {
@@ -168,26 +157,25 @@ export default function ClassQuiz() {
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
-      quizId: id
+      quizId: params.quizId
     }
-    // console.log(data)
-    createDoc('quiz',data).then(() => {
-      // studentName.map(student => {
-      //   const studentData = {
-      //     html: html,
-      //     css : css,
-      //     js: js,
-      //     ownerId: user.currentUser.uid,
-      //     classCode: params.id,
-      //     created: Timestamp.now(),
-      //     title: labTitle,
-      //     studentId: student,
-      //     instruction: instruction,
-      //     labId: params.labId
-      //   }
-      //   saveLabStudent(studentData)
-      //   saveQuizStudent(data)
-      // })
+    createClassDoc('quiz',params.quizId, data).then(() => {
+      studentName.map(student => {
+        const studentData = {
+          ownerId: user.currentUser.uid,
+          classCode: params.id,
+          students: studentName,
+          title: quizTitle,
+          questions: quizQuiestions,
+          duration: duration,
+          created: Timestamp.now(),
+          dueDate: Timestamp.fromDate(new Date(dueDate)),
+          subject: subject,
+          quizId: params.quizId,
+          studentId: student,
+        }
+        saveQuizStudent(studentData)
+      })
       const timeout = setTimeout(() => {
         history.push(`/classroomdetail/${params.id}`)
       }, 2000)
@@ -313,8 +301,8 @@ export default function ClassQuiz() {
                   label='Quiz Title' 
                   variant="outlined" 
                   sx={{marginRight: 2, marginBottom: 2}}
-                  // value={labTitle}
-                  // onChange={handleTitle}
+                  value={quizTitle}
+                  onChange={(e) => setQuizTitle(e.target.value)}
                 />
                 <FormControl sx={{ width: 500 }}>
                   <InputLabel id="select-student-label">Assign Student</InputLabel>
@@ -324,15 +312,6 @@ export default function ClassQuiz() {
                     value={studentName}
                     onChange={handleChange}
                     input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
-                    // renderValue={(selected, item) => (
-                    //   console.log(selected),
-                    //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    //     {selected.map((value) => (
-                    //       <Chip key={value} label={value}  />
-                    //     ))}
-                    //   </Box>
-                    // )}
-                    // MenuProps={MenuProps}
                   >
                     {studentsList.map((name) => (
                       <MenuItem

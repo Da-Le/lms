@@ -149,6 +149,7 @@ export default function ClassListDetail() {
   const [isTeacher, setIsTeacher] = useState(false)
   const [classCode, setClassCode] = useState('')
   const [labList, setLabList] = useState([])
+  const [quizList, setQuizList] = useState([])
 
   const open = Boolean(anchorEl);
 
@@ -214,6 +215,7 @@ export default function ClassListDetail() {
     if(Object.keys(user.currentUser).length !== 0){
         getClassData()
         getLabList()
+        getQuizList()
         getUser().then(data => {
             data.map(item => {
                 setIsTeacher(item.isTeacher)
@@ -227,6 +229,18 @@ export default function ClassListDetail() {
     const qTeacher = query(labCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
         setLabList(
+          snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+        );
+    }
+    )
+    return unsubscribe;
+  }
+
+  const getQuizList = () => {
+    const labCollection = collection(db, "quiz")
+    const qTeacher = query(labCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+        setQuizList(
           snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
         );
     }
@@ -291,7 +305,7 @@ export default function ClassListDetail() {
                                 </Typography>
                             </MenuItem>
                             {/* <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}> */}
-                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}`)}>
+                            <MenuItem onClick={() => history.push(`/quiz/${item.classCode}/${id}`)}>
                                 <AssignmentIcon />
                                 <Typography sx={style.textStyle}>
                                     Quiz
@@ -346,7 +360,7 @@ export default function ClassListDetail() {
           </Box>
 
           <Box component={Grid} container justifyContent="center" >
-            <Grid container sx={style.gridcontainerClass}>
+            <Grid container sx={style.gridcontainerClass} style={{padding: 0}}>
               <Typography variant="h6">Laboratory List</Typography>
             </Grid>
             
@@ -364,6 +378,30 @@ export default function ClassListDetail() {
               <Grid container sx={style.gridcontainerCard}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Laboratory{item.title}</Typography>
+                </Grid>
+              </Grid>
+            }
+
+            <Grid container sx={style.gridcontainerClass} style={{padding: 0}}>
+              <Typography variant="h6">Quiz List</Typography>
+            </Grid>
+
+            {quizList.length !== 0 ? quizList.map(item => 
+              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/laboratorydetail/${item.classCode}/${item.labId}`)}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>due data: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+              </Grid>
+            ) :
+              <Grid container sx={style.gridcontainerCard}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Quiz{item.title}</Typography>
                 </Grid>
               </Grid>
             }

@@ -185,28 +185,6 @@ export default function Laboratory() {
     
   };
 
-  const getLaboratory = () => {
-    getDocsByCollection('laboratory').then(item => {
-      const data = item.filter(item => item.classCode === params.id)
-      console.log(data)
-      if(data.length !== 0){
-        data.map(item => {
-          setHtml(item.html)
-          setCss(item.css)
-          setJs(item.js)
-          setSrcDoc(item.body)
-          setLabTitle(item.title)
-          setLabId(item.labId)
-          setStudentName(item.students)
-          setInstruction(item.instruction)
-        })
-      }else {
-        setIsNew(true)
-      }
-      
-    })
-  }
-
   const saveLab = () => {
     const data = {
       html: html,
@@ -218,10 +196,10 @@ export default function Laboratory() {
       title: labTitle,
       students: studentName,
       instruction: instruction,
-      labId: params.id
+      labId: params.labId
     }
     // if(isNew){
-      createClassDoc('laboratory',id, data).then(() => {
+      createClassDoc('laboratory',params.labId, data).then(() => {
         setOpen({ open: true});
         studentName.map(student => {
           const studentData = {
@@ -238,42 +216,12 @@ export default function Laboratory() {
           }
           saveLabStudent(studentData)
         })
-        console.log('success')
         const timeout = setTimeout(() => {
           history.push(`/classroomdetail/${params.id}`)
         }, 2000)
     
         return () => clearTimeout(timeout)
       })
-    // }
-    // else {
-    //   updateDocsByCollection('laboratory', data).then(() => {
-    //     console.log('success update')
-    //     setOpen({ open: true});
-    //     studentName.map(student => {
-    //       const studentData = {
-    //         html: html,
-    //         css : css,
-    //         js: js,
-    //         ownerId: user.currentUser.uid,
-    //         classCode: params.id,
-    //         created: Timestamp.now(),
-    //         title: labTitle,
-    //         studentId: student,
-    //         instruction: instruction,
-    //         labId: labId ? labId : id
-    //       }
-    //       saveLabStudent(studentData)
-    //       const timeout = setTimeout(() => {
-    //         history.push(`/classroomdetail/${params.id}`)
-    //       }, 2000)
-      
-    //       return () => clearTimeout(timeout)
-    //     })
-       
-    //   })
-    // }
-    
   }
 
   const handleTitle = (e) => {
@@ -296,8 +244,6 @@ export default function Laboratory() {
     setInstruction(e.target.value)
   }
 
-  console.log(studentName)
-  console.log(studentsList)
   return (
     <Teacherdrawer classCode={params.id}>     
       <Snackbar
@@ -341,15 +287,6 @@ export default function Laboratory() {
                 value={studentName}
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
-                // renderValue={(selected, item) => (
-                //   console.log(selected),
-                //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                //     {selected.map((value) => (
-                //       <Chip key={value} label={value}  />
-                //     ))}
-                //   </Box>
-                // )}
-                // MenuProps={MenuProps}
               >
                 {studentsList.map((name, index) => (
                   <MenuItem

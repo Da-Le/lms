@@ -95,8 +95,6 @@ export const getLabStudent = async (classCode, studentId, labId) => {
 
 /**
  * 
- * @param {string} collectionName
- * @param {string} id 
  * @param {object} data
  */
 // save laboratory
@@ -109,8 +107,6 @@ export const saveLabStudent = async (data) => {
 
 /**
  * 
- * @param {string} collectionName
- * @param {string} id 
  * @param {object} data
  */
 // save quiz
@@ -242,7 +238,7 @@ export const updateDocsByCollection = async (collectionName, data) => {
   // querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
   docId = querySnapshot.docs.filter(item => item.data().ownerId === data.ownerId).map((doc) => {
     // console.log(doc.id)
-    let docId = ''
+    // let docId = ''
     return doc.id
   })
   // console.log(docId)

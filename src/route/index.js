@@ -125,7 +125,7 @@ export default function RouterComponent() {
                     <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
                     <Route component={ClassGrade} path="/studentgrade/:id" exact />
                     <Route component={StudentList} path="/studentlist/:id" exact />
-                    <Route component={ClassNewQuiz} path="/quiz/:id" exact />
+                    <Route component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     
                     {/*student router */}
