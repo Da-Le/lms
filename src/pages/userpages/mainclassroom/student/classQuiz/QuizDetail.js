@@ -21,7 +21,7 @@ import DatePicker from '@mui/lab/DatePicker';
 
 
 
-import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
+import Studentdrawer from '../../classdrawer/ClassDrawerStudent';
 import { Timestamp } from 'firebase/firestore';
 
 import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc} from '../../../../../utils/firebaseUtil';
@@ -311,7 +311,7 @@ export default function QuizDetail() {
   console.log(quizQuiestions)
 
   return (
-    <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
+    <Studentdrawer headTitle='Create Quiz' classCode={params.id}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
           
@@ -422,6 +422,6 @@ export default function QuizDetail() {
 
        
       </Box>
-    </Teacherdrawer>
+    </Studentdrawer>
   )
 }

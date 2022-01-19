@@ -150,6 +150,8 @@ export default function ClassListDetail() {
   const [classCode, setClassCode] = useState('')
   const [title ,setTitle] = useState('')
   const [labList, setLabList] = useState([])
+  const [quizList, setQuizList] = useState([])
+
 
   const open = Boolean(anchorEl);
 
@@ -215,6 +217,7 @@ export default function ClassListDetail() {
     if(Object.keys(user.currentUser).length !== 0){
         getClassData()
         getLabList()
+        getQuizList()
         getUser().then(data => {
             data.map(item => {
                 setIsTeacher(item.isTeacher)
@@ -236,6 +239,18 @@ export default function ClassListDetail() {
   }
 
   console.log(labList)
+
+  const getQuizList = () => {
+    const labCollection = collection(db, "quiz")
+    const qTeacher = query(labCollection, where('classCode', "==", params.id));
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+      setQuizList(
+        snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+      );
+    }
+    )
+    return unsubscribe;
+  }
 
   const getClassData =  () => {
     const classCollection = collection(db, "createclass")
@@ -292,6 +307,30 @@ export default function ClassListDetail() {
               <Grid container sx={style.gridcontainerCard}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Laboratory{item.title}</Typography>
+                </Grid>
+              </Grid>
+            }
+
+            <Grid container sx={style.gridcontainerClass} style={{ padding: 0 }}>
+              <Typography variant="h6">Quiz List</Typography>
+            </Grid>
+
+            {quizList.length !== 0 ? quizList.map(item => 
+              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/studentquizdetail/${item.classCode}/${item.quizId}`)}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>due data: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+              </Grid>
+            ) :
+              <Grid container sx={style.gridcontainerCard}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Quiz{item.title}</Typography>
                 </Grid>
               </Grid>
             }

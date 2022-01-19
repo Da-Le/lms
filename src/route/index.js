@@ -58,6 +58,7 @@ import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetti
 import StudentClassList from '../pages/userpages/mainclassroom/student/classList'
 import StudentClassListDetail from '../pages/userpages/mainclassroom/student/classList/ClassDetail';
 import StudentLaboratoryDetail from '../pages/userpages/mainclassroom/student/classLaboratory/LabDetails'
+import StudentQuizDetail from '../pages/userpages/mainclassroom/student/classQuiz/QuizDetail'
 
 
 
@@ -145,6 +146,7 @@ export default function RouterComponent() {
                     <Route component={StudentClassList} path="/studentclassroom" exact />
                     <Route component={StudentClassListDetail} path="/studentclassroomdetail/:id" exact />
                     <Route component={StudentLaboratoryDetail} path="/studentlaboratorydetail/:id/:labId" exact />
+                    <Route component={StudentQuizDetail} path="/studentquizdetail/:id/:quizId" exact />
                     
 
                     <Route component={NotFound} path='/'/>
