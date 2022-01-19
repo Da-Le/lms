@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-    Typography,
-    Box,
-    Grid,
-    Button,
-    Menu,
-    MenuItem,
-    TextField,
-    OutlinedInput,
-    FormControl,
-    InputLabel,
-    Select,
-    Alert,
-    AlertTitle,
-    Snackbar,
-    IconButton,
-    Stack,
-    Chip
+  Typography,
+  Box,
+  Grid,
+  Button,
+  Menu,
+  MenuItem,
+  TextField,
+  OutlinedInput,
+  FormControl,
+  InputLabel,
+  Select,
+  Alert,
+  AlertTitle,
+  Snackbar,
+  IconButton,
+  Stack,
+  Chip,
+  useMediaQuery
 } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
@@ -26,11 +27,11 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import {createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent} from '../../../../../utils/firebaseUtil'
+import { createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent } from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
 
@@ -45,71 +46,73 @@ import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import bgImage from '../../../../../assets/img/jpg/animatedcomputer.jpg';
 
 import Editor from './Editor'
-
-
-
+import { useTheme } from '@mui/material/styles';
 
 
 const style = {
-    gridcontainer: {
-        display: "flex",
-        marginTop: 5,
-        padding: 2,
-        maxWidth: 900,
-        borderBottom: 0.5,
-        borderColor: (theme) => theme.palette.primary.main
+  gridcontainer: {
+    display: "flex",
+    marginTop: 5,
+    padding: 2,
+    maxWidth: 1100,
+    borderBottom: 0.5,
+    borderColor: (theme) => theme.palette.primary.main
+  },
+  main: {
+    display: "flex",
+    cursor: "pointer",
+    alignItems: "center",
+  },
+  iconStyle: {
+    color: (theme) => theme.palette.primary.main,
+    margin: 0.5
+  },
+  btnStyle: {
+    marginRight: 4,
+    width: 120,
+    height: 40,
+    borderRadius: 8,
+    fontSize: 16,
+    textTransform: 'none',
+    color: (theme) => theme.colors.textColor,
+    backgroundColor: (theme) => theme.palette.primary.main,
+    '&:hover': {
+      backgroundColor: "#346ef7",
+      boxShadow: '0 3px 5px 2px rgba(163, 163, 163, .3)',
     },
-    main: {
-        display: "flex",
-        cursor: "pointer",
-        alignItems: "center",
-    },
-    iconStyle: {
-        color: (theme) => theme.palette.primary.main,
-        margin: 0.5
-    },
-    btnStyle: {
-        borderRadius: 20,
-        fontSize: 20,
-        width: 150,
-        marginTop: -2,
-        marginBottom: 4,
-        textTransform: 'none',
-        color: (theme) => theme.colors.textColor,
-        backgroundColor: (theme) => theme.palette.primary.main,
-        '&:hover': {
-            backgroundColor: "#346ef7",
-            boxShadow: '0 3px 5px 2px rgba(163, 163, 163, .3)',
-        },
-    },
-    textStyle: {
-        paddingLeft: 2,
-        fontSize: 20,
-        fontWeight: 400
-    },
-    linkStyle: {
-        paddingLeft: 2
-    },
-    imgStyle: {
-        height: 300,
-        width: 300
-    },
-    imgContainer: {
-        width: 200
-    },
-    txtContainer: {
-        width: 500
-    },
-    topPane: {
-      backgroundColor: 'hsl(225, 6%, 25%)',
-      display: 'flex',
-      flexGrow : 1,
-    },
-    pane :{
-      height: '50vh',
-      display: 'flex',
-      width:'100%'
-    }
+  },
+  textStyle: {
+    paddingLeft: 2,
+    fontSize: 20,
+    fontWeight: 400
+  },
+  linkStyle: {
+    paddingLeft: 2
+  },
+  imgStyle: {
+    height: 300,
+    width: 300
+  },
+  imgContainer: {
+    width: 200
+  },
+  txtContainer: {
+    width: 500
+  },
+  topPane: {
+    backgroundColor: 'hsl(225, 6%, 25%)',
+    display: 'flex',
+    flexGrow: 1,
+  },
+  pane: {
+    height: '50vh',
+    display: 'flex',
+    width: '100%'
+  },
+  textStyle: {
+    margin: 0.5
+  }
+
 }
 
 export default function Laboratory() {
@@ -132,6 +135,10 @@ export default function Laboratory() {
   const history = useHistory();
   const id = (uuidv4().slice(-8));
 
+  const theme = useTheme();
+
+  const matchMD = useMediaQuery(theme.breakpoints.up('md'));
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -148,20 +155,20 @@ export default function Laboratory() {
   }, [html, css, js])
 
   useEffect(() => {
-     
-    if(Object.keys(user.currentUser).length !== 0){
+
+    if (Object.keys(user.currentUser).length !== 0) {
       // getLaboratory()
       getStudentList()
-      }
-    
-    
+    }
+
+
   }, [user]);
 
   const getStudentList = () => {
     getDocsByCollection('users').then(data => {
       const students = data.map(item => {
         let studentArr = []
-        studentArr = {label:item.displayName, value:item.ownerId}
+        studentArr = { label: item.displayName, value: item.ownerId }
         return studentArr
       })
       setStudentsList(students)
@@ -169,7 +176,7 @@ export default function Laboratory() {
     getDocsByCollection('quiz').then(data => {
       data.filter(item => item.classCode === params.id).map(item => {
         setStudentName(item.students)
-      }) 
+      })
     })
   }
 
@@ -181,14 +188,36 @@ export default function Laboratory() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
-      
-    
+
+
   };
+
+  const getLaboratory = () => {
+    getDocsByCollection('laboratory').then(item => {
+      const data = item.filter(item => item.classCode === params.id)
+      console.log(data)
+      if (data.length !== 0) {
+        data.map(item => {
+          setHtml(item.html)
+          setCss(item.css)
+          setJs(item.js)
+          setSrcDoc(item.body)
+          setLabTitle(item.title)
+          setLabId(item.labId)
+          setStudentName(item.students)
+          setInstruction(item.instruction)
+        })
+      } else {
+        setIsNew(true)
+      }
+
+    })
+  }
 
   const saveLab = () => {
     const data = {
       html: html,
-      css : css,
+      css: css,
       js: js,
       ownerId: user.currentUser.uid,
       classCode: params.id,
@@ -196,32 +225,62 @@ export default function Laboratory() {
       title: labTitle,
       students: studentName,
       instruction: instruction,
-      labId: params.labId
+      labId: params.id
     }
     // if(isNew){
-      createClassDoc('laboratory',params.labId, data).then(() => {
-        setOpen({ open: true});
-        studentName.map(student => {
-          const studentData = {
-            html: html,
-            css : css,
-            js: js,
-            ownerId: user.currentUser.uid,
-            classCode: params.id,
-            created: Timestamp.now(),
-            title: labTitle,
-            studentId: student,
-            instruction: instruction,
-            labId: params.labId
-          }
-          saveLabStudent(studentData)
-        })
-        const timeout = setTimeout(() => {
-          history.push(`/classroomdetail/${params.id}`)
-        }, 2000)
-    
-        return () => clearTimeout(timeout)
+    createClassDoc('laboratory', id, data).then(() => {
+      setOpen({ open: true });
+      studentName.map(student => {
+        const studentData = {
+          html: html,
+          css: css,
+          js: js,
+          ownerId: user.currentUser.uid,
+          classCode: params.id,
+          created: Timestamp.now(),
+          title: labTitle,
+          studentId: student,
+          instruction: instruction,
+          labId: params.labId
+        }
+        saveLabStudent(studentData)
       })
+      console.log('success')
+      const timeout = setTimeout(() => {
+        history.push(`/classroomdetail/${params.id}`)
+      }, 2000)
+
+      return () => clearTimeout(timeout)
+    })
+    // }
+    // else {
+    //   updateDocsByCollection('laboratory', data).then(() => {
+    //     console.log('success update')
+    //     setOpen({ open: true});
+    //     studentName.map(student => {
+    //       const studentData = {
+    //         html: html,
+    //         css : css,
+    //         js: js,
+    //         ownerId: user.currentUser.uid,
+    //         classCode: params.id,
+    //         created: Timestamp.now(),
+    //         title: labTitle,
+    //         studentId: student,
+    //         instruction: instruction,
+    //         labId: labId ? labId : id
+    //       }
+    //       saveLabStudent(studentData)
+    //       const timeout = setTimeout(() => {
+    //         history.push(`/classroomdetail/${params.id}`)
+    //       }, 2000)
+
+    //       return () => clearTimeout(timeout)
+    //     })
+
+    //   })
+    // }
+
   }
 
   const handleTitle = (e) => {
@@ -229,7 +288,7 @@ export default function Laboratory() {
   }
 
   const handleClickSnack = () => {
-    setOpen({ open: true});
+    setOpen({ open: true });
   };
 
   const handleClose = (event, reason) => {
@@ -244,28 +303,41 @@ export default function Laboratory() {
     setInstruction(e.target.value)
   }
 
+  console.log(studentName)
+  console.log(studentsList)
   return (
-    <Teacherdrawer classCode={params.id}>     
+    <Teacherdrawer classCode={params.id}>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
         open={open}
         onClose={handleClose}
         message="I love snacks"
-        // key={vertical + horizontal}
+      // key={vertical + horizontal}
       >
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Successfully Saved Lab
         </Alert>
       </Snackbar>
-      <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
+      <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 6 }}>
         <>
           <Grid xs={12} justifyContent='space-between' container>
+            <Grid container justifyContent="center">
+              <Typography variant="h4" sx={{ marginBottom: 2 }}>Laboratory</Typography>
+            </Grid>
+            {matchMD ? <>
+              <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
+                <Button variant="contained" style={style.btnStyle} onClick={saveLab}>Create Task</Button>
+                <Button variant="contained" style={style.btnStyle}>Cancel</Button>
+              </Grid>
+            </> : ""
+            }
+            <Typography sx={{ marginTop: { xs: -2, md: 0 } }}>Title</Typography>
             <Grid xs={12} justifyContent='flex-start' container>
-              <TextField 
-                label={labTitle === '' ? 'Title' : labTitle} 
-                variant="outlined" 
-                sx={{marginBottom: 2}}
+              <TextField
+                label={labTitle === '' ? 'Title' : labTitle}
+                variant="outlined"
+                sx={{ marginBottom: 2 }}
                 value={labTitle}
                 onChange={handleTitle}
               />
@@ -278,8 +350,8 @@ export default function Laboratory() {
                 {isNew ? 'Save' : 'Update'}
               </Button> */}
             </Grid>
-            
-            <FormControl sx={{ width: 500 , marginBottom: 2}}>
+
+            <FormControl fullWidth sx={{ marginBottom: 2 }}>
               <InputLabel id="select-student-label">Assign Student</InputLabel>
               <Select
                 labelId="select-student-label"
@@ -287,29 +359,36 @@ export default function Laboratory() {
                 value={studentName}
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
+              // renderValue={(selected, item) => (
+              //   console.log(selected),
+              //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              //     {selected.map((value) => (
+              //       <Chip key={value} label={value}  />
+              //     ))}
+              //   </Box>
+              // )}
+              // MenuProps={MenuProps}
               >
                 {studentsList.map((name, index) => (
                   <MenuItem
                     key={name.value}
                     value={name.value}
                     name={name.value}
-                    // style={getStyles(name, personName, theme)}
+                  // style={getStyles(name, personName, theme)}
                   >
                     {name.label}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <Grid xs={12} justifyContent='flex-start' container sx={{marginBottom: 2}}>
-            <Stack direction="row" spacing={1} xs={{width: 500}}>
-              {studentName && studentName.map(item => (
-                studentsList.filter(data => data.value === item).map(name => (
-                  <Chip label={name.label} />
-                ))
-                
-              ))}
-              
-            </Stack>
+            <Grid xs={12} justifyContent='flex-start' container sx={{ marginBottom: 2 }}>
+              <Stack direction="row" spacing={1} xs={{ width: 500 }}>
+                {studentName && studentName.map(item => (
+                  studentsList.filter(data => data.value === item).map(name => (
+                    <Chip label={name.label} />
+                  ))
+                ))}
+              </Stack>
             </Grid>
             <Grid xs={12} justifyContent='flex-start' container>
               <Grid container>
@@ -336,26 +415,38 @@ export default function Laboratory() {
                       <YouTubeIcon />
                     </IconButton> */}
                   </Grid>
-                  <Grid item sx={{ marginTop: 0.5 }}>
-                    <Button 
-                      style={style.btnStyle} 
-                      // onClick={saveLab}
-                    > 
-                      cancel
-                    </Button>
-                    <Button 
-                      variant="contained" 
-                      // disabled={announcementContent ? false : true} 
-                      style={style.btnStyle}
-                      onClick={saveLab}
-                    > 
-                      Save
-                    </Button>
-                  </Grid>
                 </Box>
               </Grid>
             </Grid>
           </Grid>
+          <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
+            <Grid item>
+              <Typography sx={style.textStyle}>Total Score</Typography>
+              <TextField />
+            </Grid>
+            <Grid item>
+              <Typography sx={style.textStyle}>Due Date</Typography>
+              <TextField />
+            </Grid>
+            <Grid item>
+              <Typography sx={style.textStyle}>Assign to</Typography>
+              <TextField />
+            </Grid>
+            <Grid item>
+              <Typography sx={style.textStyle}>Language</Typography>
+              <TextField />
+            </Grid>
+          </Box>
+          {matchMD ?
+            ""
+            : 
+            <>
+              <Grid container justifyContent="center" sx={{ marginTop: 2}}>
+                <Button variant="contained" style={style.btnStyle} onClick={saveLab}>Create Task</Button>
+                <Button variant="contained" style={style.btnStyle}>Cancel</Button>
+              </Grid>
+            </>
+          }
           {/* <Box sx={style.pane, style.topPane}>
             <Editor
               language="xml"
@@ -386,8 +477,8 @@ export default function Laboratory() {
               height="100%"
             />
           </Box> */}
-        </> 
+        </>
       </Box>
-    </Teacherdrawer>
+    </Teacherdrawer >
   )
 }

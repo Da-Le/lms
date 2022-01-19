@@ -260,7 +260,7 @@ export default function MiniDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={isTeacher ? `/classroom` : `/studentclassroom`}
+                                    to={`/classroom`}
                                     sx={style.listItemStyle}
                                 >
                                     <ListItemIcon> <MeetingRoomIcon color="primary" sx={style.iconStyle} /></ListItemIcon>

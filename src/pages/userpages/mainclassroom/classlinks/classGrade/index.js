@@ -47,7 +47,7 @@ const style = {
         display: "flex",
         marginTop: 5,
         padding: 2,
-        maxWidth: 900,
+        maxWidth: 1100,
         borderBottom: 0.5,
         borderColor: (theme) => theme.palette.primary.main
     },
@@ -56,7 +56,7 @@ const style = {
       // boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
       marginTop: 5,
       padding: 2,
-      maxWidth: 1000
+      maxWidth: 1100
   },
     main: {
         display: "flex",
