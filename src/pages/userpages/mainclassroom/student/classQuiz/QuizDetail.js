@@ -413,7 +413,7 @@ export default function QuizDetail() {
         <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
           <Box sx={{display:'flex', alignItems:'center'}}>
             {quizQuiestions.length !== 0 && 
-              <Quiz quiz={quizQuiestions} showDefaultResult={false} onComplete={setQuizResult}/>
+              <Quiz quiz={quizQuiestions} showDefaultResult={true} onComplete={setQuizResult}/>
             }
             
           </Box>

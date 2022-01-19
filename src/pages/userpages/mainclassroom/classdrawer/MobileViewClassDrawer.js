@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     IconButton,
@@ -28,6 +28,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 
 import { logoutInitiate } from '../../../../redux/actions/userAction';
 
+import { getUser } from '../../../../utils/firebaseUtil';
 
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonIcon from '@mui/icons-material/Person';
@@ -98,7 +99,17 @@ export default function MobileViewClassDrawer() {
     const history = useHistory();
 
     const [openDrawer, setOpenDrawer] = useState(false);
+    const [isTeacher, setIsTeacher] = useState(false)
 
+    useEffect(() => {
+        if (Object.keys(user.currentUser).length !== 0) {
+            getUser().then(data => {
+                data.map(item => {
+                    setIsTeacher(item.isTeacher)
+                })
+            })
+        }
+    }, [user])
 
     const handleLogOut = () => {
         if (user) {
@@ -133,7 +144,7 @@ export default function MobileViewClassDrawer() {
                         <ListItem
                             button
                             component={ReactLink}
-                            to={`/classroom`}
+                            to={isTeacher ? `/classroom` : `/studentclassroom`}
                         >
                             <ListItemIcon>
                                 <MeetingRoomIcon sx={style.icons} />

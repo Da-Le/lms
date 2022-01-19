@@ -292,7 +292,7 @@ export default function StudentDrawer(props) {
                           <ListItemIcon> <AssessmentIcon color="primary" /></ListItemIcon>
                           <ListItemText>Classroom</ListItemText>
                       </ListItem> */}
-                            <Box sx={style.listHover}>
+                            {/* <Box sx={style.listHover}>
                                 <ListItem
                                     button
                                     component={Link}
@@ -306,7 +306,7 @@ export default function StudentDrawer(props) {
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
-                            </Box>
+                            </Box> */}
 
                             {/* <ListItem
                           button
