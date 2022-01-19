@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-    Typography,
-    Box,
-    Grid,
-    Avatar,
-    TextField,
-    Button,
-    IconButton,
-    FormControl,
-    InputLabel,
-    Select,
-    OutlinedInput,
-    Chip,
-    MenuItem,
+  Typography,
+  Box,
+  Grid,
+  Avatar,
+  TextField,
+  Button,
+  IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  Chip,
+  MenuItem,
+  useMediaQuery
 } from '@mui/material';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 
-
+import { useTheme } from '@mui/material/styles';
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
-import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc} from '../../../../../utils/firebaseUtil';
-import { useParams} from 'react-router-dom';
+import { getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc } from '../../../../../utils/firebaseUtil';
+import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,30 +37,29 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const style = {
-    gridcontainer: {
-        display: "flex",
-        boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
-        marginTop: 5,
-        padding: 2,
-        maxWidth: 1000
-    },
-    main: {
-        display: "flex",
-        cursor: "pointer",
-        alignItems: "center",
-    },
-    iconStyle: {
-        color: (theme) => theme.palette.primary.main,
-        margin: 0.5
-    },
-    btnStyle: {
-        width: 'auto',
-        marginLeft: 5
-    },
-    addBtncontainer: {
-      display: "flex",
-      marginTop: 5,
-      maxWidth: 1000
+  gridcontainer: {
+    display: "flex",
+    marginTop: 5,
+    padding: 2,
+    maxWidth: 1000
+  },
+  main: {
+    display: "flex",
+    cursor: "pointer",
+    alignItems: "center",
+  },
+  iconStyle: {
+    color: (theme) => theme.palette.primary.main,
+    margin: 0.5
+  },
+  btnStyle: {
+    width: 'auto',
+    marginLeft: 5
+  },
+  addBtncontainer: {
+    display: "flex",
+    marginTop: 5,
+    maxWidth: 1000
   },
 }
 
@@ -76,6 +76,9 @@ export default function ClassQuiz() {
   const [subject, setSubject] = useState('')
   const [quizTitle, setQuizTitle] = ('')
 
+  const theme = useTheme();
+
+  const matchMD = useMediaQuery(theme.breakpoints.up('md'));
 
   const params = useParams()
   const { user } = useSelector((state) => state);
@@ -84,7 +87,7 @@ export default function ClassQuiz() {
 
 
   useEffect(() => {
-    if(Object.keys(user.currentUser).length !== 0){
+    if (Object.keys(user.currentUser).length !== 0) {
       getStudentList()
     }
   }, [user]);
@@ -106,36 +109,36 @@ export default function ClassQuiz() {
     getStudentByAssigned(params.id).then(item => {
       const students = item.students.filter(item => item.isJoin === true).map(item => {
         let studentArr = []
-        studentArr = {label:item.displayName, value:item.ownerId}
+        studentArr = { label: item.displayName, value: item.ownerId }
         return studentArr
       })
       setStudentsList(students)
-  })
+    })
     getDocsByCollection('createclass').then(data => {
       data.filter(item => item.classCode === params.id).map(item => {
         setSubject(item.subject)
       })
-      
+
     })
   }
 
   const getQuiz = () => {
     getDocsByCollection('quiz')
-    .then(item => {
-      // const data = item.filter(item => item.classCode === params.id)
-      setQuizData(item)
-    })
+      .then(item => {
+        // const data = item.filter(item => item.classCode === params.id)
+        setQuizData(item)
+      })
   }
 
   const addQuestion = () => {
     let questions = {
-      question:'',
+      question: '',
       item: 0,
-      choiceOne:'',
-      choiceTwo:'',
-      choiceThree:'',
-      choiceFour:'',
-      answerKey:''
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+      choiceFour: '',
+      answerKey: ''
     }
 
     setQuizQuestions(quizQuiestions => [...quizQuiestions, questions])
@@ -159,7 +162,7 @@ export default function ClassQuiz() {
       subject: subject,
       quizId: params.quizId
     }
-    createClassDoc('quiz',params.quizId, data).then(() => {
+    createClassDoc('quiz', params.quizId, data).then(() => {
       studentName.map(student => {
         const studentData = {
           ownerId: user.currentUser.uid,
@@ -180,7 +183,7 @@ export default function ClassQuiz() {
         history.push(`/classroomdetail/${params.id}`)
       }, 2000)
       return () => clearTimeout(timeout)
-     
+
     })
   }
 
@@ -203,14 +206,14 @@ export default function ClassQuiz() {
   }
 
   const quizBody = () => {
-    return quizQuiestions && quizQuiestions.map((item,index) => 
+    return quizQuiestions && quizQuiestions.map((item, index) =>
       <Grid container sx={style.gridcontainer} justifyContent='space-between'>
         <Grid xs={12} item>
-          <TextField 
-            label='Question' 
-            variant="outlined" 
+          <TextField
+            label='Question'
+            variant="outlined"
             fullWidth
-            sx={{marginRight: 2, marginBottom: 2}}
+            sx={{ marginRight: 2, marginBottom: 2 }}
             name='question'
             value={item.question}
             onChange={(e) => handleQuizChange(e, index)}
@@ -218,64 +221,64 @@ export default function ClassQuiz() {
         </Grid>
         <Grid xs={12} container direction='column'>
           <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>a.)</Typography>
-            <TextField 
-              label='Choice 1' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <Typography sx={{ marginRight: 2 }}>a.)</Typography>
+            <TextField
+              label='Choice 1'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='choiceOne'
               value={item.choiceOne}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
           <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>b.)</Typography>
-            <TextField 
-              label='Choice 2' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <Typography sx={{ marginRight: 2 }}>b.)</Typography>
+            <TextField
+              label='Choice 2'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='choiceTwo'
               value={item.choiceTwo}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
           <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>c.)</Typography>
-            <TextField 
-              label='Choice 3' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <Typography sx={{ marginRight: 2 }}>c.)</Typography>
+            <TextField
+              label='Choice 3'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='choiceThree'
               value={item.choiceThree}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
           <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>d.)</Typography>
-            <TextField 
-              label='Choice 4' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <Typography sx={{ marginRight: 2 }}>d.)</Typography>
+            <TextField
+              label='Choice 4'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='choiceFour'
               value={item.choiceFour}
               onChange={(e) => handleQuizChange(e, index)}
             />
-          </Grid>          
-          
+          </Grid>
+
           {/* <Typography>{item.ownerName}</Typography> */}
         </Grid>
         <Grid item xs={12}>
-        <TextField 
-            label='Answer' 
-            variant="outlined" 
-            sx={{marginRight: 2, marginBottom: 2}}
+          <TextField
+            label='Answer'
+            variant="outlined"
+            sx={{ marginRight: 2, marginBottom: 2 }}
             name='answerKey'
             value={item.answerKey}
             onChange={(e) => handleQuizChange(e, index)}
           />
           {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
         </Grid>
-      
+
         {/* <Grid xs={12} justifyContent='flex-end' container>
           <Button 
             variant="contained" 
@@ -294,71 +297,81 @@ export default function ClassQuiz() {
     <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
-          
-            <Grid container>
-              <Grid container>
-                <TextField 
-                  label='Quiz Title' 
-                  variant="outlined" 
-                  sx={{marginRight: 2, marginBottom: 2}}
-                  value={quizTitle}
-                  onChange={(e) => setQuizTitle(e.target.value)}
-                />
-                <FormControl sx={{ width: 500 }}>
-                  <InputLabel id="select-student-label">Assign Student</InputLabel>
-                  <Select
-                    labelId="select-student-label"
-                    multiple
-                    value={studentName}
-                    onChange={handleChange}
-                    input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
-                  >
-                    {studentsList.map((name) => (
-                      <MenuItem
-                        key={name.value}
-                        value={name.value}
-                        name={name.value}
-                        // style={getStyles(name, personName, theme)}
-                      >
-                        {name.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <LocalizationProvider dateAdapter={DateAdapter}>
-                  <DatePicker
-                    label="Due Date"
-                    value={dueDate}
-                    onChange={(newValue) => setDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
+          <Grid container>
+            <Typography>Title</Typography>
+            {matchMD ? <>
+              <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
+                <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
+                <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }}>Cancel</Button>
               </Grid>
+            </> : ""
+            }
+            <Grid container>
               <TextField
-                variant="filled"
-                multiline
-                placeholder="Please enter direction"
-                // value={announcementContent}
-                // onChange={handleAnnoucement}
-                fullWidth
-                minRows={5}
+                label='Quiz Title'
+                variant="outlined"
+                sx={{ marginRight: 2, marginBottom: 2 }}
+                value={quizTitle}
+                onChange={(e) => setQuizTitle(e.target.value)}
               />
-              <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
-                <Grid item>
-                  <IconButton sx={style.iconStyle}>
-                    <AddToDriveIcon />
-                  </IconButton>
-                  <IconButton sx={style.iconStyle}>
-                    <FileUploadIcon />
-                  </IconButton>
-                  <IconButton sx={style.iconStyle}>
-                    <InsertLinkIcon />
-                  </IconButton>
-                  <IconButton sx={style.iconStyle}>
-                    <YouTubeIcon />
-                  </IconButton>
-                </Grid>
-                {/* <Grid item sx={{ marginTop: 0.5 }}>
+              <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                <InputLabel id="select-student-label">Assign Student</InputLabel>
+                <Select
+                  labelId="select-student-label"
+                  multiple
+                  value={studentName}
+                  onChange={handleChange}
+                  input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
+                >
+                  {studentsList.map((name) => (
+                    <MenuItem
+                      key={name.value}
+                      value={name.value}
+                      name={name.value}
+                    // style={getStyles(name, personName, theme)}
+                    >
+                      {name.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <LocalizationProvider dateAdapter={DateAdapter}>
+                <DatePicker
+                  label="Due Date"
+                  value={dueDate}
+                  onChange={(newValue) => setDate(newValue)}
+                  renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <TextField
+              variant="filled"
+              multiline
+              placeholder="Please enter direction"
+              // value={announcementContent}
+              // onChange={handleAnnoucement}
+              fullWidth
+              minRows={5}
+            />
+            <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
+
+              {/*  <Grid item>
+                <IconButton sx={style.iconStyle}>
+                  <AddToDriveIcon />
+                </IconButton>
+                <IconButton sx={style.iconStyle}>
+                  <FileUploadIcon />
+                </IconButton>
+                <IconButton sx={style.iconStyle}>
+                  <InsertLinkIcon />
+                </IconButton>
+                <IconButton sx={style.iconStyle}>
+                  <YouTubeIcon />
+                </IconButton>
+              </Grid>
+             */}
+
+              {/* <Grid item sx={{ marginTop: 0.5 }}>
                   <Button 
                     style={style.btnStyle} 
                     // onClick={cancelAnnouncement}
@@ -374,40 +387,44 @@ export default function ClassQuiz() {
                     Save
                   </Button>
                 </Grid> */}
-              </Box>
-            </Grid>
+            </Box>
+          </Grid>
         </Grid>
-        {quizData && quizBody() }
-        
+
+        {matchMD ?
+          ""
+          :
+          <>
+            <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
+              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }}>Cancel</Button>
+            </Grid>
+          </>
+        }
+        {quizData && quizBody()}
+
         <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
-          <Box sx={{display:'flex', alignItems:'center'}}>
-          <TextField
-            variant="outlined"
-            placeholder="quiz duration"
-            type="number"
-            value={duration}
-            onChange={handleDuration}
-          />
-          <Typography sx={{ marginLeft: 2 }}>minutes</Typography> 
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              variant="outlined"
+              placeholder="quiz duration"
+              type="number"
+              value={duration}
+              onChange={handleDuration}
+            />
+            <Typography sx={{ marginLeft: 2 }}>minutes</Typography>
           </Box>
-          <Box sx={{display:'flex', alignItems:'center'}}>
-            <Button 
-              variant="contained" 
-              style={style.btnStyle} 
+          <Box component={Grid} justifyContent="center" sx={{ marginTop: { xs: 2, md: 0 }, marginLeft: { xs: 10, md: 0 } }} >
+            <Button
+              variant="contained"
+              style={style.btnStyle}
               onClick={addQuestion}
-            > 
+            >
               Add Question
             </Button>
-            <Button 
-              variant="contained" 
-              style={style.btnStyle} 
-              onClick={saveQuiz}
-            > 
-              Create Quiz
-            </Button>
           </Box>
         </Grid>
-       
+
       </Box>
     </Teacherdrawer>
   )

@@ -185,7 +185,7 @@ export default function TeacherDrawer(props) {
         }
     }, [classUser, user])
 
-    // console.log(classUser);
+    console.log(classUser);
 
     const handleLogOut = () => {
         if (user) {
@@ -194,7 +194,7 @@ export default function TeacherDrawer(props) {
         }
     }
 
-    // console.log(props)
+    console.log(props)
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -367,7 +367,7 @@ export default function TeacherDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={`/settings`}
+                                    to={`/classsetting/${props.classCode}`}
                                     sx={style.listItemStyle}
                                 >
                                     <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
@@ -398,7 +398,7 @@ export default function TeacherDrawer(props) {
                     </Drawer>
                 </>
             }
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 5 }}>
                 {props.children}
             </Box>
         </Box>

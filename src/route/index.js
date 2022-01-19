@@ -33,7 +33,6 @@ import ClassAnnouncement from '../pages/userpages/mainclassroom/classlinks/class
 import ClassAnnouncementList from '../pages/userpages/mainclassroom/classlinks/classannouncement';
 import ClassJoinMeet from '../pages/userpages/mainclassroom/classlinks/classjoinmeet/ClassJoinMeet';
 import ClassPeople from '../pages/userpages/mainclassroom/classlinks/classpeople/ClassPeople';
-import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetting/ClassSetting';
 import { getClassroomData } from '../redux/actions/classAction';
 import ClassWork from '../pages/userpages/mainclassroom/classlinks/classwork/ClassWork';
 import ClassList from '../pages/userpages/mainclassroom/classlinks/classList';
@@ -52,6 +51,7 @@ import Files from '../pages/userpages/mainclassroom/classlinks/files'
 import About from '../pages/userpages/mainclassroom/classlinks/about'
 import StudentList from '../pages/userpages/mainclassroom/classlinks/studentList'
 import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
+import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetting/ClassSetting';
 
 //student components
 import StudentClassList from '../pages/userpages/mainclassroom/student/classList'
@@ -119,6 +119,14 @@ export default function RouterComponent() {
                     <Route component={Files} path="/files/" exact />
 
                     {/* teacher mainclassroom */}
+                   
+             
+                  
+                  
+                    
+                   
+                    <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+
                     <Route component={ClassListDetail} path="/classroomdetail/:id" exact />
                     <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
                     <Route component={LaboratoryDetail} path="/laboratorydetail/:id/:labId" exact />
@@ -127,6 +135,7 @@ export default function RouterComponent() {
                     <Route component={StudentList} path="/studentlist/:id" exact />
                     <Route component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+                    <Route component={ClassSetting} path="/classsetting/:id" exact />
                     
                     {/*student router */}
                     {/* <Route component={ClassListStudent} path="/studentclassroom" exact /> */}
