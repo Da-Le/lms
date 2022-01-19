@@ -387,7 +387,7 @@ export default function ClassListDetail() {
             </Grid>
 
             {quizList.length !== 0 ? quizList.map(item => 
-              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/laboratorydetail/${item.classCode}/${item.labId}`)}>
+              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/quizdetail/${item.classCode}/${item.quizId}`)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
                 </Grid>

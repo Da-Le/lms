@@ -54,7 +54,8 @@ const style = {
     },
     btnStyle: {
         width: 'auto',
-        marginLeft: 5
+        marginLeft: 5,
+        marginBottom: 12
     },
     addBtncontainer: {
       display: "flex",
@@ -67,14 +68,28 @@ export default function ClassQuiz() {
 
   const [quizData, setQuizData] = useState([])
   const [userId, setUserId] = useState('');
-  const [quizQuiestions, setQuizQuestions] = useState([])
   const [studentsList, setStudentsList] = useState([])
   const [studentName, setStudentName] = useState([])
   const [students, setStudents] = useState([])
   const [duration, setDuration] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [subject, setSubject] = useState('')
-  const [quizTitle, setQuizTitle] = ('')
+  const [quizTitle, setQuizTitle] = useState('')
+  const [instruction, setInstruction] = useState('')
+  const [answer, setAnswer] = useState([''])
+  const [quizQuiestions, setQuizQuestions] = useState([])
+  const [addQuestion, setAddQuestion] = useState([{
+    question: "",
+    questionType: "text",
+    questionPic: "",
+    answerSelectionType: "single",
+    answers: [''],
+    correctAnswer: "",
+    messageForCorrectAnswer: "Correct answer. Good job.",
+    messageForIncorrectAnswer: "Incorrect answer. Please try again.",
+    explanation: "",
+    point: ""
+  }])
 
 
   const params = useParams()
@@ -127,37 +142,90 @@ export default function ClassQuiz() {
     })
   }
 
-  const addQuestion = () => {
-    let questions = {
-      question:'',
-      item: 0,
-      choiceOne:'',
-      choiceTwo:'',
-      choiceThree:'',
-      choiceFour:'',
-      answerKey:''
-    }
-
-    setQuizQuestions(quizQuiestions => [...quizQuiestions, questions])
+  const quizAddQuestion = () => {
+    // let questions = {
+    //   question:'',
+    //   item: 0,
+    //   choiceOne:'',
+    //   choiceTwo:'',
+    //   choiceThree:'',
+    //   choiceFour:'',
+    //   answerKey:''
+    // }
+    // setAnswer([''])
+    addQuestion.map(item => {
+      setQuizQuestions(quizQuiestions => [...quizQuiestions, item])
+      setAddQuestion([{
+        question: "",
+        questionType: "text",
+        questionPic: "",
+        answerSelectionType: "single",
+        answers: [''],
+        correctAnswer: "",
+        messageForCorrectAnswer: "Correct answer. Good job.",
+        messageForIncorrectAnswer: "Incorrect answer. Please try again.",
+        explanation: "",
+        point: ""
+      }])
+    })
+    
+    // setAnswer([''])
+    // let questions = {
+    //   question: "",
+    //   questionType: "text",
+    //   questionPic: "",
+    //   answerSelectionType: "single",
+    //   answers: [''],
+    //   correctAnswer: "",
+    //   messageForCorrectAnswer: "Correct answer. Good job.",
+    //   messageForIncorrectAnswer: "Incorrect answer. Please try again.",
+    //   explanation: "",
+    //   point: ""
+    // }
+    // setQuizQuestions(quizQuiestions => [...quizQuiestions, questions])
+    
   }
 
+  const addAnswer = (item, index) => {
+    let newAnswers = [...addQuestion]
+    newAnswers[index].answers = [...newAnswers[index].answers, '']
+    setAddQuestion(newAnswers)   
+  }
+  const onAnswerChange = (e, index, item) => {
+    const answerList = [...answer]
+    answerList[index] = e.target.value
+    setAnswer(answerList)
+
+    let newAnswers = [...addQuestion]
+    newAnswers[0].answers[index] = e.target.value
+    setAddQuestion(newAnswers)
+  }
+
+  // const handleQuizChange = (e, index) => {
+  //   const questionList = [...quizQuiestions];
+  //   questionList[index][e.target.name] = e.target.value;
+  //   setQuizQuestions(questionList);
+  // }
   const handleQuizChange = (e, index) => {
-    const questionList = [...quizQuiestions];
+    const questionList = [...addQuestion];
     questionList[index][e.target.name] = e.target.value;
-    setQuizQuestions(questionList);
+    setAddQuestion(questionList)
   }
 
   const saveQuiz = () => {
     const data = {
       ownerId: user.currentUser.uid,
       classCode: params.id,
+      title: quizTitle,
       students: studentName,
       questions: quizQuiestions,
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
-      quizId: params.quizId
+      quizId: params.quizId,
+      instruction: instruction
+
     }
     createClassDoc('quiz',params.quizId, data).then(() => {
       studentName.map(student => {
@@ -173,6 +241,7 @@ export default function ClassQuiz() {
           subject: subject,
           quizId: params.quizId,
           studentId: student,
+          instruction: instruction
         }
         saveQuizStudent(studentData)
       })
@@ -202,93 +271,174 @@ export default function ClassQuiz() {
     setDuration(e.target.value)
   }
 
-  const quizBody = () => {
-    return quizQuiestions && quizQuiestions.map((item,index) => 
-      <Grid container sx={style.gridcontainer} justifyContent='space-between'>
-        <Grid xs={12} item>
+  console.log(quizQuiestions)
+  console.log(answer)
+  console.log('addQuestion', addQuestion)
+
+  const quizBody = () => (
+    <>
+      {quizQuiestions && quizQuiestions.map((item,index) => 
+        <Grid container sx={style.gridcontainer} justifyContent='space-between'>
+          <Grid xs={12} item>
+            <TextField 
+              label='Question' 
+              variant="outlined" 
+              fullWidth
+              sx={{marginRight: 2, marginBottom: 2}}
+              name='question'
+              value={item.question}
+              disabled
+              onChange={(e) => handleQuizChange(e, index)}
+            />
+          </Grid>
+          <Grid xs={12} container direction='column'>
+            {item.answers && item.answers.map((item,i) => (
+              <Grid container alignItems="center">
+                {/* <Typography sx={{marginRight: 2}}>a.)</Typography> */}
+                <TextField 
+                  label={`Answer ${index + 1}`} 
+                  variant="outlined" 
+                  sx={{marginRight: 2, marginBottom: 2}}
+                  name='answer'
+                  value={item}
+                  disabled
+                  // onChange={(e) => onAnswerChange(e, i,item)}
+                />
+              </Grid>
+            ))
+            }
+          </Grid>
+          <Grid container xs={12}>
           <TextField 
-            label='Question' 
-            variant="outlined" 
-            fullWidth
-            sx={{marginRight: 2, marginBottom: 2}}
-            name='question'
-            value={item.question}
-            onChange={(e) => handleQuizChange(e, index)}
-          />
-        </Grid>
-        <Grid xs={12} container direction='column'>
-          <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>a.)</Typography>
-            <TextField 
-              label='Choice 1' 
+              label='Answer Key' 
               variant="outlined" 
               sx={{marginRight: 2, marginBottom: 2}}
-              name='choiceOne'
-              value={item.choiceOne}
+              name='answerKey'
+              disabled
+              value={item.correctAnswer}
+              onChange={(e) => handleQuizChange(e, index)}
+            />
+            {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
+          </Grid>
+          <Grid container alignItems="center">
+            <TextField 
+              label='Points' 
+              variant="outlined" 
+              sx={{marginRight: 2, marginBottom: 2}}
+              name='point'
+              type='number'
+              disabled
+              value={item.point}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
-          <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>b.)</Typography>
+        
+          {/* <Grid xs={12} justifyContent='flex-end' container>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              sx={{ marginTop: 2 }}
+              onClick={(e) => handleQuizChange(e, index)}
+            >
+              Delete
+            </Button>
+          </Grid> */}
+        </Grid>
+      )}
+      {addQuestion && addQuestion.map((item,index) => 
+        <Grid container sx={style.gridcontainer} justifyContent='space-between'>
+          <Grid xs={12} item>
             <TextField 
-              label='Choice 2' 
+              label='Question' 
               variant="outlined" 
+              fullWidth
               sx={{marginRight: 2, marginBottom: 2}}
-              name='choiceTwo'
-              value={item.choiceTwo}
+              name='question'
+              value={item.question}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
-          <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>c.)</Typography>
-            <TextField 
-              label='Choice 3' 
+          <Grid xs={12} container direction='column'>
+            {item.answers && item.answers.map((item,i) => (
+              <Grid container alignItems="center">
+                {/* <Typography sx={{marginRight: 2}}>a.)</Typography> */}
+                <TextField 
+                  label={`Answer ${i + 1}`} 
+                  variant="outlined" 
+                  sx={{marginRight: 2, marginBottom: 2}}
+                  name='answer'
+                  // value={item}
+                  onChange={(e) => onAnswerChange(e, i,item)}
+                />
+              </Grid>
+            ))
+            }
+          </Grid>
+          <Grid xs={12} container direction='column'>
+            <Button 
+              variant="contained" 
+              style={style.btnStyle} 
+              onClick={() => addAnswer(item, index)}
+            > 
+              Add Answer
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl sx={{ width: 500, marginBottom: 2 }}>
+              <InputLabel id="select-student-label">Answer key</InputLabel>
+              <Select
+                labelId="select-student-label"
+                value={item.correctAnswer}
+                onChange={(e) => handleQuizChange(e, index)}
+                input={<OutlinedInput name='correctAnswer' id="select-multiple-chip" label="Answer key" />}
+              >
+                {item.answers.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    // style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          {/* <TextField 
+              label='Answer Key' 
               variant="outlined" 
               sx={{marginRight: 2, marginBottom: 2}}
-              name='choiceThree'
-              value={item.choiceThree}
+              name='correctAnswer'
+              value={item.answerKey}
+              onChange={(e) => handleQuizChange(e, index)}
+            /> */}
+            {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
+          </Grid>
+          <Grid container alignItems="center">
+            <TextField 
+              label='Points' 
+              variant="outlined" 
+              sx={{marginRight: 2, marginBottom: 2}}
+              name='point'
+              type='number'
+              value={item.point}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
-          <Grid container alignItems="center">
-            <Typography sx={{marginRight: 2}}>d.)</Typography>
-            <TextField 
-              label='Choice 4' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
-              name='choiceFour'
-              value={item.choiceFour}
-              onChange={(e) => handleQuizChange(e, index)}
-            />
-          </Grid>          
-          
-          {/* <Typography>{item.ownerName}</Typography> */}
+        
+          {/* <Grid xs={12} justifyContent='flex-end' container>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              sx={{ marginTop: 2 }}
+              onClick={(e) => handleQuizChange(e, index)}
+            >
+              Delete
+            </Button>
+          </Grid> */}
         </Grid>
-        <Grid item xs={12}>
-        <TextField 
-            label='Answer' 
-            variant="outlined" 
-            sx={{marginRight: 2, marginBottom: 2}}
-            name='answerKey'
-            value={item.answerKey}
-            onChange={(e) => handleQuizChange(e, index)}
-          />
-          {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
-        </Grid>
-      
-        {/* <Grid xs={12} justifyContent='flex-end' container>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            sx={{ marginTop: 2 }}
-            onClick={(e) => handleQuizChange(e, index)}
-          >
-            Delete
-          </Button>
-        </Grid> */}
-      </Grid>
-    )
-  }
+      )}
+    </>
+  )
 
   return (
     <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
@@ -338,8 +488,8 @@ export default function ClassQuiz() {
                 variant="filled"
                 multiline
                 placeholder="Please enter direction"
-                // value={announcementContent}
-                // onChange={handleAnnoucement}
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
                 fullWidth
                 minRows={5}
               />
@@ -380,7 +530,7 @@ export default function ClassQuiz() {
         {quizData && quizBody() }
         
         <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
-          <Box sx={{display:'flex', alignItems:'center'}}>
+          {/* <Box sx={{display:'flex', alignItems:'center'}}>
           <TextField
             variant="outlined"
             placeholder="quiz duration"
@@ -389,12 +539,12 @@ export default function ClassQuiz() {
             onChange={handleDuration}
           />
           <Typography sx={{ marginLeft: 2 }}>minutes</Typography> 
-          </Box>
+          </Box> */}
           <Box sx={{display:'flex', alignItems:'center'}}>
             <Button 
               variant="contained" 
               style={style.btnStyle} 
-              onClick={addQuestion}
+              onClick={quizAddQuestion}
             > 
               Add Question
             </Button>

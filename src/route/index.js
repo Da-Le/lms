@@ -46,6 +46,7 @@ import LabList from '../pages/userpages/mainclassroom/classlinks/classLaboratory
 import ClassQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz'
 import ClassNewQuiz from '../pages/userpages/mainclassroom/classlinks/classQuiz/NewQuiz'
 import ClassQuizList from '../pages/userpages/mainclassroom/classlinks/classQuiz/ClassQuizList'
+import QuizDetail from '../pages/userpages/mainclassroom/classlinks/classQuiz/QuizDetail'
 import Profile from '../pages/userpages/mainclassroom/classlinks/profile'
 import Calendar from '../pages/userpages/mainclassroom/classlinks/calendar'
 import Files from '../pages/userpages/mainclassroom/classlinks/files'
@@ -126,6 +127,7 @@ export default function RouterComponent() {
                     <Route component={ClassGrade} path="/studentgrade/:id" exact />
                     <Route component={StudentList} path="/studentlist/:id" exact />
                     <Route component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
+                    <Route component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
                     <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     
                     {/*student router */}
