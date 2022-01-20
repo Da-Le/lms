@@ -303,7 +303,7 @@ export default function Register() {
                     };
                     createUserGoogle(user.uid, payload).then(() => {
                         // dispatch(loginInitiate(values.email, values.password, history));
-                        if (payload.isTeacher) {
+                        if (values.isTeacher) {
                             history.push('/classroom')
                         } else {
                             history.push('/studentclassroom')
