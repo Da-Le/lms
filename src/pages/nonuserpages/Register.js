@@ -26,7 +26,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 
-import { createUser, createDoc, createUserGoogle } from '../../utils/firebaseUtil'
+import { createUser, createDoc, createUserGoogle, getUserLogin } from '../../utils/firebaseUtil'
 
 import { setDoc, doc, addDoc, collection } from '@firebase/firestore';
 
@@ -287,7 +287,7 @@ export default function Register() {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // Check if user is new
-                const { isNewUser } = getAdditionalUserInfo(result)
+                const {isNewUser}  = getAdditionalUserInfo(result)
                 const userId = result.user.uid
                 const user = result.user;
                 // await handleNew(user);
@@ -311,9 +311,18 @@ export default function Register() {
 
                         console.log('success')
                     })
-                    history.push('/classroom')
+                    // history.push('/classroom')
                 } else {
-                    history.push('/classroom')
+                    getUserLogin(result.user.email).then(userData => {
+                        userData.map(item => {
+                            if(item.isTeacher){
+                                history.push('/classroom')
+                            }else {
+                                history.push('/studentclassroom')
+                            }
+                        })
+                    })
+                    // history.push('/classroom')
                 }
 
                 // handleNew(user);
