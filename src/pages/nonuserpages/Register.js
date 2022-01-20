@@ -7,7 +7,9 @@ import {
     Grid,
     Stack,
     Switch,
-    FormControlLabel
+    FormControlLabel,
+    InputAdornment,
+    IconButton
 } from '@mui/material';
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
@@ -436,10 +438,23 @@ export default function Register() {
                                     <Grid item xs={12} spacing={3}>
                                         <Input
                                             label='Password'
-                                            type='password'
+                                            type={values.showPassword ? 'text' : 'password'}
                                             onChange={e => handleChange(e)}
                                             value={values.password}
                                             name='password'
+                                            id="outlined-adornment-password"
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                                </InputAdornment>
+                                            }
                                             errorMessage={error.password}
                                         />
                                     </Grid>
