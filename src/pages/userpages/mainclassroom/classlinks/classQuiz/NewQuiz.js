@@ -84,7 +84,7 @@ export default function ClassQuiz() {
     questionType: "text",
     questionPic: "",
     answerSelectionType: "single",
-    answers: [''],
+    answers: [],
     correctAnswer: "",
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
@@ -164,7 +164,7 @@ export default function ClassQuiz() {
         questionType: "text",
         questionPic: "",
         answerSelectionType: "single",
-        answers: [''],
+        answers: [],
         correctAnswer: "",
         messageForCorrectAnswer: "Correct answer. Good job.",
         messageForIncorrectAnswer: "Incorrect answer. Please try again.",
@@ -217,12 +217,16 @@ export default function ClassQuiz() {
   }
 
   const saveQuiz = () => {
+    let lastQuestion = {}
+    addQuestion.map(item => {
+      lastQuestion = item
+    })
     const data = {
       ownerId: user.currentUser.uid,
       classCode: params.id,
       title: quizTitle,
       students: studentName,
-      questions: quizQuiestions,
+      questions: [...quizQuiestions, lastQuestion],
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
@@ -275,6 +279,11 @@ export default function ClassQuiz() {
     setDuration(e.target.value)
   }
 
+  const onDeleteQuestion = (e, index) => {
+    const newList = quizQuiestions.filter((value, i) => i !== index)
+    setQuizQuestions(newList)
+  }
+
   console.log(quizQuiestions)
   console.log(answer)
   console.log('addQuestion', addQuestion)
@@ -283,6 +292,19 @@ export default function ClassQuiz() {
     <>
       {quizQuiestions && quizQuiestions.map((item,index) => 
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
+          <Grid xs={12} container justifyContent='flex-end' >
+            <Grid item>
+              <Button 
+                variant="contained" 
+                style={style.btnStyle} 
+                color="error"
+                fullWidth={false}
+                onClick={(e) => onDeleteQuestion(e, index)}
+              > 
+                Delete
+              </Button>
+            </Grid>
+          </Grid>
           <Grid xs={12} item>
             <TextField 
               label='Question' 
@@ -306,7 +328,7 @@ export default function ClassQuiz() {
                   name='answer'
                   value={item}
                   disabled
-                  // onChange={(e) => onAnswerChange(e, i,item)}
+                  onChange={console.log(index)}
                 />
               </Grid>
             ))
