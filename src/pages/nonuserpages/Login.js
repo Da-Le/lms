@@ -35,7 +35,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import { loginInitiate } from '../../redux/actions/userAction';
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
 import { setDoc, doc } from '@firebase/firestore';
 
@@ -204,9 +204,15 @@ export default function Login() {
             .then((result) => {
                 // This gives you a Google Access Token. You can use it to access the Google API.
                 // The signed-in user info.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // Check if user is new
+                const {isNewUser}  = getAdditionalUserInfo(result)
+                const userId = result.user.uid
                 const user = result.user;
                 // handleNew(user);
-                history.push('/classroom')
+                dispatch(loginInitiate(values.email, values.password, history));
+                // history.push('/classroom')
                 // ...
             }).catch((error) => {
                 // Handle Errors here.
