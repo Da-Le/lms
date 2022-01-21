@@ -503,14 +503,14 @@ export default function Register() {
                                         <Typography noWrap component="div" sx={style.titleClass}>
                                             -- or --
                                         </Typography>
-                                        <Button
+                                        {/* <Button
                                             variant="outlined"
                                             startIcon={<GoogleIcon />}
                                             sx={{ ...style.marginStyle, ...style.btnColor }}
                                             onClick={btnSignInWithGoogle}
                                         >
                                             Sign In With Google+
-                                        </Button>
+                                        </Button> */}
                                     </Grid>
                                 </Grid>
                             </Box>

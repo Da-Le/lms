@@ -322,14 +322,14 @@ export default function Login() {
                                 <Typography noWrap component="div" sx={{ marginTop: 2 }}>
                                     ------ or continue with ------
                                 </Typography>
-                                <Button
+                                {/* <Button
                                     variant="outlined"
                                     startIcon={<GoogleIcon />}
                                     sx={{ ...style.marginStyle, ...style.btnColor, ...style.btnGoogle }}
                                     onClick={btnSignInWithGoogle}
                                 >
                                     Sign In With Google+
-                                </Button>
+                                </Button> */}
                             </Grid>
                         </Grid>
                     </Box>
