@@ -34,6 +34,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import { loginInitiate } from '../../redux/actions/userAction';
+import { getUserLogin } from '../../utils/firebaseUtil'
 
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
@@ -211,7 +212,15 @@ export default function Login() {
                 const userId = result.user.uid
                 const user = result.user;
                 // handleNew(user);
-                dispatch(loginInitiate(values.email, values.password, history));
+                getUserLogin(result.user.email).then(userData => {
+                    userData.map(item => {
+                        if(item.isTeacher){
+                            history.push('/classroom')
+                        }else {
+                            history.push('/studentclassroom')
+                        }
+                    })
+                })
                 // history.push('/classroom')
                 // ...
             }).catch((error) => {
