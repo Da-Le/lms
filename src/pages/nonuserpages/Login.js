@@ -319,9 +319,7 @@ export default function Login() {
                                 >
                                     Sign in
                                 </Button>
-                                <Typography noWrap component="div" sx={{ marginTop: 2 }}>
-                                    ------ or continue with ------
-                                </Typography>
+
                                 {/* <Button
                                     variant="outlined"
                                     startIcon={<GoogleIcon />}

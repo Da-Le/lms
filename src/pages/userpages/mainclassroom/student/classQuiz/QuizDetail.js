@@ -37,7 +37,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import Quiz from 'react-quiz-component';
 
-
+  
 const style = {
     gridcontainer: {
         display: "flex",
