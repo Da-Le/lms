@@ -418,7 +418,7 @@ export default function ClassListDetail() {
   console.log(classCode)
 
   return (
-    <Teacherdrawer classCode={classCode}>
+    <Teacherdrawer>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}

@@ -79,7 +79,7 @@ const style = {
     linkStyle: {
         cursor: 'pointer',
         color: 'white',
-        fontSize: 25,
+        fontSize: 18,
         textAlign: 'center',
         fontWeight: 600
     },
@@ -205,7 +205,7 @@ export default function ClassList() {
                 <Box component={Grid} container justifyContent="center">
                     <Grid container sx={style.gridcontainerClass}>
                         {classroom && classroom.map(item =>
-                            <Box sx={{ minWidth: 300, boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)', padding: 2, margin: 2, }}>
+                            <Box sx={{ width:300, boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)', padding: 2, margin: 2, }}>
                                 <Box sx={style.headerClass} key={item.id} container justifyContent="center">
                                     <Typography sx={style.linkStyle} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}>
                                         {item.className}

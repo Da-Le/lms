@@ -287,7 +287,7 @@ export default function Register() {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // Check if user is new
-                const {isNewUser}  = getAdditionalUserInfo(result)
+                const { isNewUser } = getAdditionalUserInfo(result)
                 const userId = result.user.uid
                 const user = result.user;
                 // await handleNew(user);
@@ -315,9 +315,9 @@ export default function Register() {
                 } else {
                     getUserLogin(result.user.email).then(userData => {
                         userData.map(item => {
-                            if(item.isTeacher){
+                            if (item.isTeacher) {
                                 history.push('/classroom')
-                            }else {
+                            } else {
                                 history.push('/studentclassroom')
                             }
                         })
@@ -454,14 +454,14 @@ export default function Register() {
                                             id="outlined-adornment-password"
                                             endAdornment={
                                                 <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
                                                 </InputAdornment>
                                             }
                                             errorMessage={error.password}
@@ -470,11 +470,23 @@ export default function Register() {
                                     <Grid item xs={12} spacing={3}>
                                         <Input
                                             label='Confirm Password'
-                                            type='password'
+                                            type={values.showPassword ? 'text' : 'password'}
                                             onChange={e => handleChange(e)}
                                             value={values.confirmPassword}
                                             name='confirmPassword'
                                             errorMessage={error.confirmPassword}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
                                         />
                                     </Grid>
                                     <Grid
@@ -497,12 +509,13 @@ export default function Register() {
                                         <Button
                                             variant="contained"
                                             onClick={signup}
+                                            sx={{ width: 150, borderRadius: 10 }}
                                         >
                                             Sign up
                                         </Button>
-                                        <Typography noWrap component="div" sx={style.titleClass}>
+                                        {/* <Typography noWrap component="div" sx={style.titleClass}>
                                             -- or --
-                                        </Typography>
+                                        </Typography> */}
                                         {/* <Button
                                             variant="outlined"
                                             startIcon={<GoogleIcon />}
