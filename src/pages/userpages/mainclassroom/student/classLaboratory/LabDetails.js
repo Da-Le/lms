@@ -113,6 +113,7 @@ export default function Laboratory() {
   const [open, setOpen] = useState(false)
   const [instruction, setInstruction] = useState('')
   const [labId, setLabId] = useState('')
+  const [title, setTitle] = useState('')
 
 
   const { user } = useSelector((state) => state);
@@ -181,6 +182,7 @@ export default function Laboratory() {
         setLabId(params.labId)
         setStudentName(item.students)
         setInstruction(item.instruction)
+        setTitle(item.title)
       }else {
         setIsNew(true)
       }
@@ -232,7 +234,7 @@ export default function Laboratory() {
   console.log(studentsList)
   console.log(labId)
   return (
-    <Studentdrawer classCode={params.id}>     
+    <Studentdrawer classCode={params.id} headTitle={title}>     
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}

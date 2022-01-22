@@ -311,7 +311,7 @@ export default function QuizDetail() {
   console.log(quizQuiestions)
 
   return (
-    <Studentdrawer headTitle='Create Quiz' classCode={params.id}>
+    <Studentdrawer headTitle={quizTitle} classCode={params.id}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
           

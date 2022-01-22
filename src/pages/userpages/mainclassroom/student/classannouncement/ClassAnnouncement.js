@@ -138,7 +138,7 @@ export default function ClassAnnouncement() {
         <Grid item xs={12} sx={{ marginTop: 1 }}>
           <Typography sx={{ marginTop: 2 }}>{item.body}</Typography>
         </Grid>
-        <Grid xs={12} justifyContent='flex-end' container>
+        {/* <Grid xs={12} justifyContent='flex-end' container>
           <Button
             variant="contained"
             color="error"
@@ -147,14 +147,14 @@ export default function ClassAnnouncement() {
           >
             Delete
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     )
   }
 
   return (
     <Studentdrawer headTitle={className} classCode={params.id}>
-      <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+      {/* <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer}>
           {showInput ? (
             <Grid container>
@@ -208,7 +208,7 @@ export default function ClassAnnouncement() {
             </Grid>
           )}
         </Grid>
-      </Box>
+      </Box> */}
       <Box component={Grid} container justifyContent="center">
         <Grid container sx={style.announcementcontainer}>
           {announcementData && announcementBody()}

@@ -150,6 +150,7 @@ export default function ClassListDetail() {
   const [classCode, setClassCode] = useState('')
   const [labList, setLabList] = useState([])
   const [quizList, setQuizList] = useState([])
+  const [title, setTitle] = useState('')
 
   const open = Boolean(anchorEl);
 
@@ -259,6 +260,7 @@ export default function ClassListDetail() {
       );
       snapshot.docs.map(doc => {
         setClassCode(doc.data().classCode)
+        setTitle(doc.data().className)
       })
       // setLoading(false);
     }
@@ -292,12 +294,12 @@ export default function ClassListDetail() {
                   TransitionComponent={Fade}
                   sx={{ marginTop: 1 }}
                 >
-                  <MenuItem onClick={() => history.push(`/classannouncement/${item.classCode}`)} >
+                  {/* <MenuItem onClick={() => history.push(`/classannouncement/${item.classCode}`)} >
                     <AssignmentIcon />
                     <Typography sx={style.textStyle}>
                       Announcement
                     </Typography>
-                  </MenuItem>
+                  </MenuItem> */}
                   <MenuItem onClick={() => history.push(`/laboratory/${item.classCode}/${id}`)} >
                     <AssignmentIcon />
                     <Typography sx={style.textStyle}>
@@ -418,7 +420,7 @@ export default function ClassListDetail() {
   console.log(classCode)
 
   return (
-    <Teacherdrawer classCode={classCode}>
+    <Teacherdrawer classCode={params.id} headTitle={title}>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}

@@ -86,6 +86,7 @@ export default function ClassAnnouncement() {
         const data = item.filter(item => item.classCode === params.id)
         data.map(item => {
           setClassName(item.className)
+          setOwnerName(item.displayName)
         })
       })
   }
@@ -108,7 +109,7 @@ export default function ClassAnnouncement() {
       classCode: params.id,
       created: Timestamp.now(),
       ownerId: user.currentUser.uid,
-      ownerName: user.currentUser.displayName
+      ownerName: ownerName
     }
     createDoc('announcement', data).then(() => {
       setAnnoucncementContent('')

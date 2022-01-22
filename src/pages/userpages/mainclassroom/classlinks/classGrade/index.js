@@ -134,6 +134,7 @@ export default function StudentList() {
 
 
   const [classroom, setClassroom] = useState([]);
+  const [title, setTitle] = useState('')
 
 
   //Load classrooms
@@ -160,6 +161,7 @@ export default function StudentList() {
         );
         snapshot.docs.map(doc => {
           setClassCode(doc.data().classCode)
+          setTitle(doc.data().className)
         })
         // setLoading(false);
     }
@@ -245,7 +247,7 @@ export default function StudentList() {
   }
 
     return (
-        <Teacherdrawer classCode={classCode}>
+        <Teacherdrawer classCode={params.id} headTitle={title}>
             {classroom ?
               <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
                   {classroomBody()}

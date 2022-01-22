@@ -84,6 +84,7 @@ export default function QuizDetail() {
   const [quizTitle, setQuizTitle] = useState('')
   const [quizQuiestions, setQuizQuestions] = useState([])
   const [instruction, setInstruction] = useState('')
+  const [title, setTitle] = useState('')
 
 
   const params = useParams()
@@ -132,6 +133,7 @@ export default function QuizDetail() {
         setQuizTitle(item.title)
         setDueDate(item.dueDate)
         setInstruction(item.instruction)
+        setTitle(item.title)
       })
       
     })
@@ -311,7 +313,7 @@ export default function QuizDetail() {
   console.log(quizQuiestions)
 
   return (
-    <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
+    <Teacherdrawer headTitle={title} classCode={params.id}>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
           
