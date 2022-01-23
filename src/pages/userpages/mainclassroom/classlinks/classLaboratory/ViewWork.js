@@ -171,7 +171,7 @@ export default function Laboratory() {
   };
 
   const getLaboratory = () => {
-    getLabStudent(params.id, user.currentUser.uid, params.labId).then(item => {
+    getLabStudent(params.id, params.studentId, params.labId).then(item => {
       // const data = item
       if(item.length !== 0){
         // console.log(data)
@@ -301,7 +301,7 @@ export default function Laboratory() {
                       <YouTubeIcon />
                     </IconButton> */}
                   </Grid>
-                  <Grid item sx={{ marginTop: 0.5, marginBottom: 1}}>
+                  {/* <Grid item sx={{ marginTop: 0.5, marginBottom: 1}}>
                     <Button 
                       style={style.btnStyle} 
                       onClick={() => history.goBack()}
@@ -316,7 +316,7 @@ export default function Laboratory() {
                     > 
                       Save
                     </Button>
-                  </Grid>
+                  </Grid> */}
                 </Box>
               </Grid>
             </Grid>

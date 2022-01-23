@@ -108,6 +108,24 @@ export const saveLabStudent = async (data) => {
  * 
  * @param {object} data
  */
+// save laboratory
+export const updateLabScore = async (data, index) => {
+  const colRef = doc(db, "studentRecord", data.studentId);
+  const docSnap = await getDoc(colRef);
+  const labData = [...docSnap.data().laboratory]
+  labData[index].score = data.score
+  console.log(labData)
+  
+  await updateDoc(colRef, {
+  laboratory: labData
+});
+
+}
+
+/**
+ * 
+ * @param {object} data
+ */
 // save quiz
 export const saveLabRecord = async (data) => {
   const colRef = doc(db, "studentRecord", data.studentId)
@@ -118,6 +136,7 @@ export const saveLabRecord = async (data) => {
     title: data.title,
     classCode: data.classCode,
     // submitDate: data.submitDate,
+    score: data.score,
     studentId: data.studentId
   }
   const docInstance = await setDoc(colRef, {
