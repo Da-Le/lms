@@ -109,6 +109,30 @@ export const saveLabStudent = async (data) => {
  * @param {object} data
  */
 // save quiz
+export const saveLabRecord = async (data) => {
+  const colRef = doc(db, "studentRecord", data.studentId)
+  // await setDoc(colRef,data);
+  console.log(data)
+  const dataRecord = {
+    labId: data.labId,
+    title: data.title,
+    classCode: data.classCode,
+    // submitDate: data.submitDate,
+    studentId: data.studentId
+  }
+  const docInstance = await setDoc(colRef, {
+    laboratory: arrayUnion(dataRecord)
+  },{ merge: true });
+
+
+  return docInstance
+}
+
+/**
+ * 
+ * @param {object} data
+ */
+// save quiz
 export const saveQuizStudent = async (data) => {
   const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'quiz', data.quizId)
   // await setDoc(colRef,data);
@@ -139,7 +163,7 @@ export const saveQuizRecord = async (data) => {
   }
   const docInstance = await setDoc(colRef, {
     quiz: arrayUnion(dataRecord)
-  });
+  },{ merge: true });
 
 
   return docInstance

@@ -107,6 +107,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    width: '100%'
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -159,7 +160,6 @@ export default function StudentList() {
   const getStudentQuizData = () => {
     const studentQuizCollection = collection(db, "studentRecord")
     onSnapshot(studentQuizCollection, (snapshot) => {
-      console.log(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
       setQuizList(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
     })
     // return (
@@ -231,7 +231,7 @@ export default function StudentList() {
                 <TableRow>
                   <StyledTableCell>Name</StyledTableCell>
                   {/* <StyledTableCell align="left">Email</StyledTableCell> */}
-                  <StyledTableCell align="center">Action</StyledTableCell>
+                  {/* <StyledTableCell align="center">Action</StyledTableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -281,7 +281,7 @@ export default function StudentList() {
                           </TableHead>
                           <TableBody>
                             {quizList && quizList.map(item => (
-                              item.quiz.filter(item => item.studentId === row.ownerId).map(data => (
+                              item.quiz && item.quiz.filter(item => item.studentId === row.ownerId).map(data => (
                                 <TableRow>
                                   <TableCell component="th" scope="row">
                                     {data.title}

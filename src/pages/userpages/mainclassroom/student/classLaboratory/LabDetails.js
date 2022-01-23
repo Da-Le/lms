@@ -23,7 +23,7 @@ import {
 
 import { v4 as uuidv4 } from 'uuid';
 
-import {getDocsByCollection, getLabStudent, createClassDoc, saveLabStudent, getStudentByAssigned} from '../../../../../utils/firebaseUtil'
+import {getDocsByCollection, getLabStudent, saveLabRecord, saveLabStudent, getStudentByAssigned} from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
@@ -197,12 +197,14 @@ export default function Laboratory() {
       js: js,
       studentId: user.currentUser.uid,
       classCode: params.id,
+      submitDate: Timestamp.now(),
       created: Timestamp.now(),
       title: labTitle,
       instruction: instruction,
       labId: labId
     }
     saveLabStudent(studentData)
+    saveLabRecord(studentData)
       const timeout = setTimeout(() => {
         history.push(`/studentclassroomdetail/${params.id}`)
       }, 2000)
