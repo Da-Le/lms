@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import theme from '../utils/theme';
 
@@ -12,12 +12,15 @@ import { auth } from '../utils/firebase';
 
 import { setUser , getUserId} from '../redux/actions/userAction';
 
+import { getUser } from '../utils/firebaseUtil'
+
 // nonuserhomepage
 import Login from '../pages/nonuserpages/Login';
 import Register from '../pages/nonuserpages/Register';
 import Home from '../pages/nonuserpages/Home';
 import NewForgot from '../pages/nonuserpages/NewForgot';
 import NotFound from '../pages/nonuserpages/NotFound';
+import NotFoundPage from '../pages/nonuserpages/NotFound';
 
 //userhomepage
 // import DashboardUser from '../pages/userpages/dashboarduser/DashboarduUser';
@@ -73,6 +76,7 @@ export default function RouterComponent() {
     const dispatch = useDispatch();
 
     const { user, classUser } = useSelector((state) => state);
+    const [isTeacher, setIsTeacher]= useState(false)
 
     useEffect(() => {
         auth.onAuthStateChanged((authUser) => {
@@ -86,23 +90,90 @@ export default function RouterComponent() {
         })
     }, [dispatch])
 
+    useEffect(() => {
+        if (user.currentUser) {
+            getUser().then(data => {
+                if(data){
+                        data.map(item => {
+                        setIsTeacher(item.isTeacher)
+                    })
+                }
+                
+            })
+        }
+    }, [user])
+
     // console.log(user);
 
     console.log(classUser.classData)
     console.log('asdasd',user.currentUser)
+    console.log('oijoiu',isTeacher)
+    // console.log(sessionStorage.getItem("session"))
 
     const THEME = createTheme(theme);
+
+    const PublicRoute = ({component: Component, restricted, ...rest}) => {
+        return (
+            // restricted = false meaning public route
+            // restricted = true meaning restricted route
+            <Route {...rest} render={props => (
+                user.currentUser && restricted ?
+                    <Redirect to="/404" />
+                : <Component {...props} />
+            )} />
+        );
+    };
+
+    const PrivateRoute = ({component: Component, ...rest}) => {
+        return (
+    
+            // Show the component only when the user is logged in
+            // Otherwise, redirect the user to /signin page
+            <Route {...rest} render={props => (
+                user.currentUser ?
+                    <Component {...props} />
+                : <Redirect to="/404" />
+            )} />
+        );
+    };
+
+    const TeacherRoute = ({component: Component, ...rest}) => {
+        return (
+    
+            // Show the component only when the user is logged in
+            // Otherwise, redirect the user to /signin page
+            <Route {...rest} render={props => (
+                user.currentUser && isTeacher ?
+                    <Component {...props} />
+                : <Redirect to="/404" />
+            )} />
+        );
+    };
+
+    const StudentRoute = ({component: Component, ...rest}) => {
+        return (
+    
+            // Show the component only when the user is logged in
+            // Otherwise, redirect the user to /signin page
+            <Route {...rest} render={props => (
+                user.currentUser && !isTeacher ?
+                    <Component {...props} />
+                : <Redirect to="/404" />
+            )} />
+        );
+    };
+    
 
     return (
         <ThemeProvider theme={THEME}>
             <Router>
                 <Switch>
                     {/* noneuser */}
-                    <Route component={Home} path="/" exact />
-                    <Route component={NewForgot} path="/forgot" exact />
-                    <Route component={Login} path="/login" exact />
-                    <Route component={Register} path="/register" exact />
-                    <Route component={NewForgot} path="/forgot" exact />
+                    <PublicRoute restricted={false} component={Home} path="/" exact />
+                    <PublicRoute restricted={false} component={NewForgot} path="/forgot" exact />
+                    <PublicRoute restricted={false} component={Login} path="/login" exact />
+                    <PublicRoute restricted={false} component={Register} path="/register" exact />
+                    <PublicRoute restricted={false} component={NewForgot} path="/forgot" exact />
 
                     {/* userhomepage */}
                     {/* <Route component={DashboardUser} path="/dashboarduser" exact />
@@ -120,46 +191,47 @@ export default function RouterComponent() {
                     {/* <Route component={ClassWork} path="/classwork" exact /> */}
                     
                     {/* teacher router */}
-                    <Route component={Profile} path="/profile" exact />
-                    <Route component={Calendar} path="/calendar" exact />
-                    <Route component={About} path="/about/" exact />
-                    <Route component={ClassList} path="/classroom" exact />
-                    <Route component={Files} path="/files/" exact />
+                    <PrivateRoute component={Profile} path="/profile" exact />
+                    <PrivateRoute component={Calendar} path="/calendar" exact />
+                    <PrivateRoute component={About} path="/about/" exact />
+                    <PrivateRoute component={ClassList} path="/classroom" exact />
+                    <PrivateRoute component={Files} path="/files/" exact />
 
                     {/* teacher mainclassroom */}
                    
              
                   
                   
-                    
                    
-                    <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
-
-                    <Route component={ClassListDetail} path="/classroomdetail/:id" exact />
-                    <Route component={ClassAnnouncement} path="/classannouncement/:id" exact />
-                    <Route component={LaboratoryDetail} path="/laboratorydetail/:id/:labId" exact />
-                    <Route component={Laboratory} path="/laboratory/:id/:labId" exact />
-                    <Route component={LaboratoryView} path="/viewlab/:id/:labId/:studentId" exact />
-                    <Route component={ClassGrade} path="/studentgrade/:id" exact />
-                    <Route component={ClassStudentList} path="/studentlist/:id" exact />
-                    <Route component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
-                    <Route component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
-                    <Route component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
-                    <Route component={ClassSetting} path="/classsetting/:id" exact />
+                    <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+                    <TeacherRoute component={ClassListDetail} path="/classroomdetail/:id" exact />
+                    <TeacherRoute component={ClassAnnouncement} path="/classannouncement/:id" exact />
+                    <TeacherRoute component={LaboratoryDetail} path="/laboratorydetail/:id/:labId" exact />
+                    <TeacherRoute component={Laboratory} path="/laboratory/:id/:labId" exact />
+                    <TeacherRoute component={LaboratoryView} path="/viewlab/:id/:labId/:studentId" exact />
+                    <TeacherRoute component={ClassGrade} path="/studentgrade/:id" exact />
+                    <TeacherRoute component={ClassStudentList} path="/studentlist/:id" exact />
+                    <TeacherRoute component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
+                    <TeacherRoute component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
+                    <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+                   
+                   
+                    
                     
                     {/*student router */}
                     {/* <Route component={ClassListStudent} path="/studentclassroom" exact /> */}
-                    <Route component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
-                    <Route component={StudentClassList} path="/studentclassroom" exact />
-                    <Route component={StudentClassListDetail} path="/studentclassroomdetail/:id" exact />
-                    <Route component={StudentLaboratoryDetail} path="/studentlaboratorydetail/:id/:labId" exact />
-                    <Route component={StudentQuizDetail} path="/studentquizdetail/:id/:quizId" exact />
-                    <Route component={StudentClassAnnouncement} path="/studentclassannouncement/:id" exact />
-                    <Route component={StudentClassJoinMeet} path="/studentclassjoinmeet/:id" exact />
-                    <Route component={StudentList} path="/classstudentlist/:id" exact />
+                    <StudentRoute component={LaboratoryStudent} path="/studentlaboratory/:id" exact />
+                    <StudentRoute component={StudentClassList} path="/studentclassroom" exact />
+                    <StudentRoute component={StudentClassListDetail} path="/studentclassroomdetail/:id" exact />
+                    <StudentRoute component={StudentLaboratoryDetail} path="/studentlaboratorydetail/:id/:labId" exact />
+                    <StudentRoute component={StudentQuizDetail} path="/studentquizdetail/:id/:quizId" exact />
+                    <StudentRoute component={StudentClassAnnouncement} path="/studentclassannouncement/:id" exact />
+                    <StudentRoute component={StudentClassJoinMeet} path="/studentclassjoinmeet/:id" exact />
+                    <StudentRoute component={StudentList} path="/classstudentlist/:id" exact />
                     
 
                     <Route component={NotFound} path='/'/>
+                    <Route component={NotFoundPage} path='/404'/>
                     
 
                     {/* common user page */}

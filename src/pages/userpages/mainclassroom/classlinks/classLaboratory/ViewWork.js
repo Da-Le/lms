@@ -31,7 +31,7 @@ import { useSelector} from 'react-redux';
 import { useHistory } from 'react-router';
 
 
-import Studentdrawer from '../../classdrawer/ClassDrawerStudent';
+import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import Editor from './Editor'
 
 
@@ -239,7 +239,7 @@ export default function Laboratory() {
   console.log(studentsList)
   console.log(labId)
   return (
-    <Studentdrawer classCode={params.id} headTitle={title}>     
+    <Teacherdrawer classCode={params.id} headTitle={title}>     
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
@@ -353,6 +353,6 @@ export default function Laboratory() {
           </Box>
         </> 
       </Box>
-    </Studentdrawer>
+    </Teacherdrawer>
   )
 }

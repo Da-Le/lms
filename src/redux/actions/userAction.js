@@ -107,6 +107,7 @@ export const logoutInitiate = (user) => async (dispatch) => {
         const auth = getAuth();
         auth.signOut().then(() => {
             dispatch(logoutSuccess(user));
+            sessionStorage.clear();
         }).catch((error) => {
             // An error happened.
         });
