@@ -111,6 +111,7 @@ export default function QuizDetail() {
         setInstruction(item.instruction)
         setTitle(item.title)
         setQuizQuestions(item.questions)
+        setStudentName(item.students)
       })
       
     })
@@ -150,39 +151,42 @@ export default function QuizDetail() {
       classCode: params.id,
       title: quizTitle,
       students: studentName,
-      questions: [...quizQuiestions, lastQuestion],
+      questions: addQuestion.length !== 0 ? [...quizQuiestions, lastQuestion] :[...quizQuiestions] ,
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
       quizId: params.quizId,
-      instruction: instruction
+      instruction: instruction,
 
     }
     createClassDoc('quiz', params.quizId, data).then(() => {
-      studentName.map(student => {
-        const studentData = {
-          ownerId: user.currentUser.uid,
-          classCode: params.id,
-          students: studentName,
-          title: quizTitle,
-          questions: quizQuiestions,
-          duration: duration,
-          created: Timestamp.now(),
-          dueDate: Timestamp.fromDate(new Date(dueDate)),
-          subject: subject,
-          quizId: params.quizId,
-          studentId: student,
-          instruction: instruction
-        }
-        saveQuizStudent(studentData)
-      })
-      const timeout = setTimeout(() => {
-        history.push(`/classroomdetail/${params.id}`)
-      }, 2000)
-      return () => clearTimeout(timeout)
-
+      console.log('success')
     })
+    studentName.map(student => {
+      const studentData = {
+        ownerId: user.currentUser.uid,
+        classCode: params.id,
+        students: studentName,
+        title: quizTitle,
+        questions: data.questions,
+        duration: duration,
+        created: Timestamp.now(),
+        dueDate: Timestamp.fromDate(new Date(dueDate)),
+        subject: subject,
+        quizId: params.quizId,
+        studentId: student,
+        instruction: instruction,
+      }
+      saveQuizStudent(studentData).then(() => {
+        const timeout = setTimeout(() => {
+          history.push(`/classroomdetail/${params.id}`)
+        }, 2000)
+        return () => clearTimeout(timeout)
+      })
+    })
+    
+    
   }
 
   const handleChange = (event) => {
@@ -335,7 +339,7 @@ export default function QuizDetail() {
                 onChange={(e) => handleEditQuizChange(e, index)}
                 input={<OutlinedInput name='correctAnswer' id="select-multiple-chip" label="Answer key" />}
               >
-                {item.answers.map((name) => (
+                {item.answers && item.answers.map((name) => (
                   <MenuItem
                     key={name}
                     value={name}
@@ -366,7 +370,7 @@ export default function QuizDetail() {
               type='number'
               // disabled
               value={item.point}
-              onChange={(e) => handleQuizChange(e, index)}
+              onChange={(e) => handleEditQuizChange(e, index)}
             />
           </Grid>
         
@@ -536,6 +540,7 @@ export default function QuizDetail() {
                 multiline
                 placeholder="Please enter direction"
                 value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
                 // onChange={handleAnnoucement}
                 fullWidth
                 // disabled

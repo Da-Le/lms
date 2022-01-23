@@ -253,7 +253,7 @@ export default function ClassQuiz() {
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
       quizId: params.quizId,
-      instruction: instruction
+      instruction: instruction,
 
     }
     createClassDoc('quiz', params.quizId, data).then(() => {
@@ -263,14 +263,15 @@ export default function ClassQuiz() {
           classCode: params.id,
           students: studentName,
           title: quizTitle,
-          questions: quizQuiestions,
+          questions: [...quizQuiestions, lastQuestion],
           duration: duration,
           created: Timestamp.now(),
           dueDate: Timestamp.fromDate(new Date(dueDate)),
           subject: subject,
           quizId: params.quizId,
           studentId: student,
-          instruction: instruction
+          instruction: instruction,
+          isDone: false
         }
         saveQuizStudent(studentData)
       })
@@ -557,6 +558,8 @@ export default function ClassQuiz() {
               variant="filled"
               multiline
               placeholder="Please enter direction"
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
               // value={announcementContent}
               // onChange={handleAnnoucement}
               fullWidth
