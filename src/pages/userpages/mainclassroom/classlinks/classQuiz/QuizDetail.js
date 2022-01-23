@@ -141,40 +141,48 @@ export default function QuizDetail() {
   }
 
   const saveQuiz = () => {
+    let lastQuestion = {}
+    addQuestion.map(item => {
+      lastQuestion = item
+    })
     const data = {
       ownerId: user.currentUser.uid,
       classCode: params.id,
+      title: quizTitle,
       students: studentName,
-      questions: quizQuiestions,
+      questions: [...quizQuiestions, lastQuestion],
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
-      quizId: params.quizId
+      quizId: params.quizId,
+      instruction: instruction
+
     }
-    // createClassDoc('quiz',params.quizId, data).then(() => {
-    //   studentName.map(student => {
-    //     const studentData = {
-    //       ownerId: user.currentUser.uid,
-    //       classCode: params.id,
-    //       students: studentName,
-    //       title: quizTitle,
-    //       questions: quizQuiestions,
-    //       duration: duration,
-    //       created: Timestamp.now(),
-    //       dueDate: Timestamp.fromDate(new Date(dueDate)),
-    //       subject: subject,
-    //       quizId: params.quizId,
-    //       studentId: student,
-    //     }
-    //     saveQuizStudent(studentData)
-    //   })
-    //   const timeout = setTimeout(() => {
-    //     history.push(`/classroomdetail/${params.id}`)
-    //   }, 2000)
-    //   return () => clearTimeout(timeout)
-     
-    // })
+    createClassDoc('quiz', params.quizId, data).then(() => {
+      studentName.map(student => {
+        const studentData = {
+          ownerId: user.currentUser.uid,
+          classCode: params.id,
+          students: studentName,
+          title: quizTitle,
+          questions: quizQuiestions,
+          duration: duration,
+          created: Timestamp.now(),
+          dueDate: Timestamp.fromDate(new Date(dueDate)),
+          subject: subject,
+          quizId: params.quizId,
+          studentId: student,
+          instruction: instruction
+        }
+        saveQuizStudent(studentData)
+      })
+      const timeout = setTimeout(() => {
+        history.push(`/classroomdetail/${params.id}`)
+      }, 2000)
+      return () => clearTimeout(timeout)
+
+    })
   }
 
   const handleChange = (event) => {
