@@ -24,7 +24,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import Studentdrawer from '../../classdrawer/ClassDrawerStudent';
 import { Timestamp } from 'firebase/firestore';
 
-import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc,getQuizStudent} from '../../../../../utils/firebaseUtil';
+import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, saveQuizRecord,getQuizStudent} from '../../../../../utils/firebaseUtil';
 import { useParams} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
@@ -266,7 +266,7 @@ export default function QuizDetail() {
         result: result
       }
       saveQuizStudent(studentData)
-      console.log(studentData)
+      saveQuizRecord(studentData)
     // const timeout = setTimeout(() => {
     //   // history.push(`/classroomdetail/${params.id}`)
     //   console.log(studentData)

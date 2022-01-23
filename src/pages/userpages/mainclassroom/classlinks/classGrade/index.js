@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import {getUser, acceptStudent, removeStudent} from '../../../../../utils/firebaseUtil'
+import {getUser, acceptStudent, removeStudent, getQuizStudent} from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector} from 'react-redux';
@@ -19,7 +19,8 @@ import {
     Table,
     TableHead,
     TableRow,
-    TableBody
+    TableBody,
+    Collapse
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -134,7 +135,9 @@ export default function StudentList() {
 
 
   const [classroom, setClassroom] = useState([]);
+  const [students, setStudents] = useState([])
   const [title, setTitle] = useState('')
+  const [quizList, setQuizList] = useState([])
 
 
   //Load classrooms
@@ -147,10 +150,33 @@ export default function StudentList() {
                 setIsTeacher(item.isTeacher)
             })
         })
+        getStudentQuizData()
       }
     
     
   }, [user]);
+
+  const getStudentQuizData = () => {
+    const studentQuizCollection = collection(db, "studentRecord")
+    onSnapshot(studentQuizCollection, (snapshot) => {
+      console.log(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+      setQuizList(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+    })
+    // return (
+    //   row.history.map((historyRow) => (
+    //     <TableRow key={historyRow.date}>
+    //       <TableCell component="th" scope="row">
+    //         {historyRow.date}
+    //       </TableCell>
+    //       <TableCell>{historyRow.customerId}</TableCell>
+    //       <TableCell align="right">{historyRow.amount}</TableCell>
+    //       <TableCell align="right">
+    //         {Math.round(historyRow.amount * row.price * 100) / 100}
+    //       </TableCell>
+    //     </TableRow>
+    //   ))
+    // )
+  }
 
   const getClassData =  () => {
     const classCollection = collection(db, "createclass")
@@ -162,7 +188,9 @@ export default function StudentList() {
         snapshot.docs.map(doc => {
           setClassCode(doc.data().classCode)
           setTitle(doc.data().className)
+          setStudents(doc.data().students.filter(item => item.isJoin === true))
         })
+        
         // setLoading(false);
     }
     )
@@ -176,6 +204,8 @@ export default function StudentList() {
   const handleRemove = (classCode, userId, studentData) => {
     removeStudent('createclass', classCode, userId , studentData)
   }
+  console.log(students)
+  console.log(quizList)
 
   const classroomBody = () => {
     return (
@@ -194,25 +224,26 @@ export default function StudentList() {
             <Typography variant="h6" sx={{ marginTop: 1 }}>{item.ownerEmail}</Typography>
           </Grid> */}
           <Grid item xs={12}>
-          <Typography variant="h6" sx={{ marginTop: 1 }}>Student List ({item.students && item.students.length !== 0 ? item.students.length : 0})</Typography>
+          <Typography variant="h6" sx={{ marginTop: 1 }}>Student List ({students && students.length !== 0 ? students.length : 0})</Typography>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell align="left">Email</StyledTableCell>
+                  {/* <StyledTableCell align="left">Email</StyledTableCell> */}
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {item.students && item.students.map((row) => (
+                {students && students.map((row) => (
+                  <>
                   <StyledTableRow key={row.name}>
                     <StyledTableCell component="th" scope="row">
                       {row.displayName}
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.email}</StyledTableCell>
+                    {/* <StyledTableCell align="left">{row.email}</StyledTableCell> */}
                     <StyledTableCell align="center">
-                      {!row.isJoin ?
+                      {/* {!row.isJoin ?
                         <Button 
                             variant="contained" 
                             color="primary" 
@@ -230,11 +261,47 @@ export default function StudentList() {
                         >
                             Remove
                         </Button>
-                      }
-                      
+                      } */}
                       
                     </StyledTableCell>
                   </StyledTableRow>
+                  <StyledTableRow key={row.name}>
+                    <Collapse in={true} timeout="auto" unmountOnExit>
+                      <Box sx={{ margin: 1 }}>
+                        <Typography variant="h6" gutterBottom component="div">
+                          Quiz
+                        </Typography>
+                        <Table size="small" aria-label="purchases">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Quiz Title</TableCell>
+                              <TableCell>Due Date</TableCell>
+                              <TableCell align="right">Score</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {quizList && quizList.map(item => (
+                              item.quiz.filter(item => item.studentId === row.ownerId).map(data => (
+                                <TableRow>
+                                  <TableCell component="th" scope="row">
+                                    {data.title}
+                                  </TableCell>
+                                  <TableCell>
+                                    {new Date(data.dueDate.seconds * 1000).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {data.result.correctPoints} / {data.result.totalPoints}
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Box>
+                    </Collapse>
+                  </StyledTableRow>
+                  </>
+                    
                 ))}
               </TableBody>
             </Table>

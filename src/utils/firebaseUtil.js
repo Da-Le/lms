@@ -123,6 +123,32 @@ export const saveQuizStudent = async (data) => {
  * 
  * @param {object} data
  */
+// save quiz
+export const saveQuizRecord = async (data) => {
+  const colRef = doc(db, "studentRecord", data.studentId)
+  // await setDoc(colRef,data);
+  console.log(data)
+  const dataRecord = {
+    quizId: data.quizId,
+    title: data.title,
+    result: data.result,
+    classCode: data.classCode,
+    dueDate: data.dueDate,
+    subject: data.subject,
+    studentId: data.studentId
+  }
+  const docInstance = await setDoc(colRef, {
+    quiz: arrayUnion(dataRecord)
+  });
+
+
+  return docInstance
+}
+
+/**
+ * 
+ * @param {object} data
+ */
 // get student quiz details
 export const getQuizStudent = async (data) => {
   // const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'quiz', data.quizId)
