@@ -119,8 +119,8 @@ export default function RouterComponent() {
                     {/* <Route component={ClassWork} path="/classwork" exact /> */}
                     
                     {/* teacher router */}
-                    <Route component={Profile} path="/profile/" exact />
-                    <Route component={Calendar} path="/calendar/" exact />
+                    <Route component={Profile} path="/profile" exact />
+                    <Route component={Calendar} path="/calendar" exact />
                     <Route component={About} path="/about/" exact />
                     <Route component={ClassList} path="/classroom" exact />
                     <Route component={Files} path="/files/" exact />

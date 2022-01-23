@@ -216,6 +216,27 @@ export default function ClassQuiz() {
     setAddQuestion(questionList)
   }
 
+  const handleEditQuizChange = (e, index) => {
+    console.log(e.target.value)
+    console.log(e.target.name)
+    console.log(index)
+    const questionList = [...quizQuiestions];
+    questionList[index][e.target.name] = e.target.value;
+    // setAddQuestion(questionList)
+    setQuizQuestions(questionList)
+  }
+
+  const handleEditAnswerChange = (e, index) => {
+    console.log(e.target.value)
+    console.log(e.target.name)
+    console.log(index)
+    const questionList = [...quizQuiestions];
+    questionList.map(item => {
+      item.answers[index] = e.target.value
+    })
+    setQuizQuestions(questionList)
+  }
+
   const saveQuiz = () => {
     let lastQuestion = {}
     addQuestion.map(item => {
@@ -235,30 +256,31 @@ export default function ClassQuiz() {
       instruction: instruction
 
     }
-    createClassDoc('quiz', params.quizId, data).then(() => {
-      studentName.map(student => {
-        const studentData = {
-          ownerId: user.currentUser.uid,
-          classCode: params.id,
-          students: studentName,
-          title: quizTitle,
-          questions: quizQuiestions,
-          duration: duration,
-          created: Timestamp.now(),
-          dueDate: Timestamp.fromDate(new Date(dueDate)),
-          subject: subject,
-          quizId: params.quizId,
-          studentId: student,
-          instruction: instruction
-        }
-        saveQuizStudent(studentData)
-      })
-      const timeout = setTimeout(() => {
-        history.push(`/classroomdetail/${params.id}`)
-      }, 2000)
-      return () => clearTimeout(timeout)
+    console.log(data)
+    // createClassDoc('quiz', params.quizId, data).then(() => {
+    //   studentName.map(student => {
+    //     const studentData = {
+    //       ownerId: user.currentUser.uid,
+    //       classCode: params.id,
+    //       students: studentName,
+    //       title: quizTitle,
+    //       questions: quizQuiestions,
+    //       duration: duration,
+    //       created: Timestamp.now(),
+    //       dueDate: Timestamp.fromDate(new Date(dueDate)),
+    //       subject: subject,
+    //       quizId: params.quizId,
+    //       studentId: student,
+    //       instruction: instruction
+    //     }
+    //     saveQuizStudent(studentData)
+    //   })
+    //   const timeout = setTimeout(() => {
+    //     history.push(`/classroomdetail/${params.id}`)
+    //   }, 2000)
+    //   return () => clearTimeout(timeout)
 
-    })
+    // })
   }
 
   const handleChange = (event) => {
@@ -313,8 +335,8 @@ export default function ClassQuiz() {
               sx={{marginRight: 2, marginBottom: 2}}
               name='question'
               value={item.question}
-              disabled
-              onChange={(e) => handleQuizChange(e, index)}
+              // disabled
+              onChange={(e) => handleEditQuizChange(e, index)}
             />
           </Grid>
           <Grid xs={12} container direction='column'>
@@ -325,25 +347,45 @@ export default function ClassQuiz() {
                   label={`Answer ${index + 1}`} 
                   variant="outlined" 
                   sx={{marginRight: 2, marginBottom: 2}}
-                  name='answer'
+                  name={`answers${index}`}
                   value={item}
-                  disabled
-                  onChange={console.log(index)}
+                  // disabled
+                  onChange={(e) => handleEditAnswerChange(e, i)}
                 />
               </Grid>
             ))
             }
           </Grid>
           <Grid container xs={12}>
-          <TextField 
+            <FormControl sx={{ width: 500, marginBottom: 2 }}>
+              <InputLabel id="select-student-label">Answer key</InputLabel>
+              <Select
+                labelId="select-student-label"
+                value={item.correctAnswer}
+                name='correctAnswer'
+                onChange={(e) => handleEditQuizChange(e, index)}
+                input={<OutlinedInput name='correctAnswer' id="select-multiple-chip" label="Answer key" />}
+              >
+                {item.answers.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    // style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          {/* <TextField 
               label='Answer Key' 
               variant="outlined" 
               sx={{marginRight: 2, marginBottom: 2}}
               name='answerKey'
-              disabled
+              // disabled
               value={item.correctAnswer}
               onChange={(e) => handleQuizChange(e, index)}
-            />
+            /> */}
             {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
           </Grid>
           <Grid container alignItems="center">
@@ -353,9 +395,9 @@ export default function ClassQuiz() {
               sx={{marginRight: 2, marginBottom: 2}}
               name='point'
               type='number'
-              disabled
+              // disabled
               value={item.point}
-              onChange={(e) => handleQuizChange(e, index)}
+              onChange={(e) => handleEditQuizChange(e, index)}
             />
           </Grid>
         
@@ -598,7 +640,7 @@ export default function ClassQuiz() {
               <>
                 <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
                   <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
-                  <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }}>Cancel</Button>
+                  <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
                 </Grid>
               </> : ""
             }
