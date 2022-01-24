@@ -80,7 +80,7 @@ export default function RouterComponent() {
 
     useEffect(() => {
         auth.onAuthStateChanged((authUser) => {
-            dispatch(getUserId())
+            // dispatch(getUserId())
             if (authUser) {
                 dispatch(setUser(authUser));
                 dispatch(getClassroomData());
@@ -113,6 +113,7 @@ export default function RouterComponent() {
     const THEME = createTheme(theme);
 
     const PublicRoute = ({component: Component, restricted, ...rest}) => {
+        sessionStorage.clear();
         return (
             // restricted = false meaning public route
             // restricted = true meaning restricted route
@@ -125,15 +126,15 @@ export default function RouterComponent() {
     };
 
     const PrivateRoute = ({component: Component, ...rest}) => {
-        if (user) {
-            dispatch(logoutInitiate());
-        }
+        // if (user) {
+        //     dispatch(logoutInitiate());
+        // }
         return (
     
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                !user.currentUser ?
+                user.currentUser && window.sessionStorage.getItem('id') !== null ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
@@ -146,7 +147,7 @@ export default function RouterComponent() {
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                user.currentUser && isTeacher ?
+                user.currentUser && window.sessionStorage.getItem('id') !== null && isTeacher ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
@@ -159,7 +160,7 @@ export default function RouterComponent() {
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                user.currentUser && !isTeacher ?
+                user.currentUser && window.sessionStorage.getItem('id') !== null && !isTeacher ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
