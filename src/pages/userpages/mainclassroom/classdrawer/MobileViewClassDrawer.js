@@ -113,8 +113,13 @@ export default function MobileViewClassDrawer() {
 
     const handleLogOut = () => {
         if (user) {
-            dispatch(logoutInitiate());
-            history.push('/');
+            sessionStorage.clear();
+            
+            setTimeout(() => {
+                dispatch(logoutInitiate());
+                history.push('/');
+              }, 20000)
+            
         }
     }
 

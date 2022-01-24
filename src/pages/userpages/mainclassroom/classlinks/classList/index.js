@@ -176,9 +176,12 @@ export default function ClassList() {
         if (Object.keys(user.currentUser).length !== 0) {
             getClassData()
             getUser().then(data => {
-                data.map(item => {
-                    setIsTeacher(item.isTeacher)
-                })
+                if(data){
+                    data.map(item => {
+                        setIsTeacher(item.isTeacher)
+                    })
+                }
+                
             })
         }
 

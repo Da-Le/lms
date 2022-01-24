@@ -91,7 +91,7 @@ export default function RouterComponent() {
     }, [dispatch])
 
     useEffect(() => {
-        if (user.currentUser) {
+        if(user.currentUser){
             getUser().then(data => {
                 if(data){
                         data.map(item => {
@@ -101,6 +101,7 @@ export default function RouterComponent() {
                 
             })
         }
+            
     }, [user])
 
     // console.log(user);
@@ -108,18 +109,19 @@ export default function RouterComponent() {
     console.log(classUser.classData)
     console.log('asdasd',user.currentUser)
     console.log('oijoiu',isTeacher)
+    console.log(window.sessionStorage.getItem('user') === 'false')
     // console.log(sessionStorage.getItem("session"))
 
     const THEME = createTheme(theme);
 
     const PublicRoute = ({component: Component, restricted, ...rest}) => {
-        sessionStorage.clear();
+        // sessionStorage.clear();
         return (
             // restricted = false meaning public route
             // restricted = true meaning restricted route
             <Route {...rest} render={props => (
-                user.currentUser && restricted ?
-                    <Redirect to="/404" />
+                user.currentUser && window.sessionStorage.getItem('id') !== null && window.sessionStorage.getItem('user') !== null?
+                    <Redirect to={window.sessionStorage.getItem('user') === 'true' ? `/classroom` : `/studentclassroom` } />
                 : <Component {...props} />
             )} />
         );
@@ -147,7 +149,7 @@ export default function RouterComponent() {
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                user.currentUser && window.sessionStorage.getItem('id') !== null && isTeacher ?
+                user.currentUser && window.sessionStorage.getItem('id') !== null && window.sessionStorage.getItem('user') === 'true' ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
@@ -160,7 +162,7 @@ export default function RouterComponent() {
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                user.currentUser && window.sessionStorage.getItem('id') !== null && !isTeacher ?
+                user.currentUser && window.sessionStorage.getItem('id') !== null && window.sessionStorage.getItem('user') === 'false' ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
@@ -198,7 +200,6 @@ export default function RouterComponent() {
                     <PrivateRoute component={Profile} path="/profile" exact />
                     <PrivateRoute component={Calendar} path="/calendar" exact />
                     <PrivateRoute component={About} path="/about/" exact />
-                    <PrivateRoute component={ClassList} path="/classroom" exact />
                     <PrivateRoute component={Files} path="/files/" exact />
 
                     {/* teacher mainclassroom */}
@@ -206,7 +207,7 @@ export default function RouterComponent() {
              
                   
                   
-                   
+                    <TeacherRoute component={ClassList} path="/classroom" exact />
                     <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
                     <TeacherRoute component={ClassListDetail} path="/classroomdetail/:id" exact />
                     <TeacherRoute component={ClassAnnouncement} path="/classannouncement/:id" exact />
@@ -218,6 +219,7 @@ export default function RouterComponent() {
                     <TeacherRoute component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
                     <TeacherRoute component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
                     <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
+                    <TeacherRoute component={ClassSetting} path="/classsetting/:id" exact /> 
                    
                    
                     

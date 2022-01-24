@@ -38,6 +38,8 @@ import Input from '../../components/Input'
 
 import NavBar from '../../components/navbarcomponent/NavBar'
 import NewFooter from '../../components/linkcomponent/NewFooter';
+import { loginInitiate } from '../../redux/actions/userAction';
+
 
 
 const style = {
@@ -264,12 +266,15 @@ export default function Register() {
                 phone: values.phone
             }
             createUser(values.email, values.password, data).then(() => {
-                // dispatch(loginInitiate(values.email, values.password, history));
-                if (data.isTeacher) {
-                    history.push('/classroom')
-                } else {
-                    history.push('/studentclassroom')
-                }
+                dispatch(loginInitiate(values.email, values.password, history));
+                setTimeout(() => {
+                    if (data.isTeacher) {
+                        history.push('/classroom')
+                    } else {
+                        history.push('/studentclassroom')
+                    }
+                  }, 1000)
+                
 
                 console.log('success')
             })
