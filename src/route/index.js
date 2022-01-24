@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { auth } from '../utils/firebase';
 
-import { setUser , getUserId} from '../redux/actions/userAction';
+import { setUser , getUserId, logoutInitiate} from '../redux/actions/userAction';
 
 import { getUser } from '../utils/firebaseUtil'
 
@@ -125,6 +125,9 @@ export default function RouterComponent() {
     };
 
     const PrivateRoute = ({component: Component, ...rest}) => {
+        if (user) {
+            dispatch(logoutInitiate());
+        }
         return (
     
             // Show the component only when the user is logged in
