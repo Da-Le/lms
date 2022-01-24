@@ -183,11 +183,8 @@ export default function MiniDrawer(props) {
     const handleLogOut = () => {
         if (user) {
             sessionStorage.clear();
-            
-            setTimeout(() => {
-                dispatch(logoutInitiate());
-                history.push('/');
-              }, 50000)
+            dispatch(logoutInitiate());
+            history.push('/');
             
         }
     }

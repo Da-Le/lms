@@ -273,7 +273,7 @@ export default function Register() {
                     } else {
                         history.push('/studentclassroom')
                     }
-                  }, 1000)
+                  }, 2000)
                 
 
                 console.log('success')

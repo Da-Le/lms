@@ -68,7 +68,7 @@ export const loginInitiate = (email, password, history) => (dispatch) => {
                     } else {
                         history.push('/studentclassroom')
                     }
-                  }, 1000)
+                  }, 2000)
                 // if(data.isTeacher){
                 // history.push('/classroom')
                 // }else {

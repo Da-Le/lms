@@ -111,6 +111,7 @@ export default function ClassList() {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isTeacher, setIsTeacher] = useState(false)
+    const [displayName, setDisplayName] = useState('')
 
     const open = Boolean(anchorEl);
 
@@ -179,6 +180,7 @@ export default function ClassList() {
                 if(data){
                     data.map(item => {
                         setIsTeacher(item.isTeacher)
+                        setDisplayName(item.displayName)
                     })
                 }
                 
@@ -345,6 +347,7 @@ export default function ClassList() {
             <CreateClass
                 isClassOpen={classOpen}
                 toggleClass={handleOpenClass}
+                displayName={displayName}
             />
             <JoinClass
                 isJoinClassOpen={joinClassOpen}

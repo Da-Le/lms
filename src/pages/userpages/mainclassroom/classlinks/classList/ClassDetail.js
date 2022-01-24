@@ -151,6 +151,7 @@ export default function ClassListDetail() {
   const [labList, setLabList] = useState([])
   const [quizList, setQuizList] = useState([])
   const [title, setTitle] = useState('')
+  const [displayName, setDisplayName] = useState('')
 
   const open = Boolean(anchorEl);
 
@@ -220,6 +221,7 @@ export default function ClassListDetail() {
       getUser().then(data => {
         data.map(item => {
           setIsTeacher(item.isTeacher)
+          setDisplayName(item.displayName)
         })
       })
     }
@@ -445,6 +447,7 @@ export default function ClassListDetail() {
       <CreateClass
         isClassOpen={classOpen}
         toggleClass={handleOpenClass}
+        displayName={displayName}
       />
       <JoinClass
         isJoinClassOpen={joinClassOpen}
