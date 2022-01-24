@@ -9,8 +9,10 @@ import {
     Switch,
     FormControlLabel,
     InputAdornment,
-    IconButton
+    IconButton,
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+
 import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 
 import { useHistory } from 'react-router-dom';
@@ -159,6 +161,7 @@ export default function Register() {
         phone: '',
         password: ''
     })
+    const [loading, setLoading] = useState(false)
 
     const history = useHistory();
 
@@ -259,6 +262,7 @@ export default function Register() {
         //     // dispatch(registerInitiate(values.email, values.password, values.displayName, history));
         // }
         if (validateForm()) {
+            setLoading(true)
             const data = {
                 displayName: values.firstName + ' ' + values.lastName,
                 email: values.email,
@@ -511,13 +515,23 @@ export default function Register() {
                                                 />
                                             }
                                             label={values.isTeacher ? "Teacher" : "Student"} />
-                                        <Button
+                                        {/* <Button
                                             variant="contained"
                                             onClick={signup}
                                             sx={{ width: 150, borderRadius: 10 }}
                                         >
                                             Sign up
-                                        </Button>
+                                        </Button> */}
+                                        <LoadingButton 
+                                            loading={loading} 
+                                            loadingIndicator="Loading..." 
+                                            variant="contained"
+                                            color='primary'
+                                            onClick={signup}
+                                            sx={{ width: 150, borderRadius: 10 }}
+                                        >
+                                            Sign up
+                                        </LoadingButton>
                                         {/* <Typography noWrap component="div" sx={style.titleClass}>
                                             -- or --
                                         </Typography> */}
