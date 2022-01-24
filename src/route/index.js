@@ -133,7 +133,7 @@ export default function RouterComponent() {
             // Show the component only when the user is logged in
             // Otherwise, redirect the user to /signin page
             <Route {...rest} render={props => (
-                user.currentUser ?
+                !user.currentUser ?
                     <Component {...props} />
                 : <Redirect to="/404" />
             )} />
