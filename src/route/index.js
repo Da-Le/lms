@@ -66,6 +66,7 @@ import StudentQuizDetail from '../pages/userpages/mainclassroom/student/classQui
 import StudentClassAnnouncement from '../pages/userpages/mainclassroom/student/classannouncement/ClassAnnouncement';
 import StudentClassJoinMeet from '../pages/userpages/mainclassroom/student/classjoinmeet/ClassJoinMeet';
 import StudentList from '../pages/userpages/mainclassroom/student/studentList'
+import StudentClassSetting from '../pages/userpages/mainclassroom/student/classsetting/ClassSetting';
 
 
 
@@ -219,7 +220,7 @@ export default function RouterComponent() {
                     <TeacherRoute component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
                     <TeacherRoute component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
                     <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
-                    <TeacherRoute component={ClassSetting} path="/classsetting/:id" exact /> 
+                    <TeacherRoute component={StudentClassSetting} path="/classsetting/:id" exact /> 
                    
                    
                     
