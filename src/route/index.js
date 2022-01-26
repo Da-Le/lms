@@ -220,7 +220,7 @@ export default function RouterComponent() {
                     <TeacherRoute component={ClassNewQuiz} path="/quiz/:id/:quizId" exact />
                     <TeacherRoute component={QuizDetail} path="/quizdetail/:id/:quizId" exact />
                     <TeacherRoute component={ClassJoinMeet} path="/classjoinmeet/:id" exact />
-                    <TeacherRoute component={StudentClassSetting} path="/classsetting/:id" exact /> 
+                    <TeacherRoute component={ClassSetting} path="/classsetting/:id" exact /> 
                    
                    
                     
@@ -235,7 +235,7 @@ export default function RouterComponent() {
                     <StudentRoute component={StudentClassAnnouncement} path="/studentclassannouncement/:id" exact />
                     <StudentRoute component={StudentClassJoinMeet} path="/studentclassjoinmeet/:id" exact />
                     <StudentRoute component={StudentList} path="/classstudentlist/:id" exact />
-                    <StudentRoute component={ClassSetting} path="/studentsetting/:id" exact /> 
+                    <StudentRoute component={StudentClassSetting} path="/studentsetting/:id" exact /> 
                     
 
                     <Route component={NotFound} path='/'/>
