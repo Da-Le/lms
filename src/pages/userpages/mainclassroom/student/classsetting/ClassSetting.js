@@ -120,7 +120,7 @@ export default function ClassSetting() {
     }
 
     return (
-        <StudentDrawer classCode={classCode}>
+        <StudentDrawer classCode={params.id}>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container justifyContent="center" sx={style.gridcontainer}>
                     <Grid item sm>
