@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
+import { getUser, acceptStudent, removeStudent, getDocsByCollection, deleteClass,archiveClass} from '../../../../../utils/firebaseUtil'
 import Input from '../../../../../components/Input';
 
 import { useSelector } from 'react-redux';
@@ -11,7 +11,9 @@ import {
     Box,
     Grid,
     TextField,
-    Button
+    Button,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import InputLabel from '@mui/material/InputLabel';
@@ -24,6 +26,9 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 
 import { useParams } from 'react-router-dom';
 import TeacherDrawer from '../../classdrawer/ClassDrawerTeacher';
+import { useHistory } from 'react-router';
+
+
 const style = {
     gridcontainer: {
         maxWidth: 1200,
@@ -88,6 +93,11 @@ export default function ClassSetting() {
 
     const [isTeacher, setIsTeacher] = useState(false)
 
+    const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
+    const [openArchiveSnack, setOpenArchiveSnack] = useState(false)
+
+    const history = useHistory();
+
     //Load classrooms
     useEffect(() => {
 
@@ -119,8 +129,59 @@ export default function ClassSetting() {
         return unsubscribe;
     }
 
+    const onDeleteClass = () => {
+        deleteClass(params.id).then(() => {
+            setOpenDeleteSnack(true)
+            setTimeout(() => {
+                history.push('/classroom')
+              }, 2000)
+            
+        })
+    }
+
+    const onArchived = () => {
+        archiveClass(params.id).then(() => {
+            setOpenArchiveSnack(true)
+            setTimeout(() => {
+                history.push('/classroom')
+              }, 2000)
+        })
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpenArchiveSnack(false);
+        setOpenDeleteSnack(false)
+      };
+
     return (
         <TeacherDrawer classCode={classCode}>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={openDeleteSnack}
+                onClose={handleClose}
+                message="I love snacks"
+                // key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Successfully Deleted Class
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={openArchiveSnack}
+                onClose={handleClose}
+                message="I love snacks"
+                // key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Successfully Archived Class
+                </Alert>
+            </Snackbar>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container justifyContent="center" sx={style.gridcontainer}>
                     <Grid item sm>
@@ -129,7 +190,9 @@ export default function ClassSetting() {
                                 <Typography>Class Code</Typography>
                             </Grid>
                             <Grid container justifyContent="center" sx={{ marginTop: 1, paddingLeft: 5, paddingRight: 5 }}>
-                                <Input value="Addcb4" />
+                                <Input
+                                    value={params.id} 
+                                />
                             </Grid>
                         </Grid>
                         <Grid container justifyContent="flex-start" sx={{
@@ -144,6 +207,7 @@ export default function ClassSetting() {
                                     fontSize: 12,
                                     marginLeft: 5
                                 }}
+                                onClick={onDeleteClass}
                             >DELETE CLASSROOM</Button>
                             <Button variant="contained" color="warning"
                                 sx={{
@@ -154,6 +218,7 @@ export default function ClassSetting() {
                                     },
                                     fontSize: 12
                                 }}
+                                onClick={onArchived}
                             >ARCHIVE CLASSROOM</Button>
                         </Grid>
 

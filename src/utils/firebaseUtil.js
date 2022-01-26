@@ -405,3 +405,19 @@ export const getUserLogin = async (email) => {
    
          
   }
+
+export const deleteClass = async (id) => {
+  const docRef = doc(db, "createclass", id);
+
+  await updateDoc(docRef, {
+    isDeleted: true
+  });
+}
+
+export const archiveClass = async (id) => {
+  const docRef = doc(db, "createclass", id);
+
+  await updateDoc(docRef, {
+    isArchived: true
+  });
+}
