@@ -44,7 +44,7 @@ const style = {
     btnStyle: {
         borderRadius: 20,
         fontSize: 20,
-        width: 150,
+        width: 'auto',
         marginRight: 2,
         marginBottom: 4,
         textTransform: 'none',
@@ -194,7 +194,7 @@ export default function ClassList() {
 								aria-expanded={open ? 'true' : undefined}
 								onClick={handleOpenJoinClass}
 							> 
-								Join
+								Request Class
 							</Button>
 						</Grid>
 					</Grid>
