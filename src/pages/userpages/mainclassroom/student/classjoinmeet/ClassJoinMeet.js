@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
 import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
 
@@ -10,7 +10,8 @@ import {
     Box,
     Grid,
     TextField,
-    Button
+    Button,
+    Link
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import InputLabel from '@mui/material/InputLabel';
@@ -79,11 +80,14 @@ export default function ClassJoinMeet() {
 
     const [isTeacher, setIsTeacher] = useState(false)
 
+    const [meetingLink, setMeetingLink] = useState('')
+
     //Load classrooms
     useEffect(() => {
 
         if (Object.keys(user.currentUser).length !== 0) {
             getClassData()
+            getMeeting()
             getUser().then(data => {
                 data.map(item => {
                     setIsTeacher(item.isTeacher)
@@ -93,6 +97,18 @@ export default function ClassJoinMeet() {
 
 
     }, [user]);
+
+    const getMeeting = async () => {
+        const docRef = doc(db, "meeting", params.id)
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setMeetingLink(docSnap.data().meetingLink)
+            console.log("Document data:", docSnap.data());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+    }
 
     const getClassData = () => {
         const classCollection = collection(db, "createclass")
@@ -117,7 +133,7 @@ export default function ClassJoinMeet() {
                     <Grid item sm>
                         <Grid container justifyContent="center" sx={style.gmeetContainer}>
                             <Grid Container>
-                                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                                {/* <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
                                     <InputLabel htmlFor="outlined-adornment-password">meet.google.com</InputLabel>
                                     <OutlinedInput
                                         id="outlined-adornment-password"
@@ -128,11 +144,15 @@ export default function ClassJoinMeet() {
                                         }
                                         label="Password"
                                     />
-                                </FormControl>
+                                </FormControl> */}
+                                <Typography>Meeting Link :</Typography>
+                                <Link href="#" underline="none">
+                                    {meetingLink}
+                                </Link>
                             </Grid>
-                            <Grid container justifyContent="center">
+                            {/* <Grid container justifyContent="center">
                                 <Button variant="contained" sx={style.btnStyle}>Save</Button>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
                     <Grid item sm>

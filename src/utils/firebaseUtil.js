@@ -429,3 +429,9 @@ export const unenrollStudent = async (studentId, id) => {
     isDeleted: true
   });
 }
+
+export const saveMeeting = async (classCode, link) => {
+  const docRef = doc(db, 'meeting', classCode);
+  setDoc(docRef, { meetingLink: link }, { merge: true });
+  return docRef
+}
