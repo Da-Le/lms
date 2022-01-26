@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
+import { getUser, acceptStudent, removeStudent, getDocsByCollection, unenrollStudent } from '../../../../../utils/firebaseUtil'
 import Input from '../../../../../components/Input';
 
 import { useSelector } from 'react-redux';
@@ -11,7 +11,9 @@ import {
     Box,
     Grid,
     TextField,
-    Button
+    Button,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import InputLabel from '@mui/material/InputLabel';
@@ -23,6 +25,8 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 import { useParams } from 'react-router-dom';
+import { useHistory } from 'react-router';
+
 import StudentDrawer from '../../classdrawer/ClassDrawerStudent';
 const style = {
     gridcontainer: {
@@ -88,6 +92,10 @@ export default function ClassSetting() {
 
     const [isTeacher, setIsTeacher] = useState(false)
 
+    const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
+
+    const history = useHistory();
+
     //Load classrooms
     useEffect(() => {
 
@@ -119,8 +127,37 @@ export default function ClassSetting() {
         return unsubscribe;
     }
 
+    const onDeleteClass = () => {
+        unenrollStudent(user.currentUser.uid, params.id).then(() => {
+            setOpenDeleteSnack(true)
+            setTimeout(() => {
+                history.push('/studentclassroom')
+              }, 2000)
+            
+        })
+    }
+
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpenDeleteSnack(false)
+    };
+
     return (
         <StudentDrawer classCode={params.id}>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={openDeleteSnack}
+                onClose={handleClose}
+                message="I love snacks"
+                // key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Successfully Unenrolled
+                </Alert>
+            </Snackbar>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container justifyContent="center" sx={style.gridcontainer}>
                     <Grid item sm>
@@ -129,10 +166,12 @@ export default function ClassSetting() {
                                 <Typography>Class Code</Typography>
                             </Grid>
                             <Grid container justifyContent="center" sx={{ marginTop: 1, paddingLeft: 5, paddingRight: 5 }}>
-                                <Input value="Addcb4" />
+                                <Input
+                                    value={params.id} 
+                                />
                             </Grid>
                         </Grid>
-                        <Grid container justifyContent="flex-start" sx={{
+                        <Grid container justifyContent="center" sx={{
                             marginTop: 4
                         }}>
                             <Button variant="contained" color="error"
@@ -144,8 +183,9 @@ export default function ClassSetting() {
                                     fontSize: 12,
                                     marginLeft: 5
                                 }}
-                            >DELETE CLASSROOM</Button>
-                            <Button variant="contained" color="warning"
+                                onClick={onDeleteClass}
+                            >UNENROLL CLASSROOM</Button>
+                            {/* <Button variant="contained" color="warning"
                                 sx={{
                                     marginLeft: 1,
                                     width: {
@@ -154,7 +194,7 @@ export default function ClassSetting() {
                                     },
                                     fontSize: 12
                                 }}
-                            >ARCHIVE CLASSROOM</Button>
+                            >ARCHIVE CLASSROOM</Button> */}
                         </Grid>
 
                     </Grid>

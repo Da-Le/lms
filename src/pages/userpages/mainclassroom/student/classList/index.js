@@ -129,9 +129,9 @@ export default function ClassList() {
 
     const getClassData = () => {
 			const classCollection = collection(db, "studentRecord", user.currentUser.uid, "classroom")
-			// const q = query(classCollection, where('students', "array-contains", user.currentUser.uid));
+			const q = query(classCollection, where('isDeleted', "==", false));
 			// const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid));
-			const unsubscribe = onSnapshot(classCollection, (snapshot) => {
+			const unsubscribe = onSnapshot(q, (snapshot) => {
 				setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
 					// const classlist = snapshot.docs
 					// .map(doc => (

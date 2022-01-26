@@ -421,3 +421,11 @@ export const archiveClass = async (id) => {
     isArchived: true
   });
 }
+
+export const unenrollStudent = async (studentId, id) => {
+  const docRef = doc(db, "studentRecord", studentId, "classroom", id);
+
+  await updateDoc(docRef, {
+    isDeleted: true
+  });
+}
