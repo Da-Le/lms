@@ -19,7 +19,8 @@ import {
   Table,
   TableHead,
   TableRow,
-  TableBody
+  TableBody,
+  CircularProgress
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -152,6 +153,7 @@ export default function ClassListDetail() {
   const [quizList, setQuizList] = useState([])
   const [title, setTitle] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const open = Boolean(anchorEl);
 
@@ -264,7 +266,7 @@ export default function ClassListDetail() {
         setClassCode(doc.data().classCode)
         setTitle(doc.data().className)
       })
-      // setLoading(false);
+      setLoading(false);
     }
     )
     return unsubscribe;
@@ -423,7 +425,12 @@ export default function ClassListDetail() {
 
   return (
     <Teacherdrawer classCode={params.id} headTitle={title}>
-      {classroom ?
+      {loading ?
+        <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
+          <CircularProgress />
+        </Box>
+      :
+      classroom.length !== 0 ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}
         </Box>

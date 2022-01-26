@@ -14,7 +14,10 @@ import {
   OutlinedInput,
   Chip,
   MenuItem,
-  useMediaQuery
+  useMediaQuery,
+  Snackbar,
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -92,6 +95,8 @@ export default function ClassQuiz() {
     point: ""
   }])
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const theme = useTheme();
 
@@ -130,6 +135,7 @@ export default function ClassQuiz() {
         return studentArr
       })
       setStudentsList(students)
+      setLoading(false)
     })
     getDocsByCollection('createclass').then(data => {
       data.filter(item => item.classCode === params.id).map(item => {
@@ -240,6 +246,7 @@ export default function ClassQuiz() {
   }
 
   const saveQuiz = () => {
+    setLoading(true)
     let lastQuestion = {}
     addQuestion.map(item => {
       lastQuestion = item
@@ -260,6 +267,7 @@ export default function ClassQuiz() {
     }
     if(quizQuiestions.length === 0){
       setError('please create a question')
+      setLoading(false)
     }else {
       createClassDoc('quiz', params.quizId, data).then(() => {
         studentName.map(student => {
@@ -280,6 +288,8 @@ export default function ClassQuiz() {
           }
           saveQuizStudent(studentData)
         })
+        setLoading(false)
+        setOpen(true)
         const timeout = setTimeout(() => {
           history.push(`/classroomdetail/${params.id}`)
         }, 2000)
@@ -312,6 +322,13 @@ export default function ClassQuiz() {
     const newList = quizQuiestions.filter((value, i) => i !== index)
     setQuizQuestions(newList)
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false)
+  };
 
   console.log(quizQuiestions)
   console.log(answer)
@@ -519,147 +536,166 @@ export default function ClassQuiz() {
 
   return (
     <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
-      <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
-        <Grid container sx={style.gridcontainer} justifyContent='space-between'>
-          <Grid container>
-            <Typography>Title</Typography>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={3000}
+        open={open}
+        onClose={handleClose}
+        message="I love snacks"
+        // key={vertical + horizontal}
+      >
+      <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+        Successfully Created Quiz
+      </Alert>
+      </Snackbar>
+      {loading ?
+        <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
+          <CircularProgress />
+        </Box>
+      :
+        <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+          <Grid container sx={style.gridcontainer} justifyContent='space-between'>
             <Grid container>
-              <TextField
-                placeholder="Please Title"
-                fullWidth
-                label='Quiz Title'
-                variant="outlined"
-                sx={{ marginRight: 2, marginBottom: 2 }}
-                value={quizTitle}
-                onChange={(e) => setQuizTitle(e.target.value)}
-              />
-              <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                <InputLabel id="select-student-label">Assign Student</InputLabel>
-                <Select
-                  labelId="select-student-label"
-                  multiple
-                  value={studentName}
-                  onChange={handleChange}
-                  input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
-                >
-                  {studentsList.map((name) => (
-                    <MenuItem
-                      key={name.value}
-                      value={name.value}
-                      name={name.value}
-                    // style={getStyles(name, personName, theme)}
-                    >
-                      {name.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <LocalizationProvider dateAdapter={DateAdapter}>
-                <DatePicker
-                  label="Due Date"
-                  value={dueDate}
-                  onChange={(newValue) => setDate(newValue)}
-                  renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+              <Typography>Title</Typography>
+              <Grid container>
+                <TextField
+                  placeholder="Please Title"
+                  fullWidth
+                  label='Quiz Title'
+                  variant="outlined"
+                  sx={{ marginRight: 2, marginBottom: 2 }}
+                  value={quizTitle}
+                  onChange={(e) => setQuizTitle(e.target.value)}
                 />
-              </LocalizationProvider>
-            </Grid>
-            <TextField
-              variant="filled"
-              multiline
-              placeholder="Please enter direction"
-              value={instruction}
-              onChange={(e) => setInstruction(e.target.value)}
-              // value={announcementContent}
-              // onChange={handleAnnoucement}
-              fullWidth
-              minRows={5}
-            />
-            <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
-
-              {/*  <Grid item>
-                <IconButton sx={style.iconStyle}>
-                  <AddToDriveIcon />
-                </IconButton>
-                <IconButton sx={style.iconStyle}>
-                  <FileUploadIcon />
-                </IconButton>
-                <IconButton sx={style.iconStyle}>
-                  <InsertLinkIcon />
-                </IconButton>
-                <IconButton sx={style.iconStyle}>
-                  <YouTubeIcon />
-                </IconButton>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <InputLabel id="select-student-label">Assign Student</InputLabel>
+                  <Select
+                    labelId="select-student-label"
+                    multiple
+                    value={studentName}
+                    onChange={handleChange}
+                    input={<OutlinedInput id="select-multiple-chip" label="Assign Student" />}
+                  >
+                    {studentsList.map((name) => (
+                      <MenuItem
+                        key={name.value}
+                        value={name.value}
+                        name={name.value}
+                      // style={getStyles(name, personName, theme)}
+                      >
+                        {name.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <LocalizationProvider dateAdapter={DateAdapter}>
+                  <DatePicker
+                    label="Due Date"
+                    value={dueDate}
+                    onChange={(newValue) => setDate(newValue)}
+                    renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                  />
+                </LocalizationProvider>
               </Grid>
-             */}
+              <TextField
+                variant="filled"
+                multiline
+                placeholder="Please enter direction"
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
+                // value={announcementContent}
+                // onChange={handleAnnoucement}
+                fullWidth
+                minRows={5}
+              />
+              <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
 
-              {/* <Grid item sx={{ marginTop: 0.5 }}>
-                  <Button 
-                    style={style.btnStyle} 
-                    // onClick={cancelAnnouncement}
-                  > 
-                    cancel
-                  </Button>
-                  <Button 
-                    variant="contained" 
-                    // disabled={announcementContent ? false : true} 
-                    style={style.btnStyle}
-                    // onClick={saveAnnoucement}
-                  > 
-                    Save
-                  </Button>
-                </Grid> */}
+                {/*  <Grid item>
+                  <IconButton sx={style.iconStyle}>
+                    <AddToDriveIcon />
+                  </IconButton>
+                  <IconButton sx={style.iconStyle}>
+                    <FileUploadIcon />
+                  </IconButton>
+                  <IconButton sx={style.iconStyle}>
+                    <InsertLinkIcon />
+                  </IconButton>
+                  <IconButton sx={style.iconStyle}>
+                    <YouTubeIcon />
+                  </IconButton>
+                </Grid>
+              */}
+
+                {/* <Grid item sx={{ marginTop: 0.5 }}>
+                    <Button 
+                      style={style.btnStyle} 
+                      // onClick={cancelAnnouncement}
+                    > 
+                      cancel
+                    </Button>
+                    <Button 
+                      variant="contained" 
+                      // disabled={announcementContent ? false : true} 
+                      style={style.btnStyle}
+                      // onClick={saveAnnoucement}
+                    > 
+                      Save
+                    </Button>
+                  </Grid> */}
+              </Box>
+            </Grid>
+          </Grid>
+
+          {matchMD ?
+            ""
+            :
+            <>
+              <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+                <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
+                <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
+              </Grid>
+            </>
+          }
+          {quizData && quizBody()}
+
+          <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
+            {/* <Box sx={{display:'flex', alignItems:'center'}}>
+            <TextField
+              variant="outlined"
+              placeholder="quiz duration"
+              type="number"
+              value={duration}
+              onChange={handleDuration}
+            />
+            <Typography sx={{ marginLeft: 2 }}>minutes</Typography> 
+            </Box> */}
+            <Box sx={{display:'flex', alignItems:'center'}}>
+              <Button 
+                variant="contained" 
+                style={style.btnStyle} 
+                onClick={quizAddQuestion}
+              > 
+                Add Question
+              </Button>
             </Box>
           </Grid>
-        </Grid>
+          <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
+            <Box sx={{display:'flex', alignItems:'center'}}>
+              {matchMD ? 
+                <>
+                  <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
+                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
+                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
+                  </Grid>
+                </> : ""
+              }
+            </Box>
+          </Grid>
+          
 
-        {matchMD ?
-          ""
-          :
-          <>
-            <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
-              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
-              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
-            </Grid>
-          </>
-        }
-        {quizData && quizBody()}
-
-        <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
-          {/* <Box sx={{display:'flex', alignItems:'center'}}>
-          <TextField
-            variant="outlined"
-            placeholder="quiz duration"
-            type="number"
-            value={duration}
-            onChange={handleDuration}
-          />
-          <Typography sx={{ marginLeft: 2 }}>minutes</Typography> 
-          </Box> */}
-          <Box sx={{display:'flex', alignItems:'center'}}>
-            <Button 
-              variant="contained" 
-              style={style.btnStyle} 
-              onClick={quizAddQuestion}
-            > 
-              Add Question
-            </Button>
-          </Box>
-        </Grid>
-        <Grid container sx={style.addBtncontainer} justifyContent='space-between'>
-          <Box sx={{display:'flex', alignItems:'center'}}>
-            {matchMD ? 
-              <>
-                <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
-                  <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
-                  <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
-                </Grid>
-              </> : ""
-            }
-          </Box>
-        </Grid>
-        
-
-      </Box>
+        </Box>
+      }
+      
     </Teacherdrawer>
   )
 }

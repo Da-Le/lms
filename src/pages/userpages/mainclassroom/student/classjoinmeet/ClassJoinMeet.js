@@ -146,7 +146,7 @@ export default function ClassJoinMeet() {
                                     />
                                 </FormControl> */}
                                 <Typography>Meeting Link :</Typography>
-                                <Link href="#" underline="none">
+                                <Link href={meetingLink} underline="none">
                                     {meetingLink}
                                 </Link>
                             </Grid>

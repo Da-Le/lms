@@ -13,7 +13,8 @@ import {
     Grid,
     Button,
     Menu,
-    MenuItem
+    MenuItem,
+    CircularProgress
 } from '@mui/material';
 
 import Classdrawer from '../../classdrawer/ClassDrawer';
@@ -112,6 +113,7 @@ export default function ClassList() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isTeacher, setIsTeacher] = useState(false)
     const [displayName, setDisplayName] = useState('')
+    const [loading, setLoading] = useState(true)
 
     const open = Boolean(anchorEl);
 
@@ -196,7 +198,7 @@ export default function ClassList() {
         const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid), where("isDeleted", "==", false), where("isArchived", "==", false));
         const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
             setClassroom(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-            // setLoading(false);
+            setLoading(false);
         }
         )
         return unsubscribe;
@@ -323,24 +325,33 @@ export default function ClassList() {
                     </Grid> */}
                 </Grid>
             </Box>
-            {classroom ?
-                <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
-                    {classroomBody()}
+            {/* <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
+                <CircularProgress />
+            </Box> */}
+            {loading ?
+                <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
+                    <CircularProgress />
                 </Box>
                 :
-                <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
-                    <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
-                        <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+                classroom ?
+                    <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
+                        {classroomBody()}
                     </Box>
-                    <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
-                        <Typography>
-                            This is where you'll see classrooms.
-                        </Typography>
-                        <Typography>
-                            You can join class, see activities and check available quiz
-                        </Typography>
+                    :
+                    <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
+                        <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
+                            <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+                        </Box>
+                        <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
+                            <Typography>
+                                This is where you'll see classrooms.
+                            </Typography>
+                            <Typography>
+                                You can join class, see activities and check available quiz
+                            </Typography>
+                        </Box>
                     </Box>
-                </Box>
+                
             }
 
 

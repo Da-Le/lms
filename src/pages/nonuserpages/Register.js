@@ -10,6 +10,8 @@ import {
     FormControlLabel,
     InputAdornment,
     IconButton,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -162,6 +164,7 @@ export default function Register() {
         password: ''
     })
     const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const history = useHistory();
 
@@ -271,6 +274,7 @@ export default function Register() {
             }
             createUser(values.email, values.password, data).then(() => {
                 dispatch(loginInitiate(values.email, values.password, history));
+                setOpen(true)
                 setTimeout(() => {
                     if (data.isTeacher) {
                         history.push('/classroom')
@@ -280,7 +284,7 @@ export default function Register() {
                   }, 2000)
                 
 
-                console.log('success')
+                
             })
         }
 

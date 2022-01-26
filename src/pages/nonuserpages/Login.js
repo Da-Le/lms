@@ -35,10 +35,10 @@ import LockIcon from '@mui/icons-material/Lock';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import { loginInitiate, logoutInitiate } from '../../redux/actions/userAction';
-import { getUserLogin } from '../../utils/firebaseUtil'
+import { loginInitiate, logoutInitiate, loginSuccess } from '../../redux/actions/userAction';
+import { getUserLogin, getDocsByCollection } from '../../utils/firebaseUtil'
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo, signInWithEmailAndPassword } from "firebase/auth";
 
 import { setDoc, doc } from '@firebase/firestore';
 
@@ -195,7 +195,42 @@ export default function Login() {
         }
         else {
             setValues({ ...values, errors: "", isLoading: true });
-            dispatch(loginInitiate(values.email, values.password, history));
+            // dispatch(loginInitiate(values.email, values.password, history));
+            try {
+                const auth = getAuth();
+                signInWithEmailAndPassword(auth, values.email, values.password)
+                .then((userCredential) => {
+                  // Signed in 
+                  const user = userCredential.user;
+                  dispatch(loginSuccess(user));
+                  window.sessionStorage.setItem('id',user.uid)
+                  getDocsByCollection('users').then(data => {
+                    data.filter(data => data.ownerId === user.uid).map(data => {
+                        window.sessionStorage.setItem('user',data.isTeacher)
+                            if (data.isTeacher) {
+                                history.push('/classroom')
+                            } else {
+                                history.push('/studentclassroom')
+                            }
+                        // if(data.isTeacher){
+                        // history.push('/classroom')
+                        // }else {
+                        // history.push('/studentclassroom')
+                        // }
+                      })
+                  })
+                //   history.push('/classroom');
+                  // ...
+                })
+                .catch((error) => {
+                  const errorMessage = error.message;
+                  alert(errorMessage);
+                  setLoading(false)
+                });
+              
+            } catch (err) {
+                console.error(err)
+            }
         }
     };
 
@@ -327,7 +362,6 @@ export default function Login() {
                                 </Button> */}
                                 <LoadingButton 
                                     loading={loading} 
-                                    loadingIndicator="Signing in..." 
                                     variant="contained"
                                     color='primary'
                                     onClick={(e) => btnSignIn(e)}
