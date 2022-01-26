@@ -139,6 +139,7 @@ export default function StudentList() {
 
 
   const [addUserOpen, SetAddUserOpen] = useState(false);
+  const [title, setTitle] = useState('')
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -165,13 +166,14 @@ export default function StudentList() {
 
   const getClassData = () => {
     const classCollection = collection(db, "createclass")
-    const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
+    const qTeacher = query(classCollection, where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
       setClassroom(
         snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       );
       snapshot.docs.map(doc => {
         setClassCode(doc.data().classCode)
+        setTitle(doc.data().className)
       })
       // setLoading(false);
     }
@@ -207,10 +209,10 @@ export default function StudentList() {
           </Grid> */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ marginTop: 1 }}>Student List ({item.students && item.students.length !== 0 ? item.students.length : 0})</Typography>
-              <Box component={Grid} container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
+              {/* <Box component={Grid} container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
                 <Button variant="contained" sx={style.btnStyle}><PersonAddAltIcon sx={style.iconStyle} />Request</Button>
                 <Button variant="contained" sx={style.btnStyle} onClick={handleAddUserOpen}><PersonAddAltIcon sx={style.iconStyle} />User</Button>
-              </Box>
+              </Box> */}
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                   <TableHead>
@@ -219,7 +221,7 @@ export default function StudentList() {
                       <StyledTableCell align="left">Email</StyledTableCell>
                       <StyledTableCell align="left">Phone number</StyledTableCell>
                       <StyledTableCell align="left">Type</StyledTableCell>
-                      <StyledTableCell align="center">Action</StyledTableCell>
+                      {/* <StyledTableCell align="center">Action</StyledTableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -231,7 +233,7 @@ export default function StudentList() {
                         <StyledTableCell align="left">{row.email}</StyledTableCell>
                         <StyledTableCell align="left">{row.phone}</StyledTableCell>
                         <StyledTableCell align="left">{row.isTeacher ? "Teacher" : "Student"}</StyledTableCell>
-                        <StyledTableCell align="center">
+                        {/* <StyledTableCell align="center">
                           {!row.isJoin ?
                             <Button
                               variant="contained"
@@ -253,7 +255,7 @@ export default function StudentList() {
                           }
 
 
-                        </StyledTableCell>
+                        </StyledTableCell> */}
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -272,7 +274,7 @@ export default function StudentList() {
   }
 
   return (
-    <Studentdrawer classCode={params.id}>
+    <Studentdrawer classCode={params.id} headTitle={title}>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}
