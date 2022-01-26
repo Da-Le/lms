@@ -91,6 +91,7 @@ export default function ClassQuiz() {
     explanation: "",
     point: ""
   }])
+  const [error, setError] = useState('')
 
   const theme = useTheme();
 
@@ -147,6 +148,7 @@ export default function ClassQuiz() {
   }
 
   const quizAddQuestion = () => {
+    setError('')
     // let questions = {
     //   question:'',
     //   item: 0,
@@ -256,31 +258,36 @@ export default function ClassQuiz() {
       instruction: instruction,
 
     }
-    createClassDoc('quiz', params.quizId, data).then(() => {
-      studentName.map(student => {
-        const studentData = {
-          ownerId: user.currentUser.uid,
-          classCode: params.id,
-          students: studentName,
-          title: quizTitle,
-          questions: [...quizQuiestions, lastQuestion],
-          duration: duration,
-          created: Timestamp.now(),
-          dueDate: Timestamp.fromDate(new Date(dueDate)),
-          subject: subject,
-          quizId: params.quizId,
-          studentId: student,
-          instruction: instruction,
-          isDone: false
-        }
-        saveQuizStudent(studentData)
+    if(quizQuiestions.length === 0){
+      setError('please create a question')
+    }else {
+      createClassDoc('quiz', params.quizId, data).then(() => {
+        studentName.map(student => {
+          const studentData = {
+            ownerId: user.currentUser.uid,
+            classCode: params.id,
+            students: studentName,
+            title: quizTitle,
+            questions: [...quizQuiestions, lastQuestion],
+            duration: duration,
+            created: Timestamp.now(),
+            dueDate: Timestamp.fromDate(new Date(dueDate)),
+            subject: subject,
+            quizId: params.quizId,
+            studentId: student,
+            instruction: instruction,
+            isDone: false
+          }
+          saveQuizStudent(studentData)
+        })
+        const timeout = setTimeout(() => {
+          history.push(`/classroomdetail/${params.id}`)
+        }, 2000)
+        return () => clearTimeout(timeout)
+  
       })
-      const timeout = setTimeout(() => {
-        history.push(`/classroomdetail/${params.id}`)
-      }, 2000)
-      return () => clearTimeout(timeout)
-
-    })
+    }
+    
   }
 
   const handleChange = (event) => {
@@ -490,6 +497,8 @@ export default function ClassQuiz() {
               type='number'
               value={item.point}
               onChange={(e) => handleQuizChange(e, index)}
+              error={error ? true : false}
+              helperText={error}
             />
           </Grid>
         
@@ -609,7 +618,7 @@ export default function ClassQuiz() {
           <>
             <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
               <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
-              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }}>Cancel</Button>
+              <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
             </Grid>
           </>
         }

@@ -367,7 +367,7 @@ export default function StudentDrawer(props) {
                                 <ListItem
                                     button
                                     component={Link}
-                                    to={`/settings`}
+                                    to={`/studentsetting/${props.classCode}`}
                                     sx={style.listItemStyle}
                                 >
                                     <ListItemIcon> <SettingsIcon color="primary" sx={style.iconStyle} /></ListItemIcon>

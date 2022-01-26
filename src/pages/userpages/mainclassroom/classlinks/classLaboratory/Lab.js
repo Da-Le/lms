@@ -27,7 +27,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent } from '../../../../../utils/firebaseUtil'
+import { createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent,getStudentByAssigned } from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
@@ -128,6 +128,10 @@ export default function Laboratory() {
   const [open, setOpen] = useState(false)
   const [instruction, setInstruction] = useState('')
   const [labId, setLabId] = useState('')
+  const [error, setError] = useState({
+    title:'',
+    instruction: ''
+  })
 
 
   const { user } = useSelector((state) => state);
@@ -165,8 +169,16 @@ export default function Laboratory() {
   }, [user]);
 
   const getStudentList = () => {
-    getDocsByCollection('users').then(data => {
-      const students = data.map(item => {
+    // getDocsByCollection('users').then(data => {
+    //   const students = data.map(item => {
+    //     let studentArr = []
+    //     studentArr = { label: item.displayName, value: item.ownerId }
+    //     return studentArr
+    //   })
+    //   setStudentsList(students)
+    // })
+    getStudentByAssigned(params.id).then(item => {
+      const students = item.students.filter(item => item.isJoin === true).map(item => {
         let studentArr = []
         studentArr = { label: item.displayName, value: item.ownerId }
         return studentArr
@@ -225,33 +237,51 @@ export default function Laboratory() {
       title: labTitle,
       students: studentName,
       instruction: instruction,
-      labId: params.id
+      labId: params.labId
     }
     // if(isNew){
-    createClassDoc('laboratory', id, data).then(() => {
-      setOpen({ open: true });
-      studentName.map(student => {
-        const studentData = {
-          html: html,
-          css: css,
-          js: js,
-          ownerId: user.currentUser.uid,
-          classCode: params.id,
-          created: Timestamp.now(),
-          title: labTitle,
-          studentId: student,
-          instruction: instruction,
-          labId: params.labId
-        }
-        saveLabStudent(studentData)
+    if(labTitle === '' && instruction === ''){
+      setError({
+        title: 'please input title',
+        instruction: 'please input instruction'
       })
-      console.log('success')
-      const timeout = setTimeout(() => {
-        history.push(`/classroomdetail/${params.id}`)
-      }, 2000)
-
-      return () => clearTimeout(timeout)
-    })
+    }else if(instruction === ''){
+      setError({
+        ...error,
+        instruction: 'please input instruction'
+      })
+    }else if(labTitle === ''){
+      setError({
+        ...error,
+        title: 'please input instruction'
+      })
+    }else {
+      createClassDoc('laboratory', id, data).then(() => {
+        setOpen({ open: true });
+        studentName.map(student => {
+          const studentData = {
+            html: html,
+            css: css,
+            js: js,
+            ownerId: user.currentUser.uid,
+            classCode: params.id,
+            created: Timestamp.now(),
+            title: labTitle,
+            studentId: student,
+            instruction: instruction,
+            labId: params.labId
+          }
+          saveLabStudent(studentData)
+        })
+        console.log('success')
+        const timeout = setTimeout(() => {
+          history.push(`/classroomdetail/${params.id}`)
+        }, 2000)
+  
+        return () => clearTimeout(timeout)
+      })
+    }
+    
     // }
     // else {
     //   updateDocsByCollection('laboratory', data).then(() => {
@@ -284,6 +314,10 @@ export default function Laboratory() {
   }
 
   const handleTitle = (e) => {
+    setError({
+      ...error,
+      title: ''
+    })
     setLabTitle(e.target.value)
   }
 
@@ -300,6 +334,10 @@ export default function Laboratory() {
   };
 
   const handleInstruction = (e) => {
+    setError({
+      ...error,
+      instruction: ''
+    })
     setInstruction(e.target.value)
   }
 
@@ -328,7 +366,7 @@ export default function Laboratory() {
             {matchMD ? <>
               <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
                 <Button variant="contained" style={style.btnStyle} onClick={saveLab}>Create Task</Button>
-                <Button variant="contained" style={style.btnStyle}>Cancel</Button>
+                <Button variant="contained" style={style.btnStyle} onClick={() => history.goBack()}>Cancel</Button>
               </Grid>
             </> : ""
             }
@@ -340,6 +378,8 @@ export default function Laboratory() {
                 sx={{ marginBottom: 2 }}
                 value={labTitle}
                 onChange={handleTitle}
+                error={error.title ? true : false}
+                helperText={error.title}
               />
               {/* <Button 
                 variant="contained" 
@@ -399,6 +439,8 @@ export default function Laboratory() {
                   onChange={(e) => handleInstruction(e)}
                   fullWidth
                   minRows={5}
+                  error={error.instruction ? true : false}
+                  helperText={error.instruction}
                 />
                 <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
                   <Grid item>
@@ -419,7 +461,7 @@ export default function Laboratory() {
               </Grid>
             </Grid>
           </Grid>
-          <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
+          {/* <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
             <Grid item>
               <Typography sx={style.textStyle}>Total Score</Typography>
               <TextField />
@@ -436,14 +478,14 @@ export default function Laboratory() {
               <Typography sx={style.textStyle}>Language</Typography>
               <TextField />
             </Grid>
-          </Box>
+          </Box> */}
           {matchMD ?
             ""
             : 
             <>
               <Grid container justifyContent="center" sx={{ marginTop: 2}}>
                 <Button variant="contained" style={style.btnStyle} onClick={saveLab}>Create Task</Button>
-                <Button variant="contained" style={style.btnStyle}>Cancel</Button>
+                <Button variant="contained" style={style.btnStyle} onClick={() => history.goBack()}>Cancel</Button>
               </Grid>
             </>
           }

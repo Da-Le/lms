@@ -14,6 +14,8 @@ import {
     FormControlLabel,
     Radio,
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -166,6 +168,7 @@ export default function Login() {
         showPassword: false,
     });
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
@@ -184,9 +187,11 @@ export default function Login() {
 
     const btnSignIn = (e) => {
         // e.preventDefault();
+        setLoading(true)
         if (values.email === '' || values.password === '') {
             setValues({ ...values, errors: "Please Complete all fields", isLoading: false, password: "" })
             alert(values.errors);
+            setLoading(false)
         }
         else {
             setValues({ ...values, errors: "", isLoading: true });
@@ -312,14 +317,24 @@ export default function Login() {
                                     >Sign up
                                     </Button>
                                 </Typography>
-                                <Button
+                                {/* <Button
                                     variant="contained"
                                     // onClick={signup}
                                     onClick={(e) => btnSignIn(e)}
                                     sx={style.btnStyle}
                                 >
                                     Sign in
-                                </Button>
+                                </Button> */}
+                                <LoadingButton 
+                                    loading={loading} 
+                                    loadingIndicator="Signing in..." 
+                                    variant="contained"
+                                    color='primary'
+                                    onClick={(e) => btnSignIn(e)}
+                                    sx={style.btnStyle}
+                                >
+                                    Sign in
+                                </LoadingButton>
 
                                 {/* <Button
                                     variant="outlined"

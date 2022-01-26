@@ -160,12 +160,12 @@ export default function Laboratory() {
 
   const getStudentList = () => {
     getStudentByAssigned(params.id).then(item => {
-        const students = item.students.filter(item => item.isJoin === true).map(item => {
-          let studentArr = []
-          studentArr = {label:item.displayName, value:item.ownerId}
-          return studentArr
-        })
-        setStudentsList(students)
+      const students = item.students.filter(item => item.isJoin === true).map(item => {
+        let studentArr = []
+        studentArr = { label: item.displayName, value: item.ownerId }
+        return studentArr
+      })
+      setStudentsList(students)
     })
     // getDocsByCollection('users').then(data => {
     //   const students = data.map(item => {
