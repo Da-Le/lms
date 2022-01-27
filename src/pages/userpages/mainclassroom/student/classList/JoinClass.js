@@ -5,6 +5,8 @@ import {
     Button,
     Grid,
     TextField,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -26,6 +28,7 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass, userId,stu
     // const [userId, setUserId] = useState('');
     const [classCode, setClassCode] = useState('');
     const [error, setError] = useState('')
+    const [open, setOpen] = useState(false)
 
 
     // useEffect(() => {
@@ -42,10 +45,15 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass, userId,stu
         if(classCode === ''){
             setError('Please input class code')
         }else {
-            joinClass('createclass', classCode, student ).then(() => {
+            joinClass('createclass', classCode, student ).then(item => {
+                console.log(item)
                 setClassCode('')
+                setOpen(true)
                 toggleJoinClass()
             })
+            .catch((error) => {
+                setError('No existing class')
+            });
         }
     }
 
@@ -53,11 +61,30 @@ export default function JoinClass({ isJoinClassOpen, toggleJoinClass, userId,stu
         setClassCode(e.target.value)
         
     }
+    
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false)
+      };
 
       console.log(userId)
 
     return (
         <div>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={open}
+                onClose={handleClose}
+                message="I love snacks"
+                // key={vertical + horizontal}
+            >
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Request Sent
+            </Alert>
+            </Snackbar>
             <Dialog
                 open={isJoinClassOpen}
                 onClose={toggleJoinClass}

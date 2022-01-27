@@ -137,6 +137,7 @@ export default function StudentList() {
   const [labList, setLabList] = useState([])
   const [edit, setEdit] = useState(false)
   const [open, setOpen] = useState(false)
+  const [examList, setExamList] = useState([])
 
 
   //Load classrooms
@@ -151,6 +152,7 @@ export default function StudentList() {
       })
       getStudentQuizData()
       getStudentLabData()
+      getStudentExamData()
     }
 
 
@@ -160,6 +162,13 @@ export default function StudentList() {
     const studentQuizCollection = collection(db, "studentRecord")
     onSnapshot(studentQuizCollection, (snapshot) => {
       setQuizList(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+    })
+  }
+
+  const getStudentExamData = () => {
+    const studentQuizCollection = collection(db, "studentRecord")
+    onSnapshot(studentQuizCollection, (snapshot) => {
+      setExamList(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
     })
   }
 
@@ -278,6 +287,22 @@ export default function StudentList() {
     ))
   )
 
+  const renderExam = (exam, index) => (
+    Object.keys(exam).map(key => (
+       <TableRow>
+         <TableCell component="th" scope="row">
+           {exam[key].title}
+         </TableCell>
+         <TableCell>
+           {new Date(exam[key].dueDate.seconds * 1000).toLocaleDateString()}
+         </TableCell>
+         <TableCell align="right">
+           {exam[key].result.correctPoints} / {exam[key].result.totalPoints}
+         </TableCell>
+       </TableRow>
+     ))
+   )
+
   /*
   const handleAccept = (classCode, userId, classData, studentData) => {
     acceptStudent('createclass', classCode, classData, studentData)
@@ -365,7 +390,7 @@ export default function StudentList() {
                                 <TableBody>
                                   {quizList && quizList.map((item, index) => (
                                     item.id === row.ownerId &&
-                                      renderQuiz(item.quiz, index)
+                                      renderQuiz(item.quiz ? item.quiz : [], index)
                                   ))}
                                   {/* {quizList && quizList.map(item => (
                                     item.quiz && item.quiz.filter(item => item.studentId === row.ownerId).map(data => (
@@ -382,6 +407,30 @@ export default function StudentList() {
                                       </TableRow>
                                     ))
                                   ))} */}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableRow>
+                        <TableRow key={row.name}>
+                          <Collapse in={true} timeout="auto" unmountOnExit>
+                            <Box sx={{ margin: 1 }}>
+                              <Typography variant="h6" gutterBottom component="div">
+                                Exam
+                              </Typography>
+                              <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Exam Title</TableCell>
+                                    <TableCell>Due Date</TableCell>
+                                    <TableCell align="right">Score</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {examList && examList.map((item, index) => (
+                                    item.id === row.ownerId &&
+                                      renderExam(item.exam ? item.exam : [], index)
+                                  ))}
                                 </TableBody>
                               </Table>
                             </Box>

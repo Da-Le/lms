@@ -27,7 +27,7 @@ import { useTheme } from '@mui/material/styles';
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
-import { getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc } from '../../../../../utils/firebaseUtil';
+import { getStudentByAssigned, getDocsByCollection, saveExamStudent, createClassDoc } from '../../../../../utils/firebaseUtil';
 import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
@@ -145,14 +145,6 @@ export default function ClassQuiz() {
     })
   }
 
-  const getQuiz = () => {
-    getDocsByCollection('quiz')
-      .then(item => {
-        // const data = item.filter(item => item.classCode === params.id)
-        setQuizData(item)
-      })
-  }
-
   const quizAddQuestion = () => {
     setError('')
     setLoading(true)
@@ -239,9 +231,6 @@ export default function ClassQuiz() {
   }
 
   const handleEditQuizChange = (e, index) => {
-    console.log(e.target.value)
-    console.log(e.target.name)
-    console.log(index)
     const questionList = [...quizQuiestions];
     questionList[index][e.target.name] = e.target.value;
     // setAddQuestion(questionList)
@@ -275,7 +264,7 @@ export default function ClassQuiz() {
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
       subject: subject,
-      quizId: params.quizId,
+      examId: params.examId,
       instruction: instruction,
       startDate: Timestamp.fromDate(new Date(startDate))
     }
@@ -297,7 +286,7 @@ export default function ClassQuiz() {
       setError('please input details')
       setLoading(false)
     }else {
-      createClassDoc('quiz', params.quizId, data).then(() => {
+      createClassDoc('exam', params.examId, data).then(() => {
         studentName.map(student => {
           const studentData = {
             ownerId: user.currentUser.uid,
@@ -309,13 +298,13 @@ export default function ClassQuiz() {
             created: Timestamp.now(),
             dueDate: Timestamp.fromDate(new Date(dueDate)),
             subject: subject,
-            quizId: params.quizId,
+            examId: params.examId,
             studentId: student,
             instruction: instruction,
             isDone: false,
             startDate: Timestamp.fromDate(new Date(startDate))
           }
-          saveQuizStudent(studentData)
+          saveExamStudent(studentData)
         })
         setLoading(false)
         setOpen(true)
@@ -579,7 +568,7 @@ export default function ClassQuiz() {
         // key={vertical + horizontal}
       >
       <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-        Successfully Created Quiz
+        Successfully Created Exam
       </Alert>
       </Snackbar>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
@@ -591,7 +580,7 @@ export default function ClassQuiz() {
                 <TextField
                   placeholder="Title"
                   fullWidth
-                  label='Quiz Title'
+                  label='Exam Title'
                   variant="outlined"
                   sx={{ marginRight: 2, marginBottom: 2 }}
                   value={quizTitle}

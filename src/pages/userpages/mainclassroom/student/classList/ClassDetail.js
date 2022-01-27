@@ -157,6 +157,7 @@ export default function ClassListDetail() {
   const [loading, setLoading] = useState(true)
   const [dateMessage, setDateMessage] = useState('')
   const [openSnack, setOpenSnack] = useState(false)
+  const [examList, setExamList] = useState([])
 
 
   const open = Boolean(anchorEl);
@@ -224,6 +225,7 @@ export default function ClassListDetail() {
       getClassData()
       getLabList()
       getQuizList()
+      getExamList()
       getUser().then(data => {
         data.map(item => {
           setIsTeacher(item.isTeacher)
@@ -244,13 +246,23 @@ export default function ClassListDetail() {
     return unsubscribe;
   }
 
-  console.log(labList)
-
   const getQuizList = () => {
     const labCollection = collection(db, "quiz")
     const qTeacher = query(labCollection, where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
       setQuizList(
+        snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+      );
+    }
+    )
+    return unsubscribe;
+  }
+
+  const getExamList = () => {
+    const labCollection = collection(db, "exam")
+    const qTeacher = query(labCollection, where('classCode', "==", params.id));
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+      setExamList(
         snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       );
     }
@@ -285,6 +297,20 @@ export default function ClassListDetail() {
         setDateMessage('Quiz end')
       }else {
         history.push(`/studentquizdetail/${quizClassId}/${quizId}`)
+      }
+    }
+  }
+
+  const reDirectExam = (examClassId,examId, startDate, dueDate) => {
+    if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+      setDateMessage('Exam is not yet started')
+      setOpenSnack(true)
+    }else {
+      if(dueDate.seconds <= Timestamp.now().seconds){
+        setOpenSnack(true)
+        setDateMessage('Exam end')
+      }else {
+        history.push(`/studentexamdetail/${examClassId}/${examId}`)
       }
     }
   }
@@ -380,6 +406,37 @@ export default function ClassListDetail() {
               <Grid container sx={style.gridcontainerCard}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Quiz{item.title}</Typography>
+                </Grid>
+              </Grid>
+            }
+
+            <Grid container sx={style.gridcontainerClass} style={{ padding: 0 }}>
+              <Typography variant="h6">Exam List</Typography>
+            </Grid>
+
+            {examList.length !== 0 ? examList.map(item =>
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectExam(item.classCode,item.examId,item.startDate, item.dueDate)}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Exam name : {item.title}</Typography>
+                  <Typography variant="p" sx={style.linkStyle} onClick={() => null}>Score : {item.result ? `${item.result.correctPoints} / ${ item.result.totalPoints} `: 'not available'}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>start date: {new Date(item.startDate.seconds * 1000).toLocaleDateString()} {new Date(item.startDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>due date: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.startDate.seconds >= Timestamp.now().seconds && item.dueDate.seconds > Timestamp.now().seconds  && 'Exam is not yet started'}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.dueDate.seconds <= Timestamp.now().seconds && 'Exam end'}</Typography>
+                </Grid>
+              </Grid>
+            ) :
+              <Grid container sx={style.gridcontainerCard}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Exam{item.title}</Typography>
                 </Grid>
               </Grid>
             }
