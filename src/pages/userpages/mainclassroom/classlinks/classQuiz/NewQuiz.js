@@ -639,7 +639,6 @@ export default function ClassQuiz() {
                       />
                     </LocalizationProvider>
                   </Grid>
-                  
                 </Grid>
                 
               </Grid>

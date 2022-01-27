@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-    Typography,
-    Box,
-    Grid,
-    Avatar,
-    TextField,
-    Button,
-    IconButton,
-    FormControl,
-    InputLabel,
-    Select,
-    OutlinedInput,
-    Chip,
-    MenuItem,
+  Typography,
+  Box,
+  Grid,
+  Avatar,
+  TextField,
+  Button,
+  IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  Chip,
+  MenuItem,
 } from '@mui/material';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 
 
+import DatePicker from '@mui/lab/DatePicker';
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
 
-import {getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc} from '../../../../../utils/firebaseUtil';
-import { useParams} from 'react-router-dom';
+import { getStudentByAssigned, getDocsByCollection, saveQuizStudent, createClassDoc } from '../../../../../utils/firebaseUtil';
+import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -39,30 +42,31 @@ import Quiz from 'react-quiz-component';
 
 
 const style = {
-    gridcontainer: {
-        display: "flex",
-        boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
-        marginTop: 5,
-        padding: 2,
-        maxWidth: 1000
-    },
-    main: {
-        display: "flex",
-        cursor: "pointer",
-        alignItems: "center",
-    },
-    iconStyle: {
-        color: (theme) => theme.palette.primary.main,
-        margin: 0.5
-    },
-    btnStyle: {
-        width: 'auto',
-        marginLeft: 5
-    },
-    addBtncontainer: {
-      display: "flex",
-      marginTop: 5,
-      maxWidth: 1000
+  gridcontainer: {
+    display: "flex",
+    boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
+    marginTop: 5,
+    padding: 2,
+    maxWidth: 1000
+  },
+  main: {
+    display: "flex",
+    cursor: "pointer",
+    alignItems: "center",
+  },
+  iconStyle: {
+    color: (theme) => theme.palette.primary.main,
+    margin: 0.5
+  },
+  btnStyle: {
+    width: 'auto',
+    marginLeft: 5,
+    marginBottom: 10
+  },
+  addBtncontainer: {
+    display: "flex",
+    marginTop: 5,
+    maxWidth: 1000
   },
 }
 
@@ -100,7 +104,7 @@ export default function QuizDetail() {
 
 
   useEffect(() => {
-    if(Object.keys(user.currentUser).length !== 0){
+    if (Object.keys(user.currentUser).length !== 0) {
       getStudentList()
     }
   }, [user]);
@@ -148,7 +152,7 @@ export default function QuizDetail() {
           })
           setLoading(false)
       })
-      
+
     })
     
   
@@ -157,10 +161,10 @@ export default function QuizDetail() {
 
   const getQuiz = () => {
     getDocsByCollection('quiz')
-    .then(item => {
-      // const data = item.filter(item => item.classCode === params.id)
-      setQuizData(item)
-    })
+      .then(item => {
+        // const data = item.filter(item => item.classCode === params.id)
+        setQuizData(item)
+      })
   }
 
   const saveQuiz = () => {
@@ -173,7 +177,7 @@ export default function QuizDetail() {
       classCode: params.id,
       title: quizTitle,
       students: studentName,
-      questions: addQuestion.length !== 0 ? [...quizQuiestions, lastQuestion] :[...quizQuiestions] ,
+      questions: addQuestion.length !== 0 ? [...quizQuiestions, lastQuestion] : [...quizQuiestions],
       duration: duration,
       created: Timestamp.now(),
       dueDate: Timestamp.fromDate(new Date(dueDate)),
@@ -209,8 +213,8 @@ export default function QuizDetail() {
         return () => clearTimeout(timeout)
       })
     })
-    
-    
+
+
   }
 
   const handleChange = (event) => {
@@ -261,7 +265,7 @@ export default function QuizDetail() {
   const addAnswer = (item, index) => {
     let newAnswers = [...addQuestion]
     newAnswers[index].answers = [...newAnswers[index].answers, '']
-    setAddQuestion(newAnswers)   
+    setAddQuestion(newAnswers)
   }
   const onAnswerChange = (e, index, item) => {
     const answerList = [...answer]
@@ -295,45 +299,45 @@ export default function QuizDetail() {
       }])
     })
 
-    addQuestion.length === 0 && 
-    setAddQuestion([{
-      question: "",
-      questionType: "text",
-      questionPic: "",
-      answerSelectionType: "single",
-      answers: [],
-      correctAnswer: "",
-      messageForCorrectAnswer: "Correct answer. Good job.",
-      messageForIncorrectAnswer: "Incorrect answer. Please try again.",
-      explanation: "",
-      point: ""
-    }])
+    addQuestion.length === 0 &&
+      setAddQuestion([{
+        question: "",
+        questionType: "text",
+        questionPic: "",
+        answerSelectionType: "single",
+        answers: [],
+        correctAnswer: "",
+        messageForCorrectAnswer: "Correct answer. Good job.",
+        messageForIncorrectAnswer: "Incorrect answer. Please try again.",
+        explanation: "",
+        point: ""
+      }])
   }
 
   const quizBody = () => (
     <>
-      {quizQuiestions && quizQuiestions.map((item,index) => 
+      {quizQuiestions && quizQuiestions.map((item, index) =>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
           <Grid xs={12} container justifyContent='flex-end' >
             <Grid item>
-              <Button 
-                variant="contained" 
-                style={style.btnStyle} 
+              <Button
+                variant="contained"
+                style={style.btnStyle}
                 color="error"
                 fullWidth={false}
                 disabled = {isStart || isEnd}
                 onClick={(e) => onDeleteQuestion(e, index)}
-              > 
+              >
                 Delete
               </Button>
             </Grid>
           </Grid>
           <Grid xs={12} item>
-            <TextField 
-              label='Question' 
-              variant="outlined" 
+            <TextField
+              label='Question'
+              variant="outlined"
               fullWidth
-              sx={{marginRight: 2, marginBottom: 2}}
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='question'
               value={item.question}
               disabled = {isStart || isEnd}
@@ -341,13 +345,13 @@ export default function QuizDetail() {
             />
           </Grid>
           <Grid xs={12} container direction='column'>
-            {item.answers && item.answers.map((item,i) => (
+            {item.answers && item.answers.map((item, i) => (
               <Grid container alignItems="center">
                 {/* <Typography sx={{marginRight: 2}}>a.)</Typography> */}
-                <TextField 
-                  label={`Answer ${index + 1}`} 
-                  variant="outlined" 
-                  sx={{marginRight: 2, marginBottom: 2}}
+                <TextField
+                  label={`Answer ${index + 1}`}
+                  variant="outlined"
+                  sx={{ marginRight: 2, marginBottom: 2 }}
                   name='answer'
                   value={item}
                   disabled = {isStart || isEnd}
@@ -371,14 +375,14 @@ export default function QuizDetail() {
                   <MenuItem
                     key={name}
                     value={name}
-                    // style={getStyles(name, personName, theme)}
+                  // style={getStyles(name, personName, theme)}
                   >
                     {name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          {/* <TextField 
+            {/* <TextField 
               label='Answer Key' 
               variant="outlined" 
               sx={{marginRight: 2, marginBottom: 2}}
@@ -390,10 +394,10 @@ export default function QuizDetail() {
             {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
           </Grid>
           <Grid container alignItems="center">
-            <TextField 
-              label='Points' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <TextField
+              label='Points'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='point'
               type='number'
               disabled = {isStart || isEnd}
@@ -401,7 +405,7 @@ export default function QuizDetail() {
               onChange={(e) => handleEditQuizChange(e, index)}
             />
           </Grid>
-        
+
           {/* <Grid xs={12} justifyContent='flex-end' container>
             <Button 
               variant="contained" 
@@ -414,41 +418,41 @@ export default function QuizDetail() {
           </Grid> */}
         </Grid>
       )}
-      {addQuestion && addQuestion.map((item,index) => 
+      {addQuestion && addQuestion.map((item, index) =>
         <Grid container sx={style.gridcontainer} justifyContent='space-between'>
           <Grid xs={12} item>
-            <TextField 
-              label='Question' 
-              variant="outlined" 
+            <TextField
+              label='Question'
+              variant="outlined"
               fullWidth
-              sx={{marginRight: 2, marginBottom: 2}}
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='question'
               value={item.question}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
           <Grid xs={12} container direction='column'>
-            {item.answers && item.answers.map((item,i) => (
+            {item.answers && item.answers.map((item, i) => (
               <Grid container alignItems="center">
                 {/* <Typography sx={{marginRight: 2}}>a.)</Typography> */}
-                <TextField 
-                  label={`Answer ${i + 1}`} 
-                  variant="outlined" 
-                  sx={{marginRight: 2, marginBottom: 2}}
+                <TextField
+                  label={`Answer ${i + 1}`}
+                  variant="outlined"
+                  sx={{ marginRight: 2, marginBottom: 2 }}
                   name='answer'
                   // value={item}
-                  onChange={(e) => onAnswerChange(e, i,item)}
+                  onChange={(e) => onAnswerChange(e, i, item)}
                 />
               </Grid>
             ))
             }
           </Grid>
           <Grid xs={12} container direction='column'>
-            <Button 
-              variant="contained" 
-              style={style.btnStyle} 
+            <Button
+              variant="contained"
+              style={style.btnStyle}
               onClick={() => addAnswer(item, index)}
-            > 
+            >
               Add Answer
             </Button>
           </Grid>
@@ -465,14 +469,14 @@ export default function QuizDetail() {
                   <MenuItem
                     key={name}
                     value={name}
-                    // style={getStyles(name, personName, theme)}
+                  // style={getStyles(name, personName, theme)}
                   >
                     {name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          {/* <TextField 
+            {/* <TextField 
               label='Answer Key' 
               variant="outlined" 
               sx={{marginRight: 2, marginBottom: 2}}
@@ -483,17 +487,17 @@ export default function QuizDetail() {
             {/* <Typography sx={{ marginTop: 2 }}>{item.body}</Typography> */}
           </Grid>
           <Grid container alignItems="center">
-            <TextField 
-              label='Points' 
-              variant="outlined" 
-              sx={{marginRight: 2, marginBottom: 2}}
+            <TextField
+              label='Points'
+              variant="outlined"
+              sx={{ marginRight: 2, marginBottom: 2 }}
               name='point'
               type='number'
               value={item.point}
               onChange={(e) => handleQuizChange(e, index)}
             />
           </Grid>
-        
+
           {/* <Grid xs={12} justifyContent='flex-end' container>
             <Button 
               variant="contained" 
@@ -518,6 +522,10 @@ export default function QuizDetail() {
 
   return (
     <Teacherdrawer headTitle={title} classCode={params.id} loading={loading}>
+      <Helmet>
+        <title>Quiz Details</title>
+        <link rel="Classroom Icon" href={logohelmetclass} />
+      </Helmet>
       {!loading &&
         <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
           <Grid container sx={style.gridcontainer} justifyContent='space-between'>

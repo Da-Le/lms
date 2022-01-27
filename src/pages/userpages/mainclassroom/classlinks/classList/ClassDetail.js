@@ -52,6 +52,9 @@ import CreateLabDialog from '../classwork/CreateLabDialog';
 import CreateClass from './CreateClass';
 import JoinClass from './JoinClass';
 
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
+
 const style = {
   gridcontainer: {
     display: "flex",
@@ -466,7 +469,11 @@ export default function ClassListDetail() {
   };
 
   return (
-    <Teacherdrawer classCode={params.id} headTitle={title} loading={loading}>
+    <Teacherdrawer classCode={params.id} headTitle={title}>
+      <Helmet>
+        <title>Class Work</title>
+        <link rel="Classroom Icon" href={logohelmetclass} />
+      </Helmet>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
@@ -480,24 +487,24 @@ export default function ClassListDetail() {
         </Alert>
       </Snackbar>
       {classroom.length !== 0 ?
-        <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
-          {classroomBody()}
-        </Box>
-        :
-        !loading &&
-        <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
-          <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
-            <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+          <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
+            {classroomBody()}
           </Box>
-          <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
-            <Typography sx={style.linkStyle}>
-              This is where you'll see classrooms.
-            </Typography>
-            <Typography sx={style.linkStyle}>
-              You can join class, see activities and check available quiz
-            </Typography>
+          :
+          !loading &&
+          <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
+            <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
+              <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
+            </Box>
+            <Box component={Grid} container justifyContent="center" sx={style.txtContainer}>
+              <Typography sx={style.linkStyle}>
+                This is where you'll see classrooms.
+              </Typography>
+              <Typography sx={style.linkStyle}>
+                You can join class, see activities and check available quiz
+              </Typography>
+            </Box>
           </Box>
-        </Box>
       }
 
 

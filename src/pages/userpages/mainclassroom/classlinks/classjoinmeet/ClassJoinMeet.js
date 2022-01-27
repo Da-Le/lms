@@ -89,6 +89,7 @@ export default function ClassJoinMeet() {
 
         if (Object.keys(user.currentUser).length !== 0) {
             getMeeting()
+            getClassData()
             getUser().then(data => {
                 data.map(item => {
                     setIsTeacher(item.isTeacher)

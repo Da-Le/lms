@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, acceptStudent, removeStudent, getDocsByCollection, deleteClass,archiveClass} from '../../../../../utils/firebaseUtil'
+import { getUser, acceptStudent, removeStudent, getDocsByCollection, deleteClass, archiveClass } from '../../../../../utils/firebaseUtil'
 import Input from '../../../../../components/Input';
 
 import { useSelector } from 'react-redux';
@@ -27,6 +27,9 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { useParams } from 'react-router-dom';
 import TeacherDrawer from '../../classdrawer/ClassDrawerTeacher';
 import { useHistory } from 'react-router';
+
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 
 const style = {
@@ -134,8 +137,8 @@ export default function ClassSetting() {
             setOpenDeleteSnack(true)
             setTimeout(() => {
                 history.push('/classroom')
-              }, 2000)
-            
+            }, 2000)
+
         })
     }
 
@@ -144,30 +147,34 @@ export default function ClassSetting() {
             setOpenArchiveSnack(true)
             setTimeout(() => {
                 history.push('/classroom')
-              }, 2000)
+            }, 2000)
         })
     }
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
         setOpenArchiveSnack(false);
         setOpenDeleteSnack(false)
-      };
+    };
 
     return (
         <TeacherDrawer classCode={classCode}>
+            <Helmet>
+                <title>Settings</title>
+                <link rel="Classroom Icon" href={logohelmetclass} />
+            </Helmet>
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 autoHideDuration={3000}
                 open={openDeleteSnack}
                 onClose={handleClose}
                 message="I love snacks"
-                // key={vertical + horizontal}
+            // key={vertical + horizontal}
             >
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                Successfully Deleted Class
+                    Successfully Deleted Class
                 </Alert>
             </Snackbar>
             <Snackbar
@@ -176,10 +183,10 @@ export default function ClassSetting() {
                 open={openArchiveSnack}
                 onClose={handleClose}
                 message="I love snacks"
-                // key={vertical + horizontal}
+            // key={vertical + horizontal}
             >
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                Successfully Archived Class
+                    Successfully Archived Class
                 </Alert>
             </Snackbar>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
@@ -191,7 +198,7 @@ export default function ClassSetting() {
                             </Grid>
                             <Grid container justifyContent="center" sx={{ marginTop: 1, paddingLeft: 5, paddingRight: 5 }}>
                                 <Input
-                                    value={params.id} 
+                                    value={params.id}
                                 />
                             </Grid>
                         </Grid>

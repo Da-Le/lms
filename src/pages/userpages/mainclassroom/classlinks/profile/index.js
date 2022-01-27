@@ -5,18 +5,16 @@ import {
   Box,
   Grid,
   Avatar,
-  TextField,
   Button,
-  IconButton,
   Snackbar,
   Alert
 } from '@mui/material';
 
 import ClassDrawer from '../../classdrawer/ClassDrawer';
-import { Timestamp, doc, setDoc } from 'firebase/firestore';
-import {  db } from '../../../../../utils/firebase'
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../../../../utils/firebase'
 
-import { getAnnouncement, getDocsByCollection, getUser, createDoc } from '../../../../../utils/firebaseUtil';
+import { getUser } from '../../../../../utils/firebaseUtil';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { logoutInitiate } from '../../../../../redux/actions/userAction';
@@ -24,12 +22,11 @@ import { logoutInitiate } from '../../../../../redux/actions/userAction';
 
 import Input from '../../../../../components/Input'
 
-import AddIcon from '@mui/icons-material/Add';
-
 import { getAuth, updatePassword } from "firebase/auth";
 import { useHistory } from 'react-router';
 
-
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 
 const style = {
@@ -101,7 +98,7 @@ export default function ClassAnnouncementList() {
 
   const { user } = useSelector((state) => state);
   const [values, setValues] = useState({
-    newPassword : '',
+    newPassword: '',
     confirmPassword: '',
     phone: ''
   })
@@ -125,49 +122,49 @@ export default function ClassAnnouncementList() {
     })
   }
 
-const onSave = () => {
-  setSuccess('')
-  setError('')
-  if(values.newPassword !== values.confirmPassword){
+  const onSave = () => {
     setSuccess('')
-    setError('Password not matched, please type again')
-  }else if(userDetail[0].phone !== values.phone){
     setError('')
-    setOpen(true)
-    const docRef = doc(db, 'users', user.currentUser.uid);
-    setDoc(docRef, { phone: values.phone }, { merge: true });
-  }else {
-    setError('')
-    const docRef = doc(db, 'users', user.currentUser.uid);
-    setDoc(docRef, { phone: values.phone }, { merge: true });
-    const auth = getAuth();
-    const user = auth.currentUser;
-    // const newPassword = getASecureRandomPassword();
-    updatePassword(user, values.newPassword).then(() => {
+    if (values.newPassword !== values.confirmPassword) {
+      setSuccess('')
+      setError('Password not matched, please type again')
+    } else if (userDetail[0].phone !== values.phone) {
+      setError('')
       setOpen(true)
-      setSuccess('Profile has been updated')
-      handleLogOut()
-    }).catch((error) => {
-      // An error ocurred
-      // ...
-    });
+      const docRef = doc(db, 'users', user.currentUser.uid);
+      setDoc(docRef, { phone: values.phone }, { merge: true });
+    } else {
+      setError('')
+      const docRef = doc(db, 'users', user.currentUser.uid);
+      setDoc(docRef, { phone: values.phone }, { merge: true });
+      const auth = getAuth();
+      const user = auth.currentUser;
+      // const newPassword = getASecureRandomPassword();
+      updatePassword(user, values.newPassword).then(() => {
+        setOpen(true)
+        setSuccess('Profile has been updated')
+        handleLogOut()
+      }).catch((error) => {
+        // An error ocurred
+        // ...
+      });
+    }
   }
-}
 
-const handleLogOut = () => {
-  if (user) {
+  const handleLogOut = () => {
+    if (user) {
       dispatch(logoutInitiate());
       history.push('/');
+    }
   }
-}
 
-console.log(user)
-console.log(values)
+  console.log(user)
+  console.log(values)
   const userDetailBody = () => {
     return userDetail && userDetail.map(item =>
       <Grid container sx={style.gridcontainer} justifyContent='center'>
         <Grid container justifyContent='center'>
-          <Avatar sx={style.profileLogo} variant="square" src={user.currentUser.photoUrl}/>
+          <Avatar sx={style.profileLogo} variant="square" src={user.currentUser.photoUrl} />
           {/* <IconButton sx={style.addbtn}>
             <AddIcon sx={{ color: 'white' }} />
           </IconButton> */}
@@ -226,17 +223,17 @@ console.log(values)
             />
           </Grid>
           <Grid container justifyContent='center'>
-          <Typography sx={{color:'red'}}>{error}</Typography>
-          <Typography sx={{color:'green'}}>{success}</Typography>
+            <Typography sx={{ color: 'red' }}>{error}</Typography>
+            <Typography sx={{ color: 'green' }}>{success}</Typography>
           </Grid>
           <Grid container justifyContent='center'>
-              <Button 
-                variant="contained" 
-                sx={style.saveBtn}
-                onClick={onSave}
-              > 
-                Save 
-              </Button>
+            <Button
+              variant="contained"
+              sx={style.saveBtn}
+              onClick={onSave}
+            >
+              Save
+            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -252,17 +249,21 @@ console.log(values)
 
   return (
     <ClassDrawer headTitle='Profile'>
+      <Helmet>
+        <title>Profile</title>
+        <link rel="Profile Icon" href={logohelmetclass} />
+      </Helmet>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
         open={open}
         onClose={handleClose}
         message="I love snacks"
-        // key={vertical + horizontal}
+      // key={vertical + horizontal}
       >
-      <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-        Successfully Updated Profile
-      </Alert>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Successfully Updated Profile
+        </Alert>
       </Snackbar>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         {userDetail && userDetailBody()}

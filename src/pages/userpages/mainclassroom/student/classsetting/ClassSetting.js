@@ -171,17 +171,16 @@ export default function ClassSetting() {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container justifyContent="center" sx={{
+                        <Grid container sx={{
                             marginTop: 4
                         }}>
                             <Button variant="contained" color="error"
                                 sx={{
                                     width: {
                                         xs: 120,
-                                        md: 160
+                                        md: 180
                                     },
                                     fontSize: 12,
-                                    marginLeft: 5
                                 }}
                                 onClick={onDeleteClass}
                             >UNENROLL CLASSROOM</Button>
@@ -196,7 +195,6 @@ export default function ClassSetting() {
                                 }}
                             >ARCHIVE CLASSROOM</Button> */}
                         </Grid>
-
                     </Grid>
                     <Grid item sm>
                         <Grid container sx={style.imageContainer}>

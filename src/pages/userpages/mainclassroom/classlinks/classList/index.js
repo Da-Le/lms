@@ -12,20 +12,10 @@ import {
     Box,
     Grid,
     Button,
-    Menu,
-    MenuItem,
     CircularProgress
 } from '@mui/material';
 
 import Classdrawer from '../../classdrawer/ClassDrawer';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-
-
-import Fade from '@mui/material/Fade';
-import Divider from '@mui/material/Divider';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import AddToDriveIcon from '@mui/icons-material/AddToDrive';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import bgImage from '../../../../../assets/img/jpg/animatedcomputer.jpg';
 
 import CreateActivityDialog from '../classwork/CreateActivityDialog';
@@ -35,6 +25,8 @@ import CreateLabDialog from '../classwork/CreateLabDialog';
 
 import CreateClass from './CreateClass';
 import JoinClass from './JoinClass';
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 const style = {
     gridcontainer: {
@@ -46,12 +38,10 @@ const style = {
     gridcontainerClass: {
         display: "flex",
         padding: 2,
-        cursor: 'pointer',
         marginTop: -3
     },
     main: {
         display: "flex",
-        cursor: "pointer",
         alignItems: "center",
     },
     iconStyle: {
@@ -78,7 +68,6 @@ const style = {
         fontWeight: 400
     },
     linkStyle: {
-        cursor: 'pointer',
         color: 'white',
         fontSize: 18,
         textAlign: 'center',
@@ -95,7 +84,7 @@ const style = {
     txtContainer: {
         width: 500
     },
-    headerClass : {
+    headerClass: {
         backgroundColor: '#4BAEA6',
         width: '112%',
         marginLeft: -2,
@@ -179,13 +168,13 @@ export default function ClassList() {
         if (Object.keys(user.currentUser).length !== 0) {
             getClassData()
             getUser().then(data => {
-                if(data){
+                if (data) {
                     data.map(item => {
                         setIsTeacher(item.isTeacher)
                         setDisplayName(item.displayName)
                     })
                 }
-                
+
             })
         }
 
@@ -212,9 +201,9 @@ export default function ClassList() {
                 <Box component={Grid} container justifyContent="center">
                     <Grid container sx={style.gridcontainerClass}>
                         {classroom && classroom.map(item =>
-                            <Box sx={{ width:300, boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)', padding: 2, margin: 2, }}>
+                            <Box sx={{ width: 300, boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)', padding: 2, margin: 2, }}>
                                 <Box sx={style.headerClass} key={item.id} container justifyContent="center">
-                                    <Typography sx={style.linkStyle} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}>
+                                    <Typography sx={style.linkStyle}>
                                         {item.className}
                                     </Typography>
                                 </Box>
@@ -224,7 +213,7 @@ export default function ClassList() {
                                     <Typography variant="h6" sx={{ marginTop: 1 }}>{item.room}</Typography>
                                 </Box>
                                 <Box component={Grid} container justifyContent="center" sx={{ marginTop: 5 }}>
-                                    <Button variant="contained" sx={{backgroundColor: '#FFBD1F'}} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}> Go inside </Button>
+                                    <Button variant="contained" sx={{ backgroundColor: '#FFBD1F' }} onClick={() => history.push(`/classroomdetail/${item.classCode}`)}> Go inside </Button>
                                 </Box>
                             </Box>
                         )}
@@ -238,6 +227,10 @@ export default function ClassList() {
 
     return (
         <Classdrawer headTitle='Classroom'>
+            <Helmet>
+                <title>Teacher Dashboard</title>
+                <link rel="Classroom Icon" href={logohelmetclass} />
+            </Helmet>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Grid item>
@@ -329,7 +322,7 @@ export default function ClassList() {
                 <CircularProgress />
             </Box> */}
             {loading ?
-                <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', widhth: '100%', height: '30em', justifyContent: 'center', alignItems: 'center' }}>
                     <CircularProgress />
                 </Box>
                 :
@@ -351,7 +344,7 @@ export default function ClassList() {
                             </Typography>
                         </Box>
                     </Box>
-                
+
             }
 
 
