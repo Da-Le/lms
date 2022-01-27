@@ -103,6 +103,8 @@ export default function Laboratory() {
   const [labId, setLabId] = useState('')
   const [title, setTitle] = useState('')
   const [score, setScore] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [startDate, setStartDate] = useState('')
 
 
   const { user } = useSelector((state) => state);
@@ -173,6 +175,8 @@ export default function Laboratory() {
         setInstruction(item.instruction)
         setTitle(item.title)
         setScore(item.score ? item.score : '')
+        setStartDate(item.startDate && new Date(item.startDate.seconds * 1000))
+        setDueDate(item.dueDate && new Date(item.dueDate.seconds * 1000))
       }else {
         setIsNew(true)
       }
