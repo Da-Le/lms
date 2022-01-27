@@ -197,7 +197,7 @@ export default function Laboratory() {
     saveLabStudent(studentData)
     saveLabRecord(studentData)
       const timeout = setTimeout(() => {
-        // history.push(`/studentclassroomdetail/${params.id}`)
+        history.push(`/studentclassroomdetail/${params.id}`)
       }, 2000)
   
     return () => clearTimeout(timeout)
