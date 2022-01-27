@@ -201,17 +201,17 @@ export default function StudentList() {
           </Grid> */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ marginTop: 1 }}>Student List ({item.students && item.students.length !== 0 ? item.students.length : 0})</Typography>
-              <Box component={Grid} container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
+              {/* <Box component={Grid} container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
                 <Button variant="contained" sx={style.btnStyle}><PersonAddAltIcon sx={style.iconStyle} />Request</Button>
                 <Button variant="contained" sx={style.btnStyle} onClick={handleAddUserOpen}><PersonAddAltIcon sx={style.iconStyle} />User</Button>
-              </Box>
+              </Box> */}
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Student name A-Z</StyledTableCell>
-                      <StyledTableCell align="left">Email</StyledTableCell>
-                      <StyledTableCell align="left">Phone number</StyledTableCell>
+                      {/* <StyledTableCell align="left">Email</StyledTableCell> */}
+                      {/* <StyledTableCell align="left">Phone number</StyledTableCell> */}
                       <StyledTableCell align="left">Type</StyledTableCell>
                       <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
@@ -222,8 +222,8 @@ export default function StudentList() {
                         <StyledTableCell component="th" scope="row">
                           {row.displayName}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.email}</StyledTableCell>
-                        <StyledTableCell align="left">{row.phone}</StyledTableCell>
+                        {/* <StyledTableCell align="left">{row.email}</StyledTableCell> */}
+                        {/* <StyledTableCell align="left">{row.phone}</StyledTableCell> */}
                         <StyledTableCell align="left">{row.isTeacher ? "Teacher" : "Student"}</StyledTableCell>
                         <StyledTableCell align="center">
                           {!row.isJoin ?

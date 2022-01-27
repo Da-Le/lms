@@ -469,7 +469,7 @@ export default function ClassListDetail() {
   };
 
   return (
-    <Teacherdrawer classCode={params.id} headTitle={title}>
+    <Teacherdrawer classCode={params.id} headTitle={title} loading={loading}>
       <Helmet>
         <title>Class Work</title>
         <link rel="Classroom Icon" href={logohelmetclass} />

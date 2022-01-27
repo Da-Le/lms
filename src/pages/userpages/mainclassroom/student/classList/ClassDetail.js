@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, Timestamp } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
 import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
 
@@ -20,7 +20,9 @@ import {
   Table,
   TableHead,
   TableRow,
-  TableBody
+  TableBody,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -152,6 +154,9 @@ export default function ClassListDetail() {
   const [title, setTitle] = useState('')
   const [labList, setLabList] = useState([])
   const [quizList, setQuizList] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [dateMessage, setDateMessage] = useState('')
+  const [openSnack, setOpenSnack] = useState(false)
 
 
   const open = Boolean(anchorEl);
@@ -270,6 +275,26 @@ export default function ClassListDetail() {
     return unsubscribe;
   }
 
+  const reDirectQuiz = (quizClassId,quizId, startDate, dueDate) => {
+    if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+      setDateMessage('Quiz is not yet started')
+      setOpenSnack(true)
+    }else {
+      if(dueDate.seconds <= Timestamp.now().seconds){
+        setOpenSnack(true)
+        setDateMessage('Quiz end')
+      }else {
+        history.push(`/studentquizdetail/${quizClassId}/${quizId}`)
+      }
+    }
+  }
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnack(false)
+  };
+
   const classroomBody = () => {
     return (
       classroom && classroom.map(item =>
@@ -317,15 +342,21 @@ export default function ClassListDetail() {
             </Grid>
 
             {quizList.length !== 0 ? quizList.map(item =>
-              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/studentquizdetail/${item.classCode}/${item.quizId}`)}>
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectQuiz(item.classCode,item.quizId,item.startDate, item.dueDate)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
-                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                  <Typography>start date: {new Date(item.startDate.seconds * 1000).toLocaleDateString()} {new Date(item.startDate.seconds * 1000).toLocaleTimeString()}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
-                  <Typography>due data: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                  <Typography>due date: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.startDate.seconds >= Timestamp.now().seconds && item.dueDate.seconds > Timestamp.now().seconds  && 'Quiz is not yet started'}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.dueDate.seconds <= Timestamp.now().seconds && 'Quiz end'}</Typography>
                 </Grid>
               </Grid>
             ) :
@@ -345,16 +376,29 @@ export default function ClassListDetail() {
   }
 
   return (
-    <Studentdrawer classCode={classCode} headTitle={title}>
+    <Studentdrawer classCode={classCode} headTitle={title} loading={loading}>
       <Helmet>
         <title>Student Class Work</title>
         <link rel="Classroom Icon" href={logohelmetclass} />
       </Helmet>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={3000}
+        open={openSnack}
+        onClose={handleCloseSnack}
+        message="I love snacks"
+        // key={vertical + horizontal}
+      >
+        <Alert onClose={handleCloseSnack} severity="error" sx={{ width: '100%' }}>
+          {dateMessage}
+        </Alert>
+      </Snackbar>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}
         </Box>
         :
+        !loading &&
         <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
           <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
             <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />

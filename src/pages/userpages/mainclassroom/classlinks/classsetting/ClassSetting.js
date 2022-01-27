@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, acceptStudent, removeStudent, getDocsByCollection, deleteClass, archiveClass } from '../../../../../utils/firebaseUtil'
+import { getUser, acceptStudent, removeStudent, unenrollStudent, deleteClass, archiveClass } from '../../../../../utils/firebaseUtil'
 import Input from '../../../../../components/Input';
 
 import { useSelector } from 'react-redux';
@@ -27,6 +27,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { useParams } from 'react-router-dom';
 import TeacherDrawer from '../../classdrawer/ClassDrawerTeacher';
 import { useHistory } from 'react-router';
+import ConfirmDelete from './ConfirmDelete'
 
 import { Helmet } from 'react-helmet';
 import logohelmetclass from '../../../../../assets/img/png/monitor.png';
@@ -98,6 +99,7 @@ export default function ClassSetting() {
 
     const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
     const [openArchiveSnack, setOpenArchiveSnack] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     const history = useHistory();
 
@@ -131,16 +133,9 @@ export default function ClassSetting() {
         )
         return unsubscribe;
     }
+    console.log(classroom)
 
-    const onDeleteClass = () => {
-        deleteClass(params.id).then(() => {
-            setOpenDeleteSnack(true)
-            setTimeout(() => {
-                history.push('/classroom')
-            }, 2000)
-
-        })
-    }
+    
 
     const onArchived = () => {
         archiveClass(params.id).then(() => {
@@ -158,6 +153,32 @@ export default function ClassSetting() {
         setOpenArchiveSnack(false);
         setOpenDeleteSnack(false)
     };
+
+    const handleCloseConfirm = () => {
+        setIsOpen(false)
+    }
+
+    const onDeleteClass = () => {
+        setIsOpen(false)
+        deleteClass(params.id).then(() => {
+            setOpenDeleteSnack(true)
+            classroom.map(item => {
+                item.students.map(data => {
+                    unenrollStudent(data.ownerId, params.id).then(() => {
+                    setOpenDeleteSnack(true)
+                    setTimeout(() => {
+                        history.push('/classroom')
+                      }, 2000) 
+                })
+            })
+                
+            })
+            
+            // setTimeout(() => {
+            //     history.push('/classroom')
+            // }, 2000)
+        })
+    }
 
     return (
         <TeacherDrawer classCode={classCode}>
@@ -214,9 +235,9 @@ export default function ClassSetting() {
                                     fontSize: 12,
                                     marginLeft: 5
                                 }}
-                                onClick={onDeleteClass}
+                                onClick={() => setIsOpen(true)}
                             >DELETE CLASSROOM</Button>
-                            <Button variant="contained" color="warning"
+                            {/* <Button variant="contained" color="warning"
                                 sx={{
                                     marginLeft: 1,
                                     width: {
@@ -226,7 +247,7 @@ export default function ClassSetting() {
                                     fontSize: 12
                                 }}
                                 onClick={onArchived}
-                            >ARCHIVE CLASSROOM</Button>
+                            >ARCHIVE CLASSROOM</Button> */}
                         </Grid>
 
                     </Grid>
@@ -242,6 +263,11 @@ export default function ClassSetting() {
                     </Grid>
                 </Grid>
             </Box>
+            <ConfirmDelete
+                isOpen={isOpen}
+                handleCloseConfirm={handleCloseConfirm}
+                confirmDelete={onDeleteClass}
+            />
         </TeacherDrawer >
     )
 }

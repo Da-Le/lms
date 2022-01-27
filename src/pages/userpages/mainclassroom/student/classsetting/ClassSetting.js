@@ -27,6 +27,8 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
+import ConfirmDelete from './ConfirmDelete'
+
 import StudentDrawer from '../../classdrawer/ClassDrawerStudent';
 const style = {
     gridcontainer: {
@@ -93,6 +95,7 @@ export default function ClassSetting() {
     const [isTeacher, setIsTeacher] = useState(false)
 
     const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     const history = useHistory();
 
@@ -135,6 +138,10 @@ export default function ClassSetting() {
               }, 2000)
             
         })
+    }
+
+    const handleCloseConfirm = () => {
+        setIsOpen(false)
     }
 
     const handleClose = (event, reason) => {
@@ -182,7 +189,7 @@ export default function ClassSetting() {
                                     },
                                     fontSize: 12,
                                 }}
-                                onClick={onDeleteClass}
+                                onClick={() => setIsOpen(true)}
                             >UNENROLL CLASSROOM</Button>
                             {/* <Button variant="contained" color="warning"
                                 sx={{
@@ -208,6 +215,11 @@ export default function ClassSetting() {
                     </Grid>
                 </Grid>
             </Box>
+            <ConfirmDelete
+                isOpen={isOpen}
+                handleCloseConfirm={handleCloseConfirm}
+                confirmDelete={onDeleteClass}
+            />
         </StudentDrawer >
     )
 }

@@ -8,12 +8,13 @@ import {
     InputAdornment,
     IconButton,
     Container,
+    Alert
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 
 import Stack from '@mui/material/Stack';
-import MuiAlert from '@mui/material/Alert';
+// import MuiAlert from '@mui/material/Alert';
 
 import Snackbar from '@mui/material/Snackbar';
 
@@ -147,14 +148,13 @@ const style = {
     },
 }
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+// const Alert = React.forwardRef(function Alert(props, ref) {
+//     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+// });
 
 export default function Login() {
 
     const [openSuccess, setOpenSuccess] = React.useState(false);
-
     const [openError, setOpenError] = React.useState(false);
 
     const handleClick = () => {
@@ -318,6 +318,31 @@ export default function Login() {
                 <title>Login</title>
                 <link rel="Rendezous Icon" href={logohelmet} />
             </Helmet>
+            <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    autoHideDuration={3000}
+                    open={openError}
+                    onClose={handleCloseError}
+                    message="I love snacks"
+                // key={vertical + horizontal}
+                >
+                    <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+                        {values.errors}
+                    </Alert>
+                </Snackbar>
+
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    autoHideDuration={3000}
+                    open={openSuccess}
+                    onClose={handleCloseSuccess}
+                    message="I love snacks"
+                // key={vertical + horizontal}
+                >
+                    <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+                        {values.errors}
+                    </Alert>
+                </Snackbar>
             <NavBar />
             <Box sx={style.section1}>
                 <Box component={Grid} container justifyContent="center">
@@ -334,6 +359,7 @@ export default function Login() {
                                     type='text'
                                     value={values.email}
                                     onChange={handleChange('email')}
+                                    onKeyDown={(e) => e.key === 'Enter' && btnSignIn(e)}
                                     name='firstName'
                                 // errorMessage={error.firstName}
                                 />
@@ -344,6 +370,7 @@ export default function Login() {
                                     type={values.showPassword ? 'text' : 'password'}
                                     onChange={handleChange('password')}
                                     value={values.password}
+                                    onKeyDown={(e) => e.key === 'Enter' && btnSignIn(e)}
                                     name='password'
                                     id="outlined-adornment-password"
                                     endAdornment={
@@ -421,31 +448,6 @@ export default function Login() {
                 </Box>
             </Box>
 
-            <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                autoHideDuration={3000}
-                open={openError}
-                onClose={handleCloseError}
-                message="I love snacks"
-            // key={vertical + horizontal}
-            >
-                <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-                    {values.errors}
-                </Alert>
-            </Snackbar>
-
-            <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                autoHideDuration={3000}
-                open={openSuccess}
-                onClose={handleCloseSuccess}
-                message="I love snacks"
-            // key={vertical + horizontal}
-            >
-                <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
-                    {values.errors}
-                </Alert>
-            </Snackbar>
             <NewFooter />
         </Container>
 

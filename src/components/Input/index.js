@@ -82,6 +82,7 @@ export default function Input(props) {
     errorMessage,
     endAdornment,
     id,
+    onKeyDown
   } = props
   return (
     <div style={{display:'flex',flexDirection:'column', width:'100%'}}>
@@ -107,6 +108,7 @@ export default function Input(props) {
         type={type}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         pattern={pattern}
         endAdornment={endAdornment ? endAdornment : ''}
       />

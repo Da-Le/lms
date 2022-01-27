@@ -192,7 +192,7 @@ export default function ClassAnnouncement() {
               />
               <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
                 <Grid item>
-                  <IconButton sx={style.iconStyle}>
+                  {/* <IconButton sx={style.iconStyle}>
                     <AddToDriveIcon />
                   </IconButton>
                   <IconButton sx={style.iconStyle}>
@@ -203,7 +203,7 @@ export default function ClassAnnouncement() {
                   </IconButton>
                   <IconButton sx={style.iconStyle}>
                     <YouTubeIcon />
-                  </IconButton>
+                  </IconButton> */}
                 </Grid>
                 <Grid item sx={{ marginTop: 0.5 }}>
                   <Button
