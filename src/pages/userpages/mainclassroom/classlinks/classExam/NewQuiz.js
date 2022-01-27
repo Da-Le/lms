@@ -557,7 +557,7 @@ export default function ClassQuiz() {
   )
 
   return (
-    <Teacherdrawer headTitle='Create Quiz' classCode={params.id} loading={loading}>
+    <Teacherdrawer headTitle='Create Exam' classCode={params.id} loading={loading}>
       
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -720,7 +720,7 @@ export default function ClassQuiz() {
               {matchMD ? 
                 <>
                   <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
-                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Quiz</Button>
+                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz}>Create Exam</Button>
                     <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
                   </Grid>
                 </> : ""

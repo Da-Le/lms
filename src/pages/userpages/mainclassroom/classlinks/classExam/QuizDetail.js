@@ -652,7 +652,7 @@ export default function QuizDetail() {
             <Box sx={{display:'flex', alignItems:'center'}}>
                 <>
                   <Grid container justifyContent="flex-end" sx={{ marginBottom: { xs: -30, md: -8 } }}>
-                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz} disabled = {isStart || isEnd}>Update Quiz</Button>
+                    <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 2 }} onClick={saveQuiz} disabled = {isStart || isEnd}>Update Exam</Button>
                     <Button variant="contained" style={{ width: 130, height: 45, marginLeft: 10 }} onClick={() => history.goBack()}>Cancel</Button>
                   </Grid>
                 </>
