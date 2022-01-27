@@ -304,6 +304,18 @@ export default function ClassListDetail() {
     }
   }
 
+  const reDirectLab = (labClassId,quizId, startDate, dueDate) => {
+    if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+      history.push(`/laboratorydetail/${labClassId}/${quizId}`)
+    }else {
+      setDateMessage('Laboratory ongoing')
+      setOpenSnack(true)
+      if(dueDate.seconds <= Timestamp.now().seconds){
+        history.push(`/laboratorydetail/${labClassId}/${quizId}`)
+      }
+    }
+  }
+
   const classroomBody = () => {
     return (
       classroom && classroom.map(item =>
@@ -403,13 +415,15 @@ export default function ClassListDetail() {
             </Grid>
 
             {labList.length !== 0 ? labList.map(item =>
-              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/laboratorydetail/${item.classCode}/${item.labId}`)}>
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectLab(item.classCode,item.labId,item.startDate, item.dueDate)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Laboratory name : {item.title}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
-                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
-                  {/* <Typography variant="p" sx={{ marginTop: 1 }}>No. of student: {item.students.length !== 0 ? item.students.length : 0}</Typography> */}
+                  <Typography>start: {new Date(item.startDate.seconds * 1000).toLocaleDateString()} {new Date(item.startDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>due date: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
                 </Grid>
               </Grid>
             ) :

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, updateLabScore } from '../../../../../utils/firebaseUtil'
+import { getUser, updateLabScore,saveLabStudent } from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -18,7 +18,9 @@ import {
   TableRow,
   TableBody,
   Collapse, InputAdornment,
-  TextField
+  TextField,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -134,6 +136,7 @@ export default function StudentList() {
   const [quizList, setQuizList] = useState([])
   const [labList, setLabList] = useState([])
   const [edit, setEdit] = useState(false)
+  const [open, setOpen] = useState(false)
 
 
   //Load classrooms
@@ -174,11 +177,23 @@ export default function StudentList() {
     lab[index].laboratory[i].score = e.target.value;
     // setAddQuestion(questionList)
     setLabList(lab)
-    const timeout = setTimeout(() => {
-      updateLabScore(lab[index].laboratory[i], i)
-    }, 250)
+   
     // return () => clearTimeout(timeout)
 
+  }
+  const saveLabScore = (e, i, index) => {
+    const lab = [...labList];
+    if(e.key === 'Enter'){
+      const timeout = setTimeout(() => {
+        updateLabScore(lab[index].laboratory[i], i)
+        setOpen(true)
+      }, 250)
+    }
+    // const timeout = setTimeout(() => {
+    //   updateLabScore(lab[index].laboratory[i], i)
+    //   setOpen(true)
+    // }, 250)
+    
   }
 
   const getClassData = () => {
@@ -199,6 +214,69 @@ export default function StudentList() {
     )
     return unsubscribe;
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false)
+  };
+
+  const renderLab = (laboratory, index) => (
+    Object.keys(laboratory).map(key=> (
+      <TableRow>
+        <TableCell component="th" scope="row">
+          {laboratory[key].title}
+        </TableCell>
+        <TableCell align="right">
+          <TextField
+            id="input-with-icon-textfield"
+            label="Score"
+            value={laboratory[key].score}
+            onChange={(e) => onChangeLabScore(e, key, index)}
+            onKeyDown={(e) => saveLabScore(e, key, index)}
+            // onMouseLeave={(e) => saveLabScore(e, key, index)}
+            disabled={!edit ? false : true}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <EditOutlinedIcon
+                    onClick={() => setEdit(!edit)}
+                  />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+        </TableCell>
+        <TableCell align="right">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => history.push(`/viewlab/${params.id}/${laboratory[key].labId}/${laboratory[key].studentId}`)}
+          >
+            View
+          </Button>
+        </TableCell>
+      </TableRow>
+    ))
+  )
+
+  const renderQuiz = (quiz, index) => (
+   Object.keys(quiz).map(key => (
+      <TableRow>
+        <TableCell component="th" scope="row">
+          {quiz[key].title}
+        </TableCell>
+        <TableCell>
+          {new Date(quiz[key].dueDate.seconds * 1000).toLocaleDateString()}
+        </TableCell>
+        <TableCell align="right">
+          {quiz[key].result.correctPoints} / {quiz[key].result.totalPoints}
+        </TableCell>
+      </TableRow>
+    ))
+  )
 
   /*
   const handleAccept = (classCode, userId, classData, studentData) => {
@@ -285,7 +363,11 @@ export default function StudentList() {
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                  {quizList && quizList.map(item => (
+                                  {quizList && quizList.map((item, index) => (
+                                    item.id === row.ownerId &&
+                                      renderQuiz(item.quiz, index)
+                                  ))}
+                                  {/* {quizList && quizList.map(item => (
                                     item.quiz && item.quiz.filter(item => item.studentId === row.ownerId).map(data => (
                                       <TableRow>
                                         <TableCell component="th" scope="row">
@@ -299,7 +381,7 @@ export default function StudentList() {
                                         </TableCell>
                                       </TableRow>
                                     ))
-                                  ))}
+                                  ))} */}
                                 </TableBody>
                               </Table>
                             </Box>
@@ -321,41 +403,8 @@ export default function StudentList() {
                                 </TableHead>
                                 <TableBody>
                                   {labList && labList.map((item, index) => (
-                                    item.laboratory && item.laboratory.filter(item => item.studentId === row.ownerId).map((data, i) => (
-                                      <TableRow>
-                                        <TableCell component="th" scope="row">
-                                          {data.title}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <TextField
-                                            id="input-with-icon-textfield"
-                                            label="Score"
-                                            value={data.score}
-                                            onChange={(e) => onChangeLabScore(e, i, index)}
-                                            disabled={!edit ? false : true}
-                                            InputProps={{
-                                              endAdornment: (
-                                                <InputAdornment position="end">
-                                                  <EditOutlinedIcon
-                                                    onClick={() => setEdit(!edit)}
-                                                  />
-                                                </InputAdornment>
-                                              ),
-                                            }}
-                                            variant="standard"
-                                          />
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => history.push(`/viewlab/${params.id}/${data.labId}/${data.studentId}`)}
-                                          >
-                                            View
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))
+                                    item.id === row.ownerId &&
+                                      renderLab(item.laboratory, index)
                                   ))}
                                 </TableBody>
                               </Table>
@@ -381,6 +430,18 @@ export default function StudentList() {
         <title>Class Grade</title>
         <link rel="Classroom Icon" href={logohelmetclass} />
       </Helmet>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={3000}
+        open={open}
+        onClose={handleClose}
+        message="I love snacks"
+        // key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Score Updated!
+        </Alert>
+      </Snackbar>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}

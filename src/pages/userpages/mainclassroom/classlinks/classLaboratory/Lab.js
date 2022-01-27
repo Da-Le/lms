@@ -18,6 +18,10 @@ import {
   useMediaQuery
 } from '@mui/material';
 
+import DateAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+
 import { Helmet } from 'react-helmet';
 import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
@@ -115,6 +119,8 @@ export default function Laboratory() {
     title: '',
     instruction: ''
   })
+  const [dueDate, setDueDate] = useState('')
+  const [startDate, setStartDate] = useState('')
 
 
   const { user } = useSelector((state) => state);
@@ -209,6 +215,14 @@ export default function Laboratory() {
     })
   }
 
+  const setDate = (e) => {
+    setDueDate(e)
+  }
+
+  const onStartDate = (e) => {
+    setStartDate(e)
+  }
+
   const saveLab = () => {
     const data = {
       html: html,
@@ -217,6 +231,8 @@ export default function Laboratory() {
       ownerId: user.currentUser.uid,
       classCode: params.id,
       created: Timestamp.now(),
+      startDate: Timestamp.fromDate(new Date(startDate)),
+      dueDate: Timestamp.fromDate(new Date(dueDate)),
       title: labTitle,
       students: studentName,
       instruction: instruction,
@@ -239,7 +255,7 @@ export default function Laboratory() {
         title: 'please input instruction'
       })
     } else {
-      createClassDoc('laboratory', id, data).then(() => {
+      createClassDoc('laboratory', params.labId, data).then(() => {
         setOpen({ open: true });
         studentName.map(student => {
           const studentData = {
@@ -377,6 +393,29 @@ export default function Laboratory() {
                 {isNew ? 'Save' : 'Update'}
               </Button> */}
             </Grid>
+
+            <Grid container spacing={5}>
+                  <Grid item>
+                    <LocalizationProvider dateAdapter={DateAdapter}>
+                      <DateTimePicker
+                        label="Start Date"
+                        value={startDate}
+                        onChange={(newValue) => onStartDate(newValue)}
+                        renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item>
+                    <LocalizationProvider dateAdapter={DateAdapter}>
+                      <DateTimePicker
+                        label="Due Date"
+                        value={dueDate}
+                        onChange={(newValue) => setDate(newValue)}
+                        renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </Grid>
 
             <FormControl fullWidth sx={{ marginBottom: 2 }}>
               <InputLabel id="select-student-label">Assign Student</InputLabel>

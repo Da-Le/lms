@@ -115,12 +115,12 @@ export default function QuizDetail() {
       data.filter(item => item.quizId === params.quizId).map(item => {
         // setQuizQuestions({questions:item.questions})
         setQuizTitle(item.title)
-        setDueDate(new Date(item.dueDate.seconds * 1000))
+        setDueDate(item.dueDate && new Date(item.dueDate.seconds * 1000))
         setInstruction(item.instruction)
         setTitle(item.title)
         setQuizQuestions(item.questions)
         setStudentName(item.students)
-        setStartDate(new Date(item.dueDate.seconds * 1000))
+        setStartDate(item.startDate && new Date(item.startDate.seconds * 1000))
         if(item.startDate.seconds <= Timestamp.now().seconds){
           setIsStart(true)
         }

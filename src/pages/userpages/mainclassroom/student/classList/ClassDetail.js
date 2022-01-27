@@ -288,6 +288,21 @@ export default function ClassListDetail() {
       }
     }
   }
+
+  const reDirectLab =(labClassId, labId, startDate, dueDate) => {
+    if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+      setDateMessage('Laboratory is not yet started')
+      setOpenSnack(true)
+    }else {
+      if(dueDate.seconds <= Timestamp.now().seconds){
+        setOpenSnack(true)
+        setDateMessage('Laboratory end')
+      }else {
+        history.push(`/studentlaboratorydetail/${labClassId}/${labId}`)
+      }
+    }
+  }
+
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -320,9 +335,10 @@ export default function ClassListDetail() {
             </Grid>
 
             {labList.length !== 0 ? labList.map(item =>
-              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/studentlaboratorydetail/${item.classCode}/${item.labId}`)}>
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectLab(item.classCode, item.labId, item.startDate, item.dueDate)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Laboratory name : {item.title}</Typography>
+                  <Typography variant="p" sx={style.linkStyle} onClick={() => null}>Score : {item.score ? item.score : 0}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
                   <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
@@ -345,6 +361,7 @@ export default function ClassListDetail() {
               <Grid container sx={style.gridcontainerCard} onClick={() => reDirectQuiz(item.classCode,item.quizId,item.startDate, item.dueDate)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
+                  <Typography variant="p" sx={style.linkStyle} onClick={() => null}>Score : {item.result ? `${item.result.correctPoints} / ${ item.result.totalPoints} `: 'not available'}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
                   <Typography>start date: {new Date(item.startDate.seconds * 1000).toLocaleDateString()} {new Date(item.startDate.seconds * 1000).toLocaleTimeString()}</Typography>

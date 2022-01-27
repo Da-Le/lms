@@ -208,8 +208,8 @@ export default function StudentList() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Student name A-Z</StyledTableCell>
-                      <StyledTableCell align="left">Email</StyledTableCell>
-                      <StyledTableCell align="left">Phone number</StyledTableCell>
+                      {/* <StyledTableCell align="left">Email</StyledTableCell> */}
+                      {/* <StyledTableCell align="left">Phone number</StyledTableCell> */}
                       <StyledTableCell align="left">Type</StyledTableCell>
                       {/* <StyledTableCell align="center">Action</StyledTableCell> */}
                     </TableRow>
@@ -220,8 +220,8 @@ export default function StudentList() {
                         <StyledTableCell component="th" scope="row">
                           {row.displayName}
                         </StyledTableCell>
-                        <StyledTableCell align="left">{row.email}</StyledTableCell>
-                        <StyledTableCell align="left">{row.phone}</StyledTableCell>
+                        {/* <StyledTableCell align="left">{row.email}</StyledTableCell> */}
+                        {/* <StyledTableCell align="left">{row.phone}</StyledTableCell> */}
                         <StyledTableCell align="left">{row.isTeacher ? "Teacher" : "Student"}</StyledTableCell>
                         {/* <StyledTableCell align="center">
                           {!row.isJoin ?
