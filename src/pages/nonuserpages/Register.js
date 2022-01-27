@@ -31,6 +31,11 @@ import { loginInitiate } from '../../redux/actions/userAction';
 import { Helmet } from 'react-helmet';
 import logohelmet from '../../assets/img/png/logoforhelmet.png';
 
+import Stack from '@mui/material/Stack';
+import MuiAlert from '@mui/material/Alert';
+
+import Snackbar from '@mui/material/Snackbar';
+
 const style = {
     marginTopButton: {
         marginTop: 3
@@ -124,11 +129,29 @@ const style = {
 }
 
 
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Register() {
 
     const dispatch = useDispatch();
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const [values, setValues] = useState({
         firstName: '',
@@ -149,7 +172,7 @@ export default function Register() {
         password: ''
     })
     const [loading, setLoading] = useState(false)
-    const [open, setOpen] = useState(false)
+
 
     const history = useHistory();
 
@@ -209,6 +232,10 @@ export default function Register() {
             error.email = 'Please enter email'
             isValid = false
         }
+        if (!values.phone) {
+            error.phone = 'Please enter phone number'
+            isValid = false
+        }
 
         //validate password
         if (!values.password) {
@@ -259,11 +286,12 @@ export default function Register() {
             }
             createUser(values.email, values.password, data).then(() => {
                 dispatch(loginInitiate(values.email, values.password, history));
-                setOpen(true)
                 setTimeout(() => {
                     if (data.isTeacher) {
+              
                         history.push('/classroom')
                     } else {
+                   
                         history.push('/studentclassroom')
                     }
                 }, 2000)
@@ -445,6 +473,7 @@ export default function Register() {
                                             onChange={e => handleChange(e)}
                                             value={values.phone}
                                             name='phone'
+                                            errorMessage={error.phone}
                                         />
                                     </Grid>
                                     <Grid item xs={12} spacing={3}>
@@ -721,6 +750,18 @@ export default function Register() {
                 </Box>
             </Grid>
         </Box> */}
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={open}
+                onClose={handleClose}
+                message="I love snacks"
+            // key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Succesfully Register
+                </Alert>
+            </Snackbar>
             <NewFooter />
         </Container>
     )

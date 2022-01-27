@@ -25,7 +25,6 @@ const style = {
         color: "#FFFFFF"
     },
     btnLinks: {
-        textDecoration: 'none',
         color: "#fff",
         '&:hover': {
             background: '#4877c2',

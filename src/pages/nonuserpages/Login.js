@@ -12,6 +12,11 @@ import {
 import LoadingButton from '@mui/lab/LoadingButton';
 
 
+import Stack from '@mui/material/Stack';
+import MuiAlert from '@mui/material/Alert';
+
+import Snackbar from '@mui/material/Snackbar';
+
 import { useDispatch } from 'react-redux';
 
 import { Link, useHistory } from 'react-router-dom';
@@ -142,7 +147,34 @@ const style = {
     },
 }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Login() {
+
+    const [openSuccess, setOpenSuccess] = React.useState(false);
+
+    const [openError, setOpenError] = React.useState(false);
+
+    const handleClick = () => {
+        setOpenSuccess(true);
+    };
+
+    const handleCloseSuccess = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSuccess(false);
+    };
+
+    const handleCloseError = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenError(false);
+    };
 
     const dispatch = useDispatch();
 
@@ -176,11 +208,12 @@ export default function Login() {
         setLoading(true)
         if (values.email === '' || values.password === '') {
             setValues({ ...values, errors: "Please Complete all fields", isLoading: false, password: "" })
-            alert(values.errors);
+            setOpenError({ open: true });
             setLoading(false)
         }
         else {
-            setValues({ ...values, errors: "", isLoading: true });
+            setValues({ ...values, errors: "Successfully Login", isLoading: true });
+
             // dispatch(loginInitiate(values.email, values.password, history));
             try {
                 const auth = getAuth();
@@ -192,10 +225,13 @@ export default function Login() {
                         window.sessionStorage.setItem('id', user.uid)
                         getDocsByCollection('users').then(data => {
                             data.filter(data => data.ownerId === user.uid).map(data => {
+                                setOpenSuccess({ open: true });
                                 window.sessionStorage.setItem('user', data.isTeacher)
                                 if (data.isTeacher) {
+
                                     history.push('/classroom')
                                 } else {
+
                                     history.push('/studentclassroom')
                                 }
                                 // if(data.isTeacher){
@@ -210,8 +246,9 @@ export default function Login() {
                     })
                     .catch((error) => {
                         const errorMessage = error.message;
-                        alert(errorMessage);
-                        setLoading(false)
+                        setValues({ ...values, errors: errorMessage, isLoading: false, password: "" })
+                        setOpenError({ open: true });
+                        setLoading(false);
                     });
 
             } catch (err) {
@@ -219,6 +256,10 @@ export default function Login() {
             }
         }
     };
+
+
+
+
 
     /* const handleNew = async (user) => {
         const docRef = doc(db, "users", user.uid);
@@ -287,9 +328,6 @@ export default function Login() {
                         <Grid container style={{
                             padding: "100px 80px"
                         }} justifyContent='center' spacing={4}>
-                            <Grid item>
-                                <Typography sx={{ color: 'red' }}>{values.errors}</Typography>
-                            </Grid>
                             <Grid item xs={12} spacing={3}>
                                 <Typography sx={style.textStyle}>Email</Typography>
                                 <Input
@@ -382,8 +420,35 @@ export default function Login() {
                     </Box>
                 </Box>
             </Box>
+
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={openError}
+                onClose={handleCloseError}
+                message="I love snacks"
+            // key={vertical + horizontal}
+            >
+                <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+                    {values.errors}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                autoHideDuration={3000}
+                open={openSuccess}
+                onClose={handleCloseSuccess}
+                message="I love snacks"
+            // key={vertical + horizontal}
+            >
+                <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+                    {values.errors}
+                </Alert>
+            </Snackbar>
             <NewFooter />
         </Container>
+
         // <Box sx={style.root}>
         //     <Grid container justifyContent="center">    
         //         <Box sx={style.section1} boxShadow={12}>
