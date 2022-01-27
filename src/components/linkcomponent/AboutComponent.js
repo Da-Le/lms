@@ -111,9 +111,7 @@ export default function AboutComponent() {
                 <Box sx={style.aboutContainer}>
                     <Box sx={style.marginStyle}>
                         <Box component={Grid} container justifyContent="flex-start" sx={style.titleContainer}>
-                            <Typography sx={style.title}>About</Typography>
-                            <Typography sx={style.title}>What is Rendezvous?</Typography>
-                            <Typography sx={style.title}>The Solution for Education</Typography>
+                            <Typography sx={style.title}>About Rendezvous</Typography>
                         </Box>
                         
                         <Box component={Grid} container justifyContent="flex-start" sx={style.textContainer}>
