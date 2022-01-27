@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { useHistory } from 'react-router';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 
 import {
-    Typography,
     Box,
     Grid,
-    Button,
 } from '@mui/material';
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
 import Classdrawer from '../../classdrawer/ClassDrawer';
-import bgImage from '../../../../../assets/img/jpg/animatedcomputer.jpg';
+
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 
 const style = {
@@ -95,6 +93,10 @@ export default function CalendarComponent() {
 
     return (
         <Classdrawer headTitle='Classroom'>
+            <Helmet>
+                <title>Calendar</title>
+                <link rel="Calendar Icon" href={logohelmetclass} />
+            </Helmet>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Calendar

@@ -7,12 +7,8 @@ import {
     Paper
 } from '@mui/material';
 
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
-import Bulb from '../../assets/img/png/bulb.png'
-import Find from '../../assets/img/jpg/find.jpg'
-import Message from '../../assets/img/jpg/message.jpg'
 const style = {
     //helper
     textAlignStyle: {
@@ -62,7 +58,7 @@ export default function GuideComponent() {
                                 </Grid>
                                 <CardContent>
                                     <Typography gutterBottom sx={{ ...style.textStyle, ...style.textAlignStyle }}>
-                                        Find ypu classroom
+                                        Find your Classroom
                                     </Typography>
                                     <Typography variant="body2" sx={{ ...style.textAlignStyle, ...style.descriptStyle }}>
                                         Elementary students don’t learn the same way as college students or adults. Rendezvous was designed for all students—from kindergarten through 12th grade—to be fully engaged with their learning.

@@ -18,6 +18,8 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import Banner from '../../../../../assets/img/jpg/banner.jpg'
 
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -30,7 +32,7 @@ const style = {
     boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
     marginTop: 5,
     padding: 2,
-    maxWidth: 1100
+    maxWidth: 1100,
   },
   announcementBannerContainer: {
     boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
@@ -42,7 +44,7 @@ const style = {
     backgroundRepeat: "no-repeat",
     backgroundImage: `url(${Banner})`,
     alignItems: "center",
-    maxWidth: 1100
+    maxWidth: 1100,
   },
   imageContainer: {
 
@@ -170,6 +172,10 @@ export default function ClassAnnouncement() {
 
   return (
     <Teacherdrawer headTitle={className} classCode={params.id}>
+      <Helmet>
+        <title>Announcement</title>
+        <link rel="Classroom Icon" href={logohelmetclass} />
+      </Helmet>
       <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
         <Box component={Grid} container justifyContent="center" sx={style.announcementBannerContainer}>
         </Box>

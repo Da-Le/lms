@@ -1,23 +1,18 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState } from 'react'
 
 import {
     Box,
     Button,
     Typography,
     Grid,
-    TextField,
     InputAdornment,
-    FormControl,
     IconButton,
-    Stack,
     Container,
-    FormControlLabel,
-    Radio,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Link, useHistory } from 'react-router-dom';
 
@@ -25,24 +20,16 @@ import Input from '../../components/Input'
 import NavBar from '../../components/navbarcomponent/NavBar'
 import NewFooter from '../../components/linkcomponent/NewFooter';
 
-
-import logoRendezvous from '../../assets/img/jpg/RendezvousNewLogo.jpg'
-import GoogleIcon from '@mui/icons-material/Google';
-import EmailIcon from '@mui/icons-material/Email';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import LockIcon from '@mui/icons-material/Lock';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import { loginInitiate, logoutInitiate, loginSuccess } from '../../redux/actions/userAction';
-import { getUserLogin, getDocsByCollection } from '../../utils/firebaseUtil'
+import { loginSuccess } from '../../redux/actions/userAction';
+import { getDocsByCollection } from '../../utils/firebaseUtil'
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { setDoc, doc } from '@firebase/firestore';
-
-import { db } from '../../utils/firebase';
+import { Helmet } from 'react-helmet';
+import logohelmet from '../../assets/img/png/logoforhelmet.png';
 
 const style = {
     //helper
@@ -158,7 +145,6 @@ const style = {
 export default function Login() {
 
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state);
 
     const history = useHistory();
 
@@ -166,8 +152,8 @@ export default function Login() {
         email: '',
         password: '',
         showPassword: false,
+        errors: ''
     });
-    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
     const handleChange = (prop) => (event) => {
@@ -199,46 +185,46 @@ export default function Login() {
             try {
                 const auth = getAuth();
                 signInWithEmailAndPassword(auth, values.email, values.password)
-                .then((userCredential) => {
-                  // Signed in 
-                  const user = userCredential.user;
-                  dispatch(loginSuccess(user));
-                  window.sessionStorage.setItem('id',user.uid)
-                  getDocsByCollection('users').then(data => {
-                    data.filter(data => data.ownerId === user.uid).map(data => {
-                        window.sessionStorage.setItem('user',data.isTeacher)
-                            if (data.isTeacher) {
-                                history.push('/classroom')
-                            } else {
-                                history.push('/studentclassroom')
-                            }
-                        // if(data.isTeacher){
-                        // history.push('/classroom')
-                        // }else {
-                        // history.push('/studentclassroom')
-                        // }
-                      })
-                  })
-                //   history.push('/classroom');
-                  // ...
-                })
-                .catch((error) => {
-                  const errorMessage = error.message;
-                  alert(errorMessage);
-                  setLoading(false)
-                });
-              
+                    .then((userCredential) => {
+                        // Signed in 
+                        const user = userCredential.user;
+                        dispatch(loginSuccess(user));
+                        window.sessionStorage.setItem('id', user.uid)
+                        getDocsByCollection('users').then(data => {
+                            data.filter(data => data.ownerId === user.uid).map(data => {
+                                window.sessionStorage.setItem('user', data.isTeacher)
+                                if (data.isTeacher) {
+                                    history.push('/classroom')
+                                } else {
+                                    history.push('/studentclassroom')
+                                }
+                                // if(data.isTeacher){
+                                // history.push('/classroom')
+                                // }else {
+                                // history.push('/studentclassroom')
+                                // }
+                            })
+                        })
+                        //   history.push('/classroom');
+                        // ...
+                    })
+                    .catch((error) => {
+                        const errorMessage = error.message;
+                        alert(errorMessage);
+                        setLoading(false)
+                    });
+
             } catch (err) {
                 console.error(err)
             }
         }
     };
 
-    const handleNew = async (user) => {
+    /* const handleNew = async (user) => {
         const docRef = doc(db, "users", user.uid);
         const payload = { displayName: user.displayName, email: user.email, uid: user.uid, photoURL: user.photoURL };
         await setDoc(docRef, payload);
-    }
+    } 
 
     const btnSignInWithGoogle = () => {
         const provider = new GoogleAuthProvider()
@@ -250,24 +236,24 @@ export default function Login() {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 // Check if user is new
-                const {isNewUser}  = getAdditionalUserInfo(result)
+                const { isNewUser } = getAdditionalUserInfo(result)
                 const userId = result.user.uid
                 const user = result.user;
                 // handleNew(user);
                 if (isNewUser) {
                     setError(`account doesn't exist`)
-                }else {
+                } else {
                     getUserLogin(result.user.email).then(userData => {
                         userData.map(item => {
-                            if(item.isTeacher){
+                            if (item.isTeacher) {
                                 history.push('/classroom')
-                            }else {
+                            } else {
                                 history.push('/studentclassroom')
                             }
                         })
                     })
                 }
-                
+
                 // history.push('/classroom')
                 // ...
             }).catch((error) => {
@@ -282,11 +268,15 @@ export default function Login() {
                 // ...
                 alert(credential);
             });
-    }
+    } */
     console.log(values)
 
     return (
         <Container maxWidth disableGutters={true}>
+            <Helmet>
+                <title>Login</title>
+                <link rel="Rendezous Icon" href={logohelmet} />
+            </Helmet>
             <NavBar />
             <Box sx={style.section1}>
                 <Box component={Grid} container justifyContent="center">
@@ -298,7 +288,7 @@ export default function Login() {
                             padding: "100px 80px"
                         }} justifyContent='center' spacing={4}>
                             <Grid item>
-                                <Typography sx={{color:'red'}}>{error}</Typography>
+                                <Typography sx={{ color: 'red' }}>{values.errors}</Typography>
                             </Grid>
                             <Grid item xs={12} spacing={3}>
                                 <Typography sx={style.textStyle}>Email</Typography>
@@ -320,22 +310,21 @@ export default function Login() {
                                     id="outlined-adornment-password"
                                     endAdornment={
                                         <InputAdornment position="end">
-                                          <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            edge="end"
-                                          >
-                                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                                          </IconButton>
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                edge="end"
+                                            >
+                                                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
                                         </InputAdornment>
-                                      }
+                                    }
                                 />
                             </Grid>
-                            <Grid container justifyContent="space-between" sx={{ paddingLeft: 6 }}>
-                                <FormControlLabel value="best" control={<Radio />} label="Remember me" />
+                            <Grid container justifyContent="flex-end" sx={{ paddingLeft: 6 }}>
                                 <Link style={{ marginTop: 4, textDecoration: "none" }}
-                                    to='/forgot'>Forget Password?</Link>
+                                    to='/forgot'>Forgot Password?</Link>
                             </Grid>
                             <Grid
                                 container
@@ -360,8 +349,8 @@ export default function Login() {
                                 >
                                     Sign in
                                 </Button> */}
-                                <LoadingButton 
-                                    loading={loading} 
+                                <LoadingButton
+                                    loading={loading}
                                     variant="contained"
                                     color='primary'
                                     onClick={(e) => btnSignIn(e)}

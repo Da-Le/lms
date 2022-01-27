@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
+import { getUser } from '../../../../../utils/firebaseUtil'
 
 import { useSelector } from 'react-redux';
 
@@ -9,21 +9,15 @@ import {
     Typography,
     Box,
     Grid,
-    TextField,
-    Button,
     Link
 } from '@mui/material';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Classdrawer from '../../classdrawer/ClassDrawer';
 import Image from '../../../../../assets/img/png/gmeet_image.png'
-import OutlinedInput from '@mui/material/OutlinedInput';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 import { useParams } from 'react-router-dom';
 import StudentDrawer from '../../classdrawer/ClassDrawerStudent';
+
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 const style = {
     gridcontainer: {
         maxWidth: 1100,
@@ -104,10 +98,10 @@ export default function ClassJoinMeet() {
         if (docSnap.exists()) {
             setMeetingLink(docSnap.data().meetingLink)
             console.log("Document data:", docSnap.data());
-          } else {
+        } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
-          }
+        }
     }
 
     const getClassData = () => {
@@ -128,6 +122,10 @@ export default function ClassJoinMeet() {
 
     return (
         <StudentDrawer classCode={params.id}>
+            <Helmet>
+                <title>Meeting</title>
+                <link rel="Classroom Icon" href={logohelmetclass} />
+            </Helmet>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container justifyContent="center" sx={style.gridcontainer}>
                     <Grid item sm>
@@ -159,7 +157,7 @@ export default function ClassJoinMeet() {
                         <Grid container sx={style.imageContainer}>
                             <Box
                                 component="img"
-                                src={Image} 
+                                src={Image}
                                 alt="Gmeet Image"
                                 sx={style.imgStyle}
                             />

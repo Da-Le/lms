@@ -5,7 +5,6 @@ import {
   Box,
   Grid,
   Button,
-  Menu,
   MenuItem,
   TextField,
   OutlinedInput,
@@ -13,21 +12,18 @@ import {
   InputLabel,
   Select,
   Alert,
-  AlertTitle,
   Snackbar,
-  IconButton,
   Stack,
   Chip,
   useMediaQuery
 } from '@mui/material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import InsertLinkIcon from '@mui/icons-material/InsertLink';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { createDoc, getDocsByCollection, updateDocsByCollection, createClassDoc, saveLabStudent,getStudentByAssigned } from '../../../../../utils/firebaseUtil'
+import { getDocsByCollection, createClassDoc, saveLabStudent, getStudentByAssigned } from '../../../../../utils/firebaseUtil'
 import { Timestamp } from 'firebase/firestore';
 
 import { useParams } from 'react-router';
@@ -36,16 +32,7 @@ import { useHistory } from 'react-router';
 
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
-import AssignmentIcon from '@mui/icons-material/Assignment';
 
-
-import Fade from '@mui/material/Fade';
-import Divider from '@mui/material/Divider';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import AddToDriveIcon from '@mui/icons-material/AddToDrive';
-import bgImage from '../../../../../assets/img/jpg/animatedcomputer.jpg';
-
-import Editor from './Editor'
 import { useTheme } from '@mui/material/styles';
 
 
@@ -109,10 +96,6 @@ const style = {
     display: 'flex',
     width: '100%'
   },
-  textStyle: {
-    margin: 0.5
-  }
-
 }
 
 export default function Laboratory() {
@@ -129,7 +112,7 @@ export default function Laboratory() {
   const [instruction, setInstruction] = useState('')
   const [labId, setLabId] = useState('')
   const [error, setError] = useState({
-    title:'',
+    title: '',
     instruction: ''
   })
 
@@ -240,22 +223,22 @@ export default function Laboratory() {
       labId: params.labId
     }
     // if(isNew){
-    if(labTitle === '' && instruction === ''){
+    if (labTitle === '' && instruction === '') {
       setError({
         title: 'please input title',
         instruction: 'please input instruction'
       })
-    }else if(instruction === ''){
+    } else if (instruction === '') {
       setError({
         ...error,
         instruction: 'please input instruction'
       })
-    }else if(labTitle === ''){
+    } else if (labTitle === '') {
       setError({
         ...error,
         title: 'please input instruction'
       })
-    }else {
+    } else {
       createClassDoc('laboratory', id, data).then(() => {
         setOpen({ open: true });
         studentName.map(student => {
@@ -277,11 +260,11 @@ export default function Laboratory() {
         const timeout = setTimeout(() => {
           history.push(`/classroomdetail/${params.id}`)
         }, 2000)
-  
+
         return () => clearTimeout(timeout)
       })
     }
-    
+
     // }
     // else {
     //   updateDocsByCollection('laboratory', data).then(() => {
@@ -345,6 +328,10 @@ export default function Laboratory() {
   console.log(studentsList)
   return (
     <Teacherdrawer classCode={params.id} headTitle={'Create Laboratory'}>
+      <Helmet>
+        <title>Create Laboratory</title>
+        <link rel="Classroom Icon" href={logohelmetclass} />
+      </Helmet>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
@@ -481,9 +468,9 @@ export default function Laboratory() {
           </Box> */}
           {matchMD ?
             ""
-            : 
+            :
             <>
-              <Grid container justifyContent="center" sx={{ marginTop: 2}}>
+              <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
                 <Button variant="contained" style={style.btnStyle} onClick={saveLab}>Create Task</Button>
                 <Button variant="contained" style={style.btnStyle} onClick={() => history.goBack()}>Cancel</Button>
               </Grid>

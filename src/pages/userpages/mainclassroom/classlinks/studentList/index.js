@@ -8,16 +8,13 @@ import { useSelector } from 'react-redux';
 
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
-import AddUserDialog from './AddUserDialog'
-
+import AddUserDialog from './AddUserDialog';
 
 import {
   Typography,
   Box,
   Grid,
   Button,
-  Menu,
-  MenuItem,
   TableContainer,
   Paper,
   Table,
@@ -29,19 +26,14 @@ import {
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
-
 import { useParams } from 'react-router-dom';
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-
-
-import Fade from '@mui/material/Fade';
-import Divider from '@mui/material/Divider';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import AddToDriveIcon from '@mui/icons-material/AddToDrive';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import bgImage from '../../../../../assets/img/jpg/animatedcomputer.jpg';
+
+
+import { Helmet } from 'react-helmet';
+import logohelmetclass from '../../../../../assets/img/png/monitor.png';
 
 // import CreateClass from './CreateClass';
 // import JoinClass from './JoinClass';
@@ -143,7 +135,7 @@ export default function StudentList() {
 
   const handleClose = () => {
     setAnchorEl(null);
-};
+  };
 
   const handleAddUserOpen = () => {
     SetAddUserOpen(!addUserOpen);
@@ -275,6 +267,10 @@ export default function StudentList() {
 
   return (
     <Teacherdrawer classCode={params.id} headTitle={title}>
+      <Helmet>
+        <title>Student List</title>
+        <link rel="Classroom Icon" href={logohelmetclass} />
+      </Helmet>
       {classroom ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}
