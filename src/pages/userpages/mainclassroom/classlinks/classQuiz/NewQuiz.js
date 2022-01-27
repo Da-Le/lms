@@ -17,11 +17,10 @@ import {
   useMediaQuery,
   Snackbar,
   Alert,
-  CircularProgress
 } from '@mui/material';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -77,6 +76,7 @@ export default function ClassQuiz() {
   const [students, setStudents] = useState([])
   const [duration, setDuration] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [startDate, setStartDate] = useState('')
   const [subject, setSubject] = useState('')
   const [quizTitle, setQuizTitle] = useState('')
   const [instruction, setInstruction] = useState('')
@@ -155,6 +155,7 @@ export default function ClassQuiz() {
 
   const quizAddQuestion = () => {
     setError('')
+    setLoading(true)
     // let questions = {
     //   question:'',
     //   item: 0,
@@ -165,21 +166,34 @@ export default function ClassQuiz() {
     //   answerKey:''
     // }
     // setAnswer([''])
-    addQuestion.map(item => {
-      setQuizQuestions(quizQuiestions => [...quizQuiestions, item])
-      setAddQuestion([{
-        question: "",
-        questionType: "text",
-        questionPic: "",
-        answerSelectionType: "single",
-        answers: [],
-        correctAnswer: "",
-        messageForCorrectAnswer: "Correct answer. Good job.",
-        messageForIncorrectAnswer: "Incorrect answer. Please try again.",
-        explanation: "",
-        point: ""
-      }])
-    })
+    if(
+      quizQuiestions.length === 0 &&
+      addQuestion[0].question === "" ||
+      addQuestion[0].answers.length === 0 ||
+      addQuestion[0].correctAnswer === "" ||
+      addQuestion[0].point === ""
+      ){
+      setError('please create a question')
+      setLoading(false)
+    }else {
+      addQuestion.map(item => {
+        setQuizQuestions(quizQuiestions => [...quizQuiestions, item])
+        setAddQuestion([{
+          question: "",
+          questionType: "text",
+          questionPic: "",
+          answerSelectionType: "single",
+          answers: [],
+          correctAnswer: "",
+          messageForCorrectAnswer: "Correct answer. Good job.",
+          messageForIncorrectAnswer: "Incorrect answer. Please try again.",
+          explanation: "",
+          point: ""
+        }])
+      })
+      setLoading(false)
+    }
+    
     
     // setAnswer([''])
     // let questions = {
@@ -263,10 +277,24 @@ export default function ClassQuiz() {
       subject: subject,
       quizId: params.quizId,
       instruction: instruction,
-
+      startDate: Timestamp.fromDate(new Date(startDate))
     }
-    if(quizQuiestions.length === 0){
-      setError('please create a question')
+    if(
+      
+      quizTitle === '' ||
+      dueDate === '' ||
+      instruction === ''
+      ){
+      setError('please input details')
+      setLoading(false)
+    }else if(
+      quizQuiestions.length === 0 &&
+      addQuestion[0].question === "" ||
+      addQuestion[0].answers.length === 0 ||
+      addQuestion[0].correctAnswer === "" ||
+      addQuestion[0].point === ""
+    ){
+      setError('please input details')
       setLoading(false)
     }else {
       createClassDoc('quiz', params.quizId, data).then(() => {
@@ -284,7 +312,8 @@ export default function ClassQuiz() {
             quizId: params.quizId,
             studentId: student,
             instruction: instruction,
-            isDone: false
+            isDone: false,
+            startDate: Timestamp.fromDate(new Date(startDate))
           }
           saveQuizStudent(studentData)
         })
@@ -312,6 +341,10 @@ export default function ClassQuiz() {
 
   const setDate = (e) => {
     setDueDate(e)
+  }
+
+  const onStartDate = (e) => {
+    setStartDate(e)
   }
 
   const handleDuration = (e) => {
@@ -535,7 +568,8 @@ export default function ClassQuiz() {
   )
 
   return (
-    <Teacherdrawer headTitle='Create Quiz' classCode={params.id}>
+    <Teacherdrawer headTitle='Create Quiz' classCode={params.id} loading={loading}>
+      
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         autoHideDuration={3000}
@@ -548,12 +582,8 @@ export default function ClassQuiz() {
         Successfully Created Quiz
       </Alert>
       </Snackbar>
-      {loading ?
-        <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
-          <CircularProgress />
-        </Box>
-      :
-        <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+      <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 5 }}>
+          
           <Grid container sx={style.gridcontainer} justifyContent='space-between'>
             <Grid container>
               <Typography>Title</Typography>
@@ -588,14 +618,30 @@ export default function ClassQuiz() {
                     ))}
                   </Select>
                 </FormControl>
-                <LocalizationProvider dateAdapter={DateAdapter}>
-                  <DatePicker
-                    label="Due Date"
-                    value={dueDate}
-                    onChange={(newValue) => setDate(newValue)}
-                    renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
-                  />
-                </LocalizationProvider>
+                <Grid container spacing={5}>
+                  <Grid item>
+                    <LocalizationProvider dateAdapter={DateAdapter}>
+                      <DateTimePicker
+                        label="Start Date"
+                        value={startDate}
+                        onChange={(newValue) => onStartDate(newValue)}
+                        renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item>
+                    <LocalizationProvider dateAdapter={DateAdapter}>
+                      <DateTimePicker
+                        label="Due Date"
+                        value={dueDate}
+                        onChange={(newValue) => setDate(newValue)}
+                        renderInput={(params) => <TextField {...params} sx={{ marginBottom: 2 }} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  
+                </Grid>
+                
               </Grid>
               <TextField
                 variant="filled"
@@ -607,6 +653,8 @@ export default function ClassQuiz() {
                 // onChange={handleAnnoucement}
                 fullWidth
                 minRows={5}
+                error={error ? true : false}
+                helperText={error}
               />
               <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
 
@@ -694,7 +742,6 @@ export default function ClassQuiz() {
           
 
         </Box>
-      }
       
     </Teacherdrawer>
   )

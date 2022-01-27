@@ -224,7 +224,7 @@ export default function TeacherDrawer(props) {
                         </Typography>
                     </Grid>
                 </Toolbar>
-                {loading ?
+                {props.loading ?
                     (
                         <LinearProgress />
                     ) :

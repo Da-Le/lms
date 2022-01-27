@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, Timestamp } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
 import { getUser, acceptStudent, removeStudent, getDocsByCollection } from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
+
 
 
 import {
@@ -20,7 +21,8 @@ import {
   TableHead,
   TableRow,
   TableBody,
-  CircularProgress
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -154,6 +156,8 @@ export default function ClassListDetail() {
   const [title, setTitle] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [loading, setLoading] = useState(true)
+  const [dateMessage, setDateMessage] = useState('')
+  const [openSnack, setOpenSnack] = useState(false)
 
   const open = Boolean(anchorEl);
 
@@ -236,6 +240,7 @@ export default function ClassListDetail() {
       setLabList(
         snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       );
+      setLoading(false)
     }
     )
     return unsubscribe;
@@ -248,6 +253,7 @@ export default function ClassListDetail() {
       setQuizList(
         snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       );
+      setLoading(false)
     }
     )
     return unsubscribe;
@@ -270,6 +276,29 @@ export default function ClassListDetail() {
     }
     )
     return unsubscribe;
+  }
+
+  // const reDirectQuiz = (quizClassId,quizId, startDate, dueDate) => {
+  //   if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+  //     setDateMessage('Quiz is not yet started')
+  //   }else {
+  //     if(dueDate.seconds <= Timestamp.now().seconds){
+  //       setDateMessage('Quiz end')
+  //     }else {
+  //       history.push(`/quizdetail/${quizClassId}/${quizId}`)
+  //     }
+  //   }
+  // }
+  const reDirectQuiz = (quizClassId,quizId, startDate, dueDate) => {
+    if(startDate.seconds >= Timestamp.now().seconds && dueDate.seconds > Timestamp.now().seconds){
+      history.push(`/quizdetail/${quizClassId}/${quizId}`)
+    }else {
+      setDateMessage('Quiz ongoing')
+      setOpenSnack(true)
+      if(dueDate.seconds <= Timestamp.now().seconds){
+        history.push(`/quizdetail/${quizClassId}/${quizId}`)
+      }
+    }
   }
 
   const classroomBody = () => {
@@ -393,15 +422,21 @@ export default function ClassListDetail() {
             </Grid>
 
             {quizList.length !== 0 ? quizList.map(item => 
-              <Grid container sx={style.gridcontainerCard} onClick={() => history.push(`/quizdetail/${item.classCode}/${item.quizId}`)}>
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectQuiz(item.classCode,item.quizId,item.startDate, item.dueDate)}>
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
                   <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Quiz name : {item.title}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
-                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                  <Typography>start: {new Date(item.startDate.seconds * 1000).toLocaleDateString()} {new Date(item.startDate.seconds * 1000).toLocaleTimeString()}</Typography>
                 </Grid>
                 <Grid container xs={12} direction='column'>
-                  <Typography>due data: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                  <Typography>due date: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.startDate.seconds >= Timestamp.now().seconds && item.dueDate.seconds > Timestamp.now().seconds  && 'Quiz is not yet started'}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>{item.dueDate.seconds <= Timestamp.now().seconds && 'Quiz end'}</Typography>
                 </Grid>
               </Grid>
             ) :
@@ -423,18 +458,33 @@ export default function ClassListDetail() {
   console.log(user)
   console.log(classCode)
 
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnack(false)
+  };
+
   return (
-    <Teacherdrawer classCode={params.id} headTitle={title}>
-      {loading ?
-        <Box sx={{ display: 'flex', widhth: '100%',height:'30em', justifyContent:'center', alignItems: 'center' }}>
-          <CircularProgress />
-        </Box>
-      :
-      classroom.length !== 0 ?
+    <Teacherdrawer classCode={params.id} headTitle={title} loading={loading}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={3000}
+        open={openSnack}
+        onClose={handleCloseSnack}
+        message="I love snacks"
+        // key={vertical + horizontal}
+      >
+        <Alert onClose={handleCloseSnack} severity="error" sx={{ width: '100%' }}>
+          {dateMessage}
+        </Alert>
+      </Snackbar>
+      {classroom.length !== 0 ?
         <Box component={Grid} container justifyContent="" alignItems="" sx={{ paddingTop: 5, flexDirection: "column" }}>
           {classroomBody()}
         </Box>
         :
+        !loading &&
         <Box component={Grid} container justifyContent="center" alignItems="center" sx={{ paddingTop: 5, flexDirection: "column" }}>
           <Box component={Grid} container justifyContent="center" sx={style.imgContainer}>
             <Box component="img" src={bgImage} alt="Animated Computer" sx={style.imgStyle} />
