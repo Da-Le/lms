@@ -74,7 +74,6 @@ const style = {
 }
 
 
-
 export default function QuizDetail() {
   const setQuizResult = (obj) => {
     console.log(obj);
@@ -211,7 +210,10 @@ export default function QuizDetail() {
       examId: params.examId
     }
     getExamStudent(studentData).then(item => {
-      setQuizQuestions({questions:item.questions})
+      // setQuizQuestions({questions:item.questions})
+      setQuizQuestions({questions:item.questions,"appLocale": {
+        "startQuizBtn": "Start Exam",
+      } })
       // setQuizQuestions(item.questions)
       setQuizTitle(item.title)
       setDueDate(new Date(item.dueDate.seconds * 1000).toLocaleDateString())
