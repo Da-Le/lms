@@ -189,6 +189,8 @@ export default function Laboratory() {
       classCode: params.id,
       submitDate: Timestamp.now(),
       created: Timestamp.now(),
+      startDate: Timestamp.fromDate(new Date(startDate)),
+      dueDate: Timestamp.fromDate(new Date(dueDate)),
       title: labTitle,
       instruction: instruction,
       labId: params.labId,
