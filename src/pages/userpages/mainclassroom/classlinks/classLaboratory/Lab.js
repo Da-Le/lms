@@ -265,6 +265,8 @@ export default function Laboratory() {
             ownerId: user.currentUser.uid,
             classCode: params.id,
             created: Timestamp.now(),
+            startDate: Timestamp.fromDate(new Date(startDate)),
+            dueDate: Timestamp.fromDate(new Date(dueDate)),
             title: labTitle,
             studentId: student,
             instruction: instruction,
