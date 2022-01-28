@@ -28,7 +28,7 @@ export const createUser = async (email, password, data) => {
         ownerId: user.uid
       }
     );
-    return user
+    return user.uid
     // ...
   })
   .catch((err) => {

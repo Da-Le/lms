@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { createUser, getDocsByCollection } from '../../utils/firebaseUtil'
+import { createUser, getDocsByCollection, createDoc } from '../../utils/firebaseUtil'
 
 import Container from '@mui/material/Container';
 import Input from '../../components/Input';
@@ -27,7 +27,7 @@ import Input from '../../components/Input';
 
 import NavBar from '../../components/navbarcomponent/NavBar'
 import NewFooter from '../../components/linkcomponent/NewFooter';
-import { loginInitiate, loginSuccess} from '../../redux/actions/userAction';
+import { loginInitiate, loginSuccess, registerInitiate} from '../../redux/actions/userAction';
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -299,45 +299,57 @@ export default function Register() {
             setValues({ ...values, errors: "Successfully Login", isLoading: true });
 
             // dispatch(loginInitiate(values.email, values.password, history));
-            try {
-                const auth = getAuth();
-                signInWithEmailAndPassword(auth, values.email, values.password)
-                    .then((userCredential) => {
-                        // Signed in 
-                        const user = userCredential.user;
-                        dispatch(loginSuccess(user));
-                        window.sessionStorage.setItem('id', user.uid)
-                        getDocsByCollection('users').then(data => {
-                            data.filter(data => data.ownerId === user.uid).map(data => {
-                                setOpen({ open: true });
-                                window.sessionStorage.setItem('user', data.isTeacher)
-                                if (data.isTeacher) {
-
-                                    history.push('/classroom')
-                                } else {
-
-                                    history.push('/studentclassroom')
-                                }
-                                // if(data.isTeacher){
-                                // history.push('/classroom')
-                                // }else {
-                                // history.push('/studentclassroom')
-                                // }
+            createUser(values.email, values.password, data).then(data => {
+                createDoc('users',values).then(() => {
+                })
+                try {
+                    const auth = getAuth();
+                    signInWithEmailAndPassword(auth, values.email, values.password)
+                        .then((userCredential) => {
+                            // Signed in 
+                            const user = userCredential.user;
+                            dispatch(loginInitiate(values.email, values.password, history));
+                            dispatch(loginSuccess(user));
+                            window.sessionStorage.setItem('id', user.uid)
+                            getDocsByCollection('users').then(data => {
+                                data.filter(data => data.ownerId === user.uid).map(data => {
+                                    setOpen({ open: true });
+                                    window.sessionStorage.setItem('user', data.isTeacher)
+                                    if (data.isTeacher) {
+    
+                                        history.push('/classroom')
+                                    } else {
+    
+                                        history.push('/studentclassroom')
+                                    }
+                                    // if(data.isTeacher){
+                                    // history.push('/classroom')
+                                    // }else {
+                                    // history.push('/studentclassroom')
+                                    // }
+                                })
                             })
+                            //   history.push('/classroom');
+                            // ...
                         })
-                        //   history.push('/classroom');
-                        // ...
-                    })
-                    .catch((error) => {
-                        const errorMessage = error.message;
-                        setValues({ ...values, errors: errorMessage, isLoading: false, password: "", confirmPassword: '' })
-                        setOpenError({ open: true });
-                        setLoading(false);
-                    });
-
-            } catch (err) {
-                console.error(err)
-            }
+                        .catch((error) => {
+                            const errorMessage = error.message;
+                            setValues({ ...values, errors: errorMessage, isLoading: false, password: "", confirmPassword: '' })
+                            setOpenError({ open: true });
+                            setLoading(false);
+                        });
+    
+                } catch (err) {
+                    console.error(err)
+                }
+            }).catch((err) => {
+                const errorMessage = error.message;
+                setValues({ ...values, errors: errorMessage, isLoading: false, password: "", confirmPassword: '' })
+                setOpenError({ open: true });
+                setLoading(false)
+              });
+            
+            
             // createUser(values.email, values.password, data).then(() => {
             //     dispatch(loginInitiate(values.email, values.password, history));
             //     setTimeout(() => {
