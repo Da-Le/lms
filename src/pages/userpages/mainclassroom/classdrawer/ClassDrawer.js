@@ -176,8 +176,7 @@ export default function MiniDrawer(props) {
 
     const handleLogOut = () => {
         if (user) {
-            dispatch(logoutInitiate());
-            history.push('/');
+            dispatch(logoutInitiate(user ,history));
             
         }
     }

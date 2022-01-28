@@ -106,19 +106,21 @@ export const getUserId = () => async (dispatch) => {
     }
 }
 
-const logoutSuccess = (user) => {
-    sessionStorage.clear();
+const logoutSuccess = (user, history) => {
+    history.push('/');  
     return {
         type: actionTypes.LOGOUT_SUCCESS,
         // payload: user
     };
 }
 
-export const logoutInitiate = (user) => async (dispatch) => {
+export const logoutInitiate = (user, history) => async (dispatch) => {
+    sessionStorage.clear();
     try {
         const auth = getAuth();
         auth.signOut().then(() => {
-            dispatch(logoutSuccess(user));            
+            
+            dispatch(logoutSuccess(user, history));          
         }).catch((error) => {
             // An error happened.
         });
