@@ -136,7 +136,8 @@ export default function ClassAnnouncementList() {
   const [values, setValues] = useState({
     newPassword: '',
     confirmPassword: '',
-    phone: ''
+    phone: '',
+    photoUrl: '',
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -148,6 +149,10 @@ export default function ClassAnnouncementList() {
     if (Object.keys(user.currentUser).length !== 0) {
       getUser().then(item => {
         setUserDetail(item)
+        setValues({
+          ...values,
+          phone:item[0].phone
+        })
         setImgUrl(item[0].photoUrl)
         console.log(item)
       })
@@ -164,21 +169,37 @@ export default function ClassAnnouncementList() {
   const onSave = () => {
     setSuccess('')
     setError('')
-    if (values.newPassword !== values.confirmPassword) {
+    // if(/^(09|\+639)\d{9}$/.test(values.phone) === false && /^[0-9]{8}$/.test(values.phone) === false) {
+    //   setSuccess('')
+    //   setError('invalid phone')
+    // }else{
+    //   console.log('succeess')
+    // }
+
+    if (values.newPassword !== '' && values.newPassword !== values.confirmPassword) {
       setSuccess('')
       setError('Password not matched, please type again')
-    } else if (userDetail[0].phone !== values.phone) {
+    } else if(values.phone === '' && values.newPassword === '' && values.confirmPassword === '' && values.photoUrl !== '') {
       setError('')
-      setOpen(true)
+      const docRef = doc(db, 'users', user.currentUser.uid);
+        setDoc(docRef, { phone: values.phone, photoUrl: values.photoUrl }, { merge: true });
+        setOpen(true)
+    }else if (values.phone === '' && values.newPassword === '' && values.confirmPassword === '') {
+      setSuccess('')
+      setError('Please fill out fields')
+    }else if(/^(09|\+639)\d{9}$/.test(values.phone) === false && /^[0-9]{8}$/.test(values.phone) === false) {
+      setSuccess('')
+      setError('invalid phone')
+    }else {
+      setError('')
+      // const docRef = doc(db, 'users', user.currentUser.uid);
+      // setDoc(docRef, { phone: values.phone }, { merge: true });
+      const auth = getAuth();
+      // const user = auth.currentUser;
+      // const newPassword = getASecureRandomPassword();
       const docRef = doc(db, 'users', user.currentUser.uid);
       setDoc(docRef, { phone: values.phone, photoUrl: imgUrl }, { merge: true });
-    } else {
-      setError('')
-      const docRef = doc(db, 'users', user.currentUser.uid);
-      setDoc(docRef, { phone: values.phone }, { merge: true });
-      const auth = getAuth();
-      const user = auth.currentUser;
-      // const newPassword = getASecureRandomPassword();
+      setOpen(true)
       updatePassword(user, values.newPassword).then(() => {
         setOpen(true)
         setSuccess('Profile has been updated')
@@ -202,6 +223,10 @@ export default function ClassAnnouncementList() {
     uploadImage(file).then(data => {
       getDownloadURL(data.ref).then(url => {
         console.log(url)
+        setValues({
+          ...values,
+          photoUrl: url
+        })
         setImgUrl(url)
       })
       // getDownloadURL(data.snapshot.ref).then((downloadURL) => {
@@ -212,6 +237,7 @@ export default function ClassAnnouncementList() {
 
   console.log(user)
   console.log(values)
+  console.log(userDetail)
   console.log(imgUrl)
   const userDetailBody = () => {
     return userDetail && userDetail.map(item =>
@@ -258,7 +284,7 @@ export default function ClassAnnouncementList() {
             <Typography sx={style.textStyle}>Phone Number</Typography>
             <Input
               type='text'
-              value={values.phone ? values.phone : item.phone}
+              value={values.phone}
               name='phone'
               onChange={onChange}
             // errorMessage={error.firstName}
