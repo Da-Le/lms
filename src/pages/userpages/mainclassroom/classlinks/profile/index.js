@@ -7,14 +7,20 @@ import {
   Avatar,
   Button,
   Snackbar,
-  Alert
+  Alert,
+  IconButton,
 } from '@mui/material';
+
+import {ref, getDownloadURL} from "firebase/storage";
+
+
+import AddIcon from '@mui/icons-material/Add';
 
 import ClassDrawer from '../../classdrawer/ClassDrawer';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase'
 
-import { getUser } from '../../../../../utils/firebaseUtil';
+import { getUser, uploadImage } from '../../../../../utils/firebaseUtil';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { logoutInitiate } from '../../../../../redux/actions/userAction';
@@ -85,6 +91,36 @@ const style = {
     borderRadius: 2,
     textTransform: 'none',
     fontSize: 18
+  },
+  uploadInput: {
+    // border: '1px solid red',
+    '#icon-button-file': {
+      display: ' none',
+      border: '1px solid red'
+    },
+    
+    // input: {
+    //   display: ' none',
+    //   border: '1px solid red'
+    // },
+    'label': {
+      height: 'fit-content',
+      position: 'relative',
+      top: '80%',
+      left: '-2%',
+      'div': {
+        border: 0
+      }
+    },
+  },
+  uploadIcon: {
+    height: 30,
+    width: 30,
+    border: '1px solid black',
+    backgroundColor: '#949494',
+    '&:hover': {
+      backgroundColor: '#949494'
+    },
   }
 }
 
@@ -105,12 +141,15 @@ export default function ClassAnnouncementList() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [open, setOpen] = useState(false)
+  const [imgUrl, setImgUrl] = useState('')
 
   useEffect(() => {
 
     if (Object.keys(user.currentUser).length !== 0) {
       getUser().then(item => {
         setUserDetail(item)
+        setImgUrl(item[0].photoUrl)
+        console.log(item)
       })
     }
   }, [user]);
@@ -132,7 +171,7 @@ export default function ClassAnnouncementList() {
       setError('')
       setOpen(true)
       const docRef = doc(db, 'users', user.currentUser.uid);
-      setDoc(docRef, { phone: values.phone }, { merge: true });
+      setDoc(docRef, { phone: values.phone, photoUrl: imgUrl }, { merge: true });
     } else {
       setError('')
       const docRef = doc(db, 'users', user.currentUser.uid);
@@ -158,16 +197,39 @@ export default function ClassAnnouncementList() {
     }
   }
 
+  const onFileChange = (e) => {
+    const file = e.target.files[0]
+    uploadImage(file).then(data => {
+      getDownloadURL(data.ref).then(url => {
+        console.log(url)
+        setImgUrl(url)
+      })
+      // getDownloadURL(data.snapshot.ref).then((downloadURL) => {
+      //   console.log('File available at', downloadURL);
+      // });
+    })
+  }
+
   console.log(user)
   console.log(values)
+  console.log(imgUrl)
   const userDetailBody = () => {
     return userDetail && userDetail.map(item =>
       <Grid container sx={style.gridcontainer} justifyContent='center'>
-        <Grid container justifyContent='center'>
-          <Avatar sx={style.profileLogo} variant="square" src={user.currentUser.photoUrl} />
-          {/* <IconButton sx={style.addbtn}>
+        <Grid container justifyContent='center' sx={style.uploadInput}>
+          <Avatar sx={style.profileLogo} variant="square" src={imgUrl} />
+          {/* <Input accept="image/*" id="icon-button-file" type="file" /> */}
+          {/* <IconButton sx={style.addbtn}> */}
+          <label htmlFor="icon-button-file" sx={style.uploadContainer}>
+            <Input accept="image/*" id="icon-button-file" type="file" onChange={onFileChange} />
+            <IconButton sx={style.uploadIcon} aria-label="upload picture" component="span">
+              <AddIcon sx={{ color: 'white' }} />
+            </IconButton>
+          </label>
+          {/* <IconButton sx={style.uploadIcon}>
             <AddIcon sx={{ color: 'white' }} />
           </IconButton> */}
+          
         </Grid>
         <Grid xs={12} item sx={{ maxWidth: 500 }}>
           <Grid item xs={12} spacing={3}>
