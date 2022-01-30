@@ -175,6 +175,7 @@ export default function StudentList() {
 
   const handleAccept = (classCode, userId, classData, studentData) => {
     acceptStudent('createclass', classCode, classData, studentData)
+    // console.log(studentData)
   }
 
   const handleRemove = (classCode, userId, studentData) => {
