@@ -58,7 +58,11 @@ const style = {
       // border: '1px solid green',
       backgroundImage: 'none !important',
       backgroundColor:' black !important'
-    }
+    },
+    'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button' : {
+      '-webkit-appearance': 'none',
+      margin: 0
+}
     // '.MuiInputAdornment-positionEnd': {
     //   border: '1px solid red',
     //   height: 20,
@@ -82,7 +86,7 @@ export default function Input(props) {
     errorMessage,
     endAdornment,
     id,
-    onKeyDown
+    onKeyDown,
   } = props
   return (
     <div style={{display:'flex',flexDirection:'column', width:'100%'}}>

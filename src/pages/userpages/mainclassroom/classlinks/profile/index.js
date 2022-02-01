@@ -284,8 +284,9 @@ export default function ClassAnnouncementList() {
           <Grid item xs={12} spacing={3}>
             <Typography sx={style.textStyle}>Phone Number</Typography>
             <Input
-              type='text'
+              type='number'
               value={values.phone}
+              pattern={'[0-9]{16}'}
               name='phone'
               onChange={onChange}
             // errorMessage={error.firstName}
