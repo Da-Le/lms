@@ -232,7 +232,7 @@ export default function StudentList() {
   };
 
   const renderLab = (laboratory, index) => (
-    Object.keys(laboratory).map(key=> (
+    Object.keys(laboratory).filter(key => params.id === laboratory[key].classCode).map(key=> (
       <TableRow>
         <TableCell component="th" scope="row">
           {laboratory[key].title}
@@ -272,7 +272,7 @@ export default function StudentList() {
   )
 
   const renderQuiz = (quiz, index) => (
-   Object.keys(quiz).map(key => (
+   Object.keys(quiz).filter(key => params.id === quiz[key].classCode).map(key => (
       <TableRow>
         <TableCell component="th" scope="row">
           {quiz[key].title}
@@ -288,7 +288,7 @@ export default function StudentList() {
   )
 
   const renderExam = (exam, index) => (
-    Object.keys(exam).map(key => (
+    Object.keys(exam).filter(key => params.id === exam[key].classCode).map(key => (
        <TableRow>
          <TableCell component="th" scope="row">
            {exam[key].title}

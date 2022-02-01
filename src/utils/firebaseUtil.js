@@ -5,7 +5,7 @@ import {
   storage
 } from './firebase'
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs,getDoc, updateDoc, doc, arrayUnion,arrayRemove, setDoc, orderBy, query, where, deleteDoc} from "firebase/firestore"; 
+import { collection, addDoc, getDocs,getDoc, updateDoc, doc, arrayUnion,arrayRemove, setDoc, orderBy, query, where, deleteDoc, Timestamp} from "firebase/firestore"; 
 import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 
 
@@ -102,6 +102,13 @@ export const getLabStudent = async (classCode, studentId, labId) => {
 // save laboratory
 export const saveLabStudent = async (data) => {
   const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'laboratory', data.labId)
+  await setDoc(colRef,data);
+  return colRef
+}
+
+// save assignment
+export const saveAssignmentStudent = async (data) => {
+  const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'assignment', data.assignmentId)
   await setDoc(colRef,data);
   return colRef
 }
@@ -462,6 +469,25 @@ export const updateDocsByCollection = async (collectionName, data) => {
 
 }
 
+export const updateAssignment = async (collectionName, data) => {
+  const getData = collection(db, collectionName)
+  const querySnapshot = await getDocs(getData);
+  let docId = ''
+  // console.log(data.labId)
+  // console.log(collectionName)
+  // querySnapshot.docs.filter(item => item.ownerId === data.ownerId).map((doc) => docId = doc.id)
+  docId = querySnapshot.docs.filter(item => item.data().ownerId === data.ownerId).map((doc) => {
+    // console.log(doc.id)
+    // let docId = ''
+    return doc.id
+  })
+  // console.log(docId)
+  const docInstance = doc(db, collectionName, data.assignmentId)
+  await updateDoc(docInstance, data);
+  return docInstance
+
+}
+
 /**
  * 
  * @param {string} collectionName 
@@ -625,4 +651,80 @@ export const uploadImage = async (file) => {
     }
     );
     return uploadTask
+}
+
+export const uploadFile = async (file, classCode, id, ownerId, studentId, category) => {
+  for (var i = 0; i < file.length; i++) {
+    const imageFile = file[i];
+    const returnData = uploadImageAsPromise(imageFile)
+    console.log('test',returnData.then(item => {
+      return item
+    }))
+  }
+
+  function uploadImageAsPromise (imageFile) {
+    return new Promise(function (resolve, reject) {
+      const metadata = {
+        contentType: 'application/*,'
+      };
+        const profileImgsRef = ref(storage, 'files/' + `${classCode}/` + `${id}/` + imageFile.name);
+        //Upload file
+        const uploadTask = uploadBytesResumable(profileImgsRef, imageFile, metadata);
+
+       // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          }, 
+          (error) => {
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+              case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+              // ...
+
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          }, 
+          () => {
+            // Upload completed successfully, now we can get the download URL
+            let url =''
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL);
+              const colFileRef = doc(collection(db, 'files'))
+              const dataFile = {
+                category: category,
+                classCode: classCode,
+                createdDate: Timestamp.now(),
+                name: imageFile.name,
+                studentId: studentId,
+                ownerId: ownerId,
+                url: downloadURL
+              }
+              setDoc(colFileRef, dataFile)
+            });
+          }
+          );
+          resolve(uploadTask);
+    });
+    
+  }
 }

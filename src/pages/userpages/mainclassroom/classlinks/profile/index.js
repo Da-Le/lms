@@ -220,6 +220,7 @@ export default function ClassAnnouncementList() {
 
   const onFileChange = (e) => {
     const file = e.target.files[0]
+    console.log(file)
     uploadImage(file).then(data => {
       getDownloadURL(data.ref).then(url => {
         console.log(url)

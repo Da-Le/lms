@@ -59,6 +59,8 @@ import ClassGrade from '../pages/userpages/mainclassroom/classlinks/classGrade'
 import ClassSetting from '../pages/userpages/mainclassroom/classlinks/classsetting/ClassSetting';
 import ClassNewExam from '../pages/userpages/mainclassroom/classlinks/classExam/NewQuiz'
 import ExamDetail from '../pages/userpages/mainclassroom/classlinks/classExam/QuizDetail'
+import ClassNewAssignment from '../pages/userpages/mainclassroom/classlinks/classAssignment'
+import AssignmentDetail from '../pages/userpages/mainclassroom/classlinks/classAssignment/AssignmentDetails'
 
 //student components
 import StudentClassList from '../pages/userpages/mainclassroom/student/classList'
@@ -226,6 +228,8 @@ export default function RouterComponent() {
                     <TeacherRoute component={ClassSetting} path="/classsetting/:id" exact /> 
                     <TeacherRoute component={ClassNewExam} path="/exam/:id/:examId" exact />
                     <TeacherRoute component={ExamDetail} path="/examdetail/:id/:examId" exact />
+                    <TeacherRoute component={ClassNewAssignment} path="/assignment/:id/:assignmentId" exact />
+                    <TeacherRoute component={AssignmentDetail} path="/assignmentdetail/:id/:assignmentId" exact />
                    
                    
                     
