@@ -5,6 +5,7 @@ import {
   Box,
   Grid,
   Avatar,
+  Link
 } from '@mui/material';
 
 import Studentdrawer from '../../classdrawer/ClassDrawerStudent';
@@ -70,6 +71,7 @@ export default function ClassAnnouncement() {
   const [subject, setSubject] = useState('')
   const [ownerName, setOwnerName] = useState('')
   const [announcementContent, setAnnoucncementContent] = useState('')
+  const [fileList, setFileList] = useState([])
 
   const params = useParams()
   const { user } = useSelector((state) => state);
@@ -87,6 +89,7 @@ export default function ClassAnnouncement() {
       getClassData()
     }
     getDataAnnouncement()
+    getFileList()
   }, [user]);
 
   const getClassData = () => {
@@ -108,6 +111,15 @@ export default function ClassAnnouncement() {
         const data = item.filter(item => item.classCode === params.id)
         setAnnouncementData(data)
       })
+  }
+
+  const getFileList = () => {
+    getDocsByCollection('files').then(data => {
+      const dataFile = data.filter(item => item.classCode === params.id && item.category === 'announcement').map(item => {
+        return item
+      })
+      setFileList(dataFile)
+    })
   }
 
   const handleAnnoucement = (e) => {
@@ -149,6 +161,16 @@ export default function ClassAnnouncement() {
         </Grid>
         <Grid item xs={12} sx={{ marginTop: 1 }}>
           <Typography sx={{ marginTop: 2 }}>{item.body}</Typography>
+        </Grid>
+        <Grid item xs={12} sx={{ marginTop: 1 }}>
+          {fileList && fileList.filter(data => data.id === item.announcementId).map(data => 
+              <Grid container>
+                <Link style={{marginTop: 12}} href={data.url} underline="none">
+                  {data.name}
+                </Link>
+              </Grid>
+            )
+            }
         </Grid>
         {/* <Grid xs={12} justifyContent='flex-end' container>
           <Button
