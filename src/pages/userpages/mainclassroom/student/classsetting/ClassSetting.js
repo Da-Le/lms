@@ -96,6 +96,7 @@ export default function ClassSetting() {
 
     const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
+    const [studentData, setStudentData] = useState({})
 
     const history = useHistory();
 
@@ -116,13 +117,16 @@ export default function ClassSetting() {
 
     const getClassData = () => {
         const classCollection = collection(db, "createclass")
-        const qTeacher = query(classCollection, where('ownerId', "==", user.currentUser.uid), where('classCode', "==", params.id));
+        const qTeacher = query(classCollection, where('classCode', "==", params.id));
         const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
             setClassroom(
                 snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
             );
             snapshot.docs.map(doc => {
-                setClassCode(doc.data().classCode)
+                setClassCode(doc.data().ownerId)
+                doc.data().students.filter(item => item.ownerId === user.currentUser.uid).map(student => {
+                    setStudentData(student)
+                })
             })
             // setLoading(false);
         }
@@ -131,7 +135,7 @@ export default function ClassSetting() {
     }
 
     const onDeleteClass = () => {
-        unenrollStudent(user.currentUser.uid, params.id).then(() => {
+        unenrollStudent(user.currentUser.uid, params.id, classCode, studentData).then(() => {
             setOpenDeleteSnack(true)
             setTimeout(() => {
                 history.push('/studentclassroom')

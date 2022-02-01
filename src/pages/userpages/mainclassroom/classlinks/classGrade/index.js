@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '../../../../../utils/firebase';
-import { getUser, updateLabScore,saveLabStudent } from '../../../../../utils/firebaseUtil'
+import { getUser, updateLabScore,saveLabStudent, updateAssignScore } from '../../../../../utils/firebaseUtil'
 
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -138,6 +138,7 @@ export default function StudentList() {
   const [edit, setEdit] = useState(false)
   const [open, setOpen] = useState(false)
   const [examList, setExamList] = useState([])
+  const [assignmentList, setAssignmentList] = useState([])
 
 
   //Load classrooms
@@ -153,6 +154,7 @@ export default function StudentList() {
       getStudentQuizData()
       getStudentLabData()
       getStudentExamData()
+      getStudentAssignmentData()
     }
 
 
@@ -181,6 +183,15 @@ export default function StudentList() {
     })
   }
 
+  const getStudentAssignmentData = () => {
+    const studentLabCollection = collection(db, "studentRecord")
+    onSnapshot(studentLabCollection, (snapshot) => {
+      console.log(snapshot)
+      console.log(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+      setAssignmentList(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+    })
+  }
+
   const onChangeLabScore = (e, i, index) => {
     const lab = [...labList];
     lab[index].laboratory[i].score = e.target.value;
@@ -190,11 +201,36 @@ export default function StudentList() {
     // return () => clearTimeout(timeout)
 
   }
+
+  const onChangeAssignScore = (e, i, index) => {
+    const assign = [...assignmentList];
+    assign[index].assignment[i].score = e.target.value;
+    // setAddQuestion(questionList)
+    setAssignmentList(assign)
+   
+    // return () => clearTimeout(timeout)
+
+  }
   const saveLabScore = (e, i, index) => {
     const lab = [...labList];
     if(e.key === 'Enter'){
       const timeout = setTimeout(() => {
         updateLabScore(lab[index].laboratory[i], i)
+        setOpen(true)
+      }, 250)
+    }
+    // const timeout = setTimeout(() => {
+    //   updateLabScore(lab[index].laboratory[i], i)
+    //   setOpen(true)
+    // }, 250)
+    
+  }
+
+  const saveAssignScore = (e, i, index) => {
+    const assign = [...assignmentList];
+    if(e.key === 'Enter'){
+      const timeout = setTimeout(() => {
+        updateAssignScore(assign[index].assignment[i], i)
         setOpen(true)
       }, 250)
     }
@@ -263,6 +299,46 @@ export default function StudentList() {
             variant="contained"
             color="primary"
             onClick={() => history.push(`/viewlab/${params.id}/${laboratory[key].labId}/${laboratory[key].studentId}`)}
+          >
+            View
+          </Button>
+        </TableCell>
+      </TableRow>
+    ))
+  )
+
+  const renderAssignment = (assignment, index) => (
+    Object.keys(assignment).filter(key => params.id === assignment[key].classCode).map(key=> (
+      <TableRow>
+        <TableCell component="th" scope="row">
+          {assignment[key].title}
+        </TableCell>
+        <TableCell align="right">
+          <TextField
+            id="input-with-icon-textfield"
+            label="Score"
+            value={assignment[key].score}
+            onChange={(e) => onChangeAssignScore(e, key, index)}
+            onKeyDown={(e) => saveAssignScore(e, key, index)}
+            // onMouseLeave={(e) => saveLabScore(e, key, index)}
+            disabled={!edit ? false : true}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <EditOutlinedIcon
+                    onClick={() => setEdit(!edit)}
+                  />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+        </TableCell>
+        <TableCell align="right">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => history.push(`/viewassignment/${params.id}/${assignment[key].assignmentId}/${assignment[key].studentId}`)}
           >
             View
           </Button>
@@ -454,6 +530,30 @@ export default function StudentList() {
                                   {labList && labList.map((item, index) => (
                                     item.id === row.ownerId &&
                                       renderLab(item.laboratory, index)
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableRow>
+                        <TableRow key={row.name}>
+                          <Collapse in={true} timeout="auto" unmountOnExit>
+                            <Box sx={{ margin: 1 }}>
+                              <Typography variant="h6" gutterBottom component="div">
+                                Assignment
+                              </Typography>
+                              <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Assignment Title</TableCell>
+                                    <TableCell align="right">Score</TableCell>
+                                    <TableCell align="right">View Assignment</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {assignmentList && assignmentList.map((item, index) => (
+                                    item.id === row.ownerId &&
+                                    renderAssignment(item.assignment, index)
                                   ))}
                                 </TableBody>
                               </Table>

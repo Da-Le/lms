@@ -145,6 +145,33 @@ export const updateLabScore = async (data, index) => {
 
 }
 
+export const updateAssignScore = async (data, index) => {
+  const colRef = doc(db, "studentRecord", data.studentId);
+  const docSnap = await getDoc(colRef);
+  // const labData = [...docSnap.data().laboratory]
+  // labData[data.labId].score = data.score
+  // const labData = docSnap.data().laboratory[data.labId]
+  console.log(index)
+  let labData = {}
+  labData[`assignment.${index}`] = {
+    assignmentId: data.assignmentId,
+    title: data.title,
+    classCode: data.classCode,
+    dueDate: data.dueDate,
+    studentId: data.studentId,
+    score: data.score,
+  }
+  // console.log(docSnap.data().laboratory[data.labId].score)
+  await updateDoc(colRef, labData);
+  const colRef2 = doc(db, "createclass", data.classCode, "students", data.studentId, 'assignment', data.assignmentId)
+  await setDoc(colRef2,{score: data.score}, { merge: true });
+  
+  // await updateDoc(colRef, {
+  //   laboratory: labData
+  // });
+
+}
+
 /**
  * 
  * @param {object} data
@@ -192,6 +219,17 @@ export const saveQuizStudent = async (data) => {
   const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'quiz', data.quizId)
   // await setDoc(colRef,data);
   console.log(data)
+  const docInstance = await setDoc(colRef, data);
+
+
+  return docInstance
+}
+
+// save quiz
+export const saveAssignemntStudent = async (data) => {
+  const colRef = doc(db, "createclass", data.classCode, "students", data.studentId, 'assignment', data.assignmentId)
+  // await setDoc(colRef,data);
+  saveAssignmentRecord(data)
   const docInstance = await setDoc(colRef, data);
 
 
@@ -309,6 +347,35 @@ export const saveExamRecord = async (data) => {
   await setDoc(colRef2,{result: data.result}, { merge: true });
   // const docInstance = updateDoc(colRef, dataRecord);
   return colRef2
+}
+
+export const saveAssignmentRecord = async (data) => {
+  const colRef = doc(db, "studentRecord", data.studentId)
+  const docSnap = await getDoc(colRef);
+
+  if (docSnap.exists()) {
+    let dataRecord = {}
+  dataRecord[`assignment.${data.assignmentId}`] = {
+    assignmentId: data.assignmentId,
+    title: data.title,
+    classCode: data.classCode,
+    dueDate: data.dueDate,
+    studentId: data.studentId
+  }
+    updateDoc(colRef, dataRecord);;
+  } else {
+    setDoc(colRef, {assignment:{}})
+    let dataRecord = {}
+    dataRecord[`assignment.${data.assignmentId}`] = {
+      assignmentId: data.assignmentId,
+      title: data.title,
+      classCode: data.classCode,
+      dueDate: data.dueDate,
+      studentId: data.studentId
+    }
+    updateDoc(colRef, dataRecord);
+  }
+  
 }
 
 /**
@@ -583,9 +650,10 @@ export const archiveClass = async (id) => {
   });
 }
 
-export const unenrollStudent = async (studentId, id) => {
+export const unenrollStudent = async (studentId, id, ownerId, studentData) => {
   const docRef = doc(db, "studentRecord", studentId, "classroom", id);
-
+  removeStudent('createclass', id, ownerId, studentData)
+  // console.log(studentData)
   await updateDoc(docRef, {
     isDeleted: true
   });

@@ -189,7 +189,7 @@ export default function Laboratory() {
       const dataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment').map(item => {
         return item
       })
-      const studentDataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.studentId === user.currentUser.uid).map(item => {
+      const studentDataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.studentId === params.studentId).map(item => {
         return item
       })
       setFileList(dataFile)
@@ -418,7 +418,7 @@ export default function Laboratory() {
                 <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
                   <Grid container justifyContent='space-between'>
                     <Grid container xs={6}>
-                      <section className="container" style={{display:'flex', justifyContent: 'space-between', width:'100%'}}>
+                      {/* <section className="container" style={{display:'flex', justifyContent: 'space-between', width:'100%'}}>
                         <div {...getRootProps({ className: 'dropzone' })}>
                           <input {...getInputProps()} />
                           <div>
@@ -439,7 +439,7 @@ export default function Laboratory() {
                           </>
                           }
                         </aside>
-                      </section>
+                      </section> */}
                       {studentFile && studentFile.map(item => 
                           <Grid container>
                             <Link style={{marginTop: 12}} href={item.url} underline="none">
@@ -453,18 +453,11 @@ export default function Laboratory() {
                     <Grid container xs={6} justifyContent='flex-end'>
                       <Grid item sx={{ marginTop: 0.5 }}>
                         <Button
+                          variant='contained'
                           style={style.btnStyle}
-                          onClick={() => history.push(`/studentclassroomdetail/${params.id}`)}
+                          onClick={() => history.goBack()}
                         >
-                          cancel
-                        </Button>
-                        <Button
-                          variant="contained"
-                          // disabled={announcementContent ? false : true} 
-                          style={style.btnStyle}
-                          onClick={saveAssignment}
-                        >
-                          Save
+                          Back
                         </Button>
                       </Grid>
                     </Grid>

@@ -61,6 +61,7 @@ import ClassNewExam from '../pages/userpages/mainclassroom/classlinks/classExam/
 import ExamDetail from '../pages/userpages/mainclassroom/classlinks/classExam/QuizDetail'
 import ClassNewAssignment from '../pages/userpages/mainclassroom/classlinks/classAssignment'
 import AssignmentDetail from '../pages/userpages/mainclassroom/classlinks/classAssignment/AssignmentDetails'
+import AssignmentView from '../pages/userpages/mainclassroom/classlinks/classAssignment/ViewWork'
 
 //student components
 import StudentClassList from '../pages/userpages/mainclassroom/student/classList'
@@ -231,6 +232,7 @@ export default function RouterComponent() {
                     <TeacherRoute component={ExamDetail} path="/examdetail/:id/:examId" exact />
                     <TeacherRoute component={ClassNewAssignment} path="/assignment/:id/:assignmentId" exact />
                     <TeacherRoute component={AssignmentDetail} path="/assignmentdetail/:id/:assignmentId" exact />
+                    <TeacherRoute component={AssignmentView} path="/viewassignment/:id/:assignmentId/:studentId" exact />
                    
                    
                     

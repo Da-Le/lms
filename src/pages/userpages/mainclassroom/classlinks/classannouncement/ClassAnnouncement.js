@@ -90,6 +90,7 @@ export default function ClassAnnouncement() {
   const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
   const [itemId, setItemId] = useState('')
   const [fileList, setFileList] = useState([])
+  const [displayPhoto, setDisplayPhoto] = useState('')
 
   const params = useParams()
   const { user } = useSelector((state) => state);
@@ -128,6 +129,7 @@ export default function ClassAnnouncement() {
         item.map(data => {
           setUserId(data.ownerId)
           setOwnerName(data.displayName)
+          setDisplayPhoto(data.photoUrl)
         })
 
       })
@@ -241,7 +243,7 @@ const onDeleteDialog = (id) => {
     return announcementData && announcementData.filter(item => item.classCode === params.id).map(item =>
       <Grid container sx={style.gridcontainer} justifyContent='space-between'>
         <Grid xs={12} item sx={{ display: 'flex' }}>
-          <Avatar />
+          <Avatar src={displayPhoto}/>
           <Grid container sx={{ paddingLeft: 1 }}>
             <Grid container>
               <Typography>{new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
@@ -371,7 +373,7 @@ const onDeleteDialog = (id) => {
             <Grid container sx={style.main}
               onClick={() => setShowInput(true)}
             >
-              <Avatar />
+              <Avatar src={displayPhoto}/>
               <Typography style={{ paddingLeft: 20 }}>Announce Something To Class</Typography>
             </Grid>
           )}
