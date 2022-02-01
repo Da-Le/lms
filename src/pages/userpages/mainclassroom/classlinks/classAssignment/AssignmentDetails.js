@@ -14,7 +14,8 @@ import {
   Snackbar,
   Stack,
   Chip,
-  Typography
+  Typography,
+  Link
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import DateAdapter from '@mui/lab/AdapterMoment';
@@ -36,8 +37,9 @@ const style = {
   gridcontainer: {
     display: "flex",
     marginTop: 5,
+    boxShadow: '0 3px  5px 2px rgb(126 126 126 / 30%)',
     padding: 2,
-    maxWidth: 900,
+    // maxWidth: 900,
     borderBottom: 0.5,
     borderColor: (theme) => theme.palette.primary.main
   },
@@ -152,9 +154,10 @@ export default function Laboratory() {
 
   const getFileList = () => {
     getDocsByCollection('files').then(data => {
-      data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.ownerId === user.currentUser.uid).map(item => {
-        setFileList(item)
+      const dataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.ownerId === user.currentUser.uid).map(item => {
+        return item
       })
+      setFileList(dataFile)
     })
   }
 
@@ -394,48 +397,61 @@ export default function Laboratory() {
 
               </Stack>
             </Grid>
-            <Grid xs={12} justifyContent='flex-start' container>
-              <Grid container>
-                <TextField
-                  variant="filled"
-                  multiline
-                  value={instruction}
-                  onChange={(e) => handleInstruction(e)}
-                  fullWidth
-                  minRows={5}
-                />
-                <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
-                  <Grid item>
-                    {/* <IconButton sx={style.iconStyle}>
-                      <AddToDriveIcon />
-                    </IconButton>
-                    <IconButton sx={style.iconStyle}>
-                      <FileUploadIcon />
-                    </IconButton>
-                    <IconButton sx={style.iconStyle}>
-                      <InsertLinkIcon />
-                    </IconButton>
-                    <IconButton sx={style.iconStyle}>
-                      <YouTubeIcon />
-                    </IconButton> */}
-                  </Grid>
-                  <Grid item sx={{ marginTop: 0.5 }}>
-                    <Button
-                      style={style.btnStyle}
-                      onClick={() => history.push(`/classroomdetail/${params.id}`)}
-                    >
-                      cancel
-                    </Button>
-                    <Button
-                      variant="contained"
-                      // disabled={announcementContent ? false : true} 
-                      style={style.btnStyle}
-                      onClick={saveLab}
-                    >
-                      Update
-                    </Button>
-                  </Grid>
-                </Box>
+            <Grid xs={12} justifyContent='flex-start' sx={style.gridcontainer} container>
+              <Grid xs={12} justifyContent='flex-start' container>
+                <Grid container>
+                  <TextField
+                    variant="filled"
+                    multiline
+                    value={instruction}
+                    onChange={(e) => handleInstruction(e)}
+                    fullWidth
+                    minRows={5}
+                  />
+                  {fileList && fileList.map(item => 
+                    <Grid container>
+                      <Link style={{marginTop: 12}} href={item.url} underline="none">
+                        {item.name}
+                      </Link>
+                    </Grid>
+                  )
+                   
+                  }
+                  <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
+                    <Grid item>
+                      {/* <IconButton sx={style.iconStyle}>
+                        <AddToDriveIcon />
+                      </IconButton>
+                      <IconButton sx={style.iconStyle}>
+                        <FileUploadIcon />
+                      </IconButton>
+                      <IconButton sx={style.iconStyle}>
+                        <InsertLinkIcon />
+                      </IconButton>
+                      <IconButton sx={style.iconStyle}>
+                        <YouTubeIcon />
+                      </IconButton> */}
+                    </Grid>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container xs={12} justifyContent='flex-end' style={{marginTop: 12}}>
+              <Grid item sx={{ marginTop: 0.5 }}>
+                <Button
+                  style={style.btnStyle}
+                  onClick={() => history.push(`/classroomdetail/${params.id}`)}
+                >
+                  cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  // disabled={announcementContent ? false : true} 
+                  style={style.btnStyle}
+                  onClick={saveLab}
+                >
+                  Update
+                </Button>
               </Grid>
             </Grid>
           </Grid>

@@ -7,7 +7,8 @@ import {
     Box,
     Grid,
     Button,
-    LinearProgress
+    LinearProgress,
+    Link
 } from '@mui/material';
 
 import Classdrawer from '../../classdrawer/ClassDrawer';
@@ -21,6 +22,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+
+import { useSelector } from 'react-redux';
+
+import { getDocsByCollection } from '../../../../../utils/firebaseUtil'
+
 
 
 const style = {
@@ -116,9 +122,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Files() {
 
     const [loading, setLoading] = useState(true)
+    const [fileList , setFileList] = useState([])
+
+    const { user } = useSelector((state) => state);
+
+    useEffect(() => {
+        if (Object.keys(user.currentUser).length !== 0) {
+            getFileList()
+            setLoading(false)
+        }
+    }, [user]);
+
+    const getFileList = () => {
+        getDocsByCollection('files').then(data => {
+          const dataFile = data.filter(item => item.ownerId === user.currentUser.uid).map(item => {
+            return item
+          })
+          setFileList(dataFile)
+        })
+      }
 
     return (
-        <Classdrawer headTitle='Files'>
+        <Classdrawer headTitle='Files' loading={loading}>
             <Box component={Grid} container justifyContent="center" sx={{ paddingTop: 10 }}>
                 <Grid container sx={style.gridcontainer} justifyContent="space-between">
                     <Box component={Grid} container justifyContent="flex-start">
@@ -129,17 +154,28 @@ export default function Files() {
                             <Table aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCell>Date</StyledTableCell>
                                         <StyledTableCell align="start">File Name</StyledTableCell>
+                                        <StyledTableCell align="start">Created Date</StyledTableCell>
+                                        <StyledTableCell align="start">Category</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <StyledTableRow>
-                                        <StyledTableCell component="th" scope="row">
+                                    
+                                        {fileList && fileList.map(item => 
+                                        <StyledTableRow>
+                                            <StyledTableCell align="start">
+                                            <Link style={{marginTop: 12}} href={item.url} underline="none">
+                                                {item.name}
+                                            </Link>
+                                            </StyledTableCell>
+                                            <StyledTableCell align="start">{new Date(item.createdDate.seconds * 1000).toLocaleDateString()}</StyledTableCell>
+                                            <StyledTableCell align="start">{item.category}</StyledTableCell>
+                                            </StyledTableRow>
+                                        )}
+                                        {/* <StyledTableCell component="th" scope="row">
                                             01/21/2021 01.00PM
                                         </StyledTableCell>
-                                        <StyledTableCell align="start">Word.docs</StyledTableCell>
-                                    </StyledTableRow>
+                                        <StyledTableCell align="start">Word.docs</StyledTableCell> */}
                                 </TableBody>
                             </Table>
                         </TableContainer>

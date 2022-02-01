@@ -316,14 +316,14 @@ export default function MiniDrawer(props) {
                             <ListItemIcon> <PeopleIcon color="primary" /></ListItemIcon>
                             <ListItemText>People</ListItemText>
                         </ListItem> */}
-                            {/* <Box sx={style.listHover}>
+                            <Box sx={style.listHover}>
                                 <ListItem
                                     button
                                     component={Link}
                                     to={`/files`}
                                     sx={style.listItemStyle}
                                 >
-                                    <ListItemIcon> <ArticleIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
+                                    <ListItemIcon> <InfoIcon color="primary" sx={style.iconStyle} /></ListItemIcon>
                                     <ListItemText>
                                         <Typography sx={style.textStyle}>
                                             Files
@@ -331,7 +331,7 @@ export default function MiniDrawer(props) {
                                     </ListItemText>
                                 </ListItem>
 
-                            </Box> */}
+                            </Box>
                             <Box sx={style.listHover}>
                                 <ListItem
                                     button
