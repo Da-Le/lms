@@ -158,6 +158,7 @@ export default function ClassListDetail() {
   const [dateMessage, setDateMessage] = useState('')
   const [openSnack, setOpenSnack] = useState(false)
   const [examList, setExamList] = useState([])
+  const [assignmentList, setAssignmentList] = useState([])
 
 
   const open = Boolean(anchorEl);
@@ -226,6 +227,7 @@ export default function ClassListDetail() {
       getLabList()
       getQuizList()
       getExamList()
+      getAssignmentList()
       getUser().then(data => {
         data.map(item => {
           setIsTeacher(item.isTeacher)
@@ -263,6 +265,18 @@ export default function ClassListDetail() {
     const qTeacher = query(labCollection, where('classCode', "==", params.id));
     const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
       setExamList(
+        snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+      );
+    }
+    )
+    return unsubscribe;
+  }
+
+  const getAssignmentList = () => {
+    const assignCollection = collection(db, "assignment")
+    const qTeacher = query(assignCollection, where('classCode', "==", params.id));
+    const unsubscribe = onSnapshot(qTeacher, (snapshot) => {
+      setAssignmentList(
         snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
       );
     }
@@ -329,6 +343,15 @@ export default function ClassListDetail() {
     }
   }
 
+  const reDirectAssignment = (assignmentClassId,assignmentIdId, createdDate, dueDate) => {
+    if(dueDate.seconds >= Timestamp.now().seconds){
+      history.push(`/studentassignmentdetail/${assignmentClassId}/${assignmentIdId}`)
+    }else {
+      setDateMessage('Assignment expired')
+      setOpenSnack(true)
+    }
+  }
+
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -356,6 +379,30 @@ export default function ClassListDetail() {
           </Box>
 
           <Box component={Grid} container justifyContent="center" >
+          <Grid container sx={style.gridcontainerClass} style={{ padding: 0 }}>
+              <Typography variant="h6">Assignment List</Typography>
+            </Grid>
+
+            {assignmentList.length !== 0 ? assignmentList.map(item => 
+              <Grid container sx={style.gridcontainerCard} onClick={() => reDirectAssignment(item.classCode,item.assignmentId,item.created, item.dueDate)}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>Assignment name : {item.title}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>created: {new Date(item.created.seconds * 1000).toLocaleDateString()} {new Date(item.created.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+                <Grid container xs={12} direction='column'>
+                  <Typography>due date: {new Date(item.dueDate.seconds * 1000).toLocaleDateString()} {new Date(item.dueDate.seconds * 1000).toLocaleTimeString()}</Typography>
+                </Grid>
+              </Grid>
+            ) :
+              !loading &&
+              <Grid container sx={style.gridcontainerCard}>
+                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }} container>
+                  <Typography variant="h5" sx={style.linkStyle} onClick={() => null}>No Available Assignment{item.title}</Typography>
+                </Grid>
+              </Grid>
+            }
             <Grid container sx={style.gridcontainerClass}>
               <Typography variant="h6">Laboratory List</Typography>
             </Grid>

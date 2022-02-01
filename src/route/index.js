@@ -72,6 +72,7 @@ import StudentClassJoinMeet from '../pages/userpages/mainclassroom/student/class
 import StudentList from '../pages/userpages/mainclassroom/student/studentList'
 import StudentClassSetting from '../pages/userpages/mainclassroom/student/classsetting/ClassSetting';
 import StudentExamDetail from '../pages/userpages/mainclassroom/student/classExam/QuizDetail'
+import StudentAssignmentDetail from '../pages/userpages/mainclassroom/student/classAssignment/AssignmentDetails'
 
 
 
@@ -246,6 +247,7 @@ export default function RouterComponent() {
                     <StudentRoute component={StudentList} path="/classstudentlist/:id" exact />
                     <StudentRoute component={StudentClassSetting} path="/studentsetting/:id" exact /> 
                     <StudentRoute component={StudentExamDetail} path="/studentexamdetail/:id/:examId" exact />
+                    <StudentRoute component={StudentAssignmentDetail} path="/studentassignmentdetail/:id/:assignmentId" exact />
                     
 
                     <Route component={NotFound} path='/'/>
