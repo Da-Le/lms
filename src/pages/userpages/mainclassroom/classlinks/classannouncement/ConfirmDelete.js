@@ -26,7 +26,7 @@ const style = {
     },
 }
 
-export default function ConfirmDelete({ isOpen, handleCloseConfirm, confirmDelete, userId }) {
+export default function ConfirmDelete({ isOpen, handleCloseConfirm, confirmDeleteItem, userId }) {
     // const [userId, setUserId] = useState('');
     const [classCode, setClassCode] = useState('');
 
@@ -67,7 +67,7 @@ export default function ConfirmDelete({ isOpen, handleCloseConfirm, confirmDelet
                     <Button autoFocus onClick={handleCloseConfirm}>
                         No I Changed My Mind
                     </Button>
-                    <Button color='error' onClick={confirmDelete} autoFocus>
+                    <Button color='error' onClick={confirmDeleteItem} autoFocus>
                         Yes Delete This Announcement!!
                     </Button>
                 </DialogActions>

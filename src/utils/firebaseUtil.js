@@ -717,6 +717,7 @@ export const uploadFile = async (file, classCode, id, ownerId, studentId, catego
                 name: imageFile.name,
                 studentId: studentId,
                 ownerId: ownerId,
+                id: id,
                 url: downloadURL
               }
               setDoc(colFileRef, dataFile)

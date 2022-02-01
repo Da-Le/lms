@@ -9,13 +9,18 @@ import {
   Button,
   IconButton,
   Snackbar,
-  Alert
+  Alert,
+  Link
 } from '@mui/material';
 
 import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 import { Timestamp } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
+import {useDropzone} from 'react-dropzone';
 
-import { getAnnouncement,getAnnouncementId, deleteAnnouncement, getDocsByCollection, getUser, createDoc } from '../../../../../utils/firebaseUtil';
+
+
+import { getAnnouncement,getAnnouncementId, deleteAnnouncement, getDocsByCollection, getUser, createDoc, uploadFile } from '../../../../../utils/firebaseUtil';
 import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import Banner from '../../../../../assets/img/jpg/banner.jpg'
@@ -32,7 +37,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 const style = {
   gridcontainer: {
     display: "flex",
-    boxShadow: '0 3px 5px 2px rgb(126 126 126 / 30%)',
+    boxShadow: '0 3px  5px 2px rgb(126 126 126 / 30%)',
     marginTop: 5,
     padding: 2,
     maxWidth: 1100,
@@ -83,9 +88,38 @@ export default function ClassAnnouncement() {
   const [announcementContent, setAnnoucncementContent] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [openDeleteSnack, setOpenDeleteSnack] = useState(false)
+  const [itemId, setItemId] = useState('')
+  const [fileList, setFileList] = useState([])
 
   const params = useParams()
   const { user } = useSelector((state) => state);
+  const id = (uuidv4().slice(-8));
+
+  const {
+    acceptedFiles,
+    fileRejections,
+    getRootProps,
+    getInputProps
+  } = useDropzone({
+    accept: 'text/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.pages,.odt,.rtf'
+  });
+
+  const acceptedFileItems = acceptedFiles.map(file => (
+    <div key={file.path}>
+      ({file.path} - {file.size} bytes)
+    </div>
+  ));
+
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <div key={file.path}>
+      ({file.path} - {file.size} bytes)
+      <div>
+        {errors.map(e => (
+          <p key={e.code}>{e.message}</p>
+        ))}
+      </div>
+    </div>
+  ));
 
   useEffect(() => {
 
@@ -100,6 +134,7 @@ export default function ClassAnnouncement() {
       getClassData()
     }
     getDataAnnouncement()
+    getFileList()
   }, [user]);
 
   const getClassData = () => {
@@ -137,6 +172,15 @@ export default function ClassAnnouncement() {
       })
   }
 
+  const getFileList = () => {
+    getDocsByCollection('files').then(data => {
+      const dataFile = data.filter(item => item.classCode === params.id && item.category === 'announcement' && item.ownerId === user.currentUser.uid).map(item => {
+        return item
+      })
+      setFileList(dataFile)
+    })
+  }
+
   const handleAnnoucement = (e) => {
     setAnnoucncementContent(e.target.value)
   }
@@ -147,11 +191,17 @@ export default function ClassAnnouncement() {
       classCode: params.id,
       created: Timestamp.now(),
       ownerId: user.currentUser.uid,
-      ownerName: ownerName
+      ownerName: ownerName,
+      announcementId: id
     }
     createDoc('announcement', data).then(() => {
+      const file = acceptedFiles.map(file => Object.assign(file))
+      uploadFile(file, params.id, id, user.currentUser.uid, '', 'announcement').then(data => {
+      })
       setAnnoucncementContent('')
+      acceptedFiles.splice(0, acceptedFiles.length)
       getDataAnnouncement()
+      getFileList()
     })
   }
 
@@ -160,12 +210,15 @@ export default function ClassAnnouncement() {
     setAnnoucncementContent('')
   }
 
-  const onDelete= (id) => {
-    // setIsOpen(true)
-    deleteAnnouncement(id).then(() => {
+  const onDelete = () => {
+    // setIsOpen(false)
+    deleteAnnouncement(itemId).then(() => {
       setOpenDeleteSnack(true)
+      setIsOpen(false)
+      getDataAnnouncement()
+      getFileList()
     })
-    getDataAnnouncement()
+    // getDataAnnouncement()
   }
 
   const handleCloseConfirm = () => {
@@ -178,6 +231,11 @@ const handleClose = (event, reason) => {
   }
   setOpenDeleteSnack(false)
 };
+
+const onDeleteDialog = (id) => {
+    setItemId(id)
+    setIsOpen(true)
+}
 
   const announcementBody = () => {
     return announcementData && announcementData.filter(item => item.classCode === params.id).map(item =>
@@ -196,12 +254,22 @@ const handleClose = (event, reason) => {
         <Grid item xs={12} sx={{ marginTop: 1 }}>
           <Typography sx={{ marginTop: 2 }}>{item.body}</Typography>
         </Grid>
+        <Grid item xs={12} sx={{ marginTop: 1 }}>
+           {fileList && fileList.filter(data => data.id === item.announcementId).map(data => 
+              <Grid container>
+                <Link style={{marginTop: 12}} href={data.url} underline="none">
+                  {data.name}
+                </Link>
+              </Grid>
+            )
+            }
+        </Grid>
         <Grid xs={12} justifyContent='flex-end' container>
           <Button
             variant="contained"
             color="error"
             sx={{ marginTop: 2 }}
-            onClick={() => onDelete(item.id)}
+            onClick={() => onDeleteDialog(item.id)}
           >
             Delete
           </Button>
@@ -243,7 +311,7 @@ const handleClose = (event, reason) => {
                 minRows={5}
               />
               <Box sx={{ marginTop: 2 }} container component={Grid} justifyContent="space-between">
-                <Grid item>
+                {/* <Grid item> */}
                   {/* <IconButton sx={style.iconStyle}>
                     <AddToDriveIcon />
                   </IconButton>
@@ -256,6 +324,30 @@ const handleClose = (event, reason) => {
                   <IconButton sx={style.iconStyle}>
                     <YouTubeIcon />
                   </IconButton> */}
+                {/* </Grid> */}
+                <Grid item>
+                  <section className="container" style={{display:'flex', justifyContent: 'space-between', width:'100%'}}>
+                    <div {...getRootProps({ className: 'dropzone' })}>
+                      <input {...getInputProps()} />
+                      <div>
+                        Drag 'n' drop some files here, or click to select files
+                        <IconButton sx={style.iconStyle}>
+                          <FileUploadIcon />
+                        </IconButton>
+                      </div>
+                      <em>(Only *.doc, *ppt, and *.xls will be accepted)</em>
+                    </div>
+                    <aside>
+                      {acceptedFileItems.length !== 0 &&
+                      <>
+                        <h4>Accepted files</h4>
+                        <div>{acceptedFileItems}</div>
+                        <h4>Rejected files</h4>
+                        <div>{fileRejectionItems}</div>
+                      </>
+                      }
+                    </aside>
+                  </section>
                 </Grid>
                 <Grid item sx={{ marginTop: 0.5 }}>
                   <Button
@@ -293,7 +385,7 @@ const handleClose = (event, reason) => {
       <ConfirmDelete
           isOpen={isOpen}
           handleCloseConfirm={handleCloseConfirm}
-          confirmDelete={onDelete}
+          confirmDeleteItem={onDelete}
       />
     </Teacherdrawer>
   )
