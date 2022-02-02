@@ -36,7 +36,7 @@ import { useHistory } from 'react-router';
 
 import { Helmet } from 'react-helmet';
 import logohelmetclass from '../../../../../assets/img/png/monitor.png';
-import Studentdrawer from '../../classdrawer/ClassDrawerStudent';
+import Teacherdrawer from '../../classdrawer/ClassDrawerTeacher';
 
 const style = {
   gridcontainer: {
@@ -286,7 +286,7 @@ export default function Laboratory() {
   console.log(studentsList)
   console.log(fileList)
   return (
-    <Studentdrawer classCode={params.id} headTitle={title ? title : 'Create Laboratory'}>
+    <Teacherdrawer classCode={params.id} headTitle={title ? title : 'Create Laboratory'}>
       <Helmet>
         <title>Laboratory Details</title>
         <link rel="Classroom Icon" href={logohelmetclass} />
@@ -498,6 +498,6 @@ export default function Laboratory() {
           </Box> */}
         </>
       </Box>
-    </Studentdrawer>
+    </Teacherdrawer>
   )
 }
