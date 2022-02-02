@@ -308,7 +308,7 @@ export default function StudentList() {
   )
 
   const renderAssignment = (assignment, index) => (
-    Object.keys(assignment).filter(key => params.id === assignment[key].classCode).map(key=> (
+    assignment && Object.keys(assignment).filter(key => params.id === assignment[key].classCode).map(key=> (
       <TableRow>
         <TableCell component="th" scope="row">
           {assignment[key].title}
