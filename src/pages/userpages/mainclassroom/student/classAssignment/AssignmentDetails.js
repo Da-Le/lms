@@ -153,10 +153,9 @@ export default function Laboratory() {
   useEffect(() => {
 
     if (Object.keys(user.currentUser).length !== 0) {
-      getAssignment().then(() => {
-        getFileList()
-      })
+      getAssignment()
       getStudentList()
+      getFileList()
     }
 
 
