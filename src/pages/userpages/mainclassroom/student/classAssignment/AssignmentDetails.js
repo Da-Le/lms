@@ -115,6 +115,7 @@ export default function Laboratory() {
   const [startDate, setStartDate] = useState('')
   const [fileList, setFileList] = useState([])
   const [studentFile, setStudentFile] = useState([])
+  const [ownerId , setOwnerId] = useState('')
 
 
   const { user } = useSelector((state) => state);
@@ -152,9 +153,10 @@ export default function Laboratory() {
   useEffect(() => {
 
     if (Object.keys(user.currentUser).length !== 0) {
-      getAssignment()
+      getAssignment().then(() => {
+        getFileList()
+      })
       getStudentList()
-      getFileList()
     }
 
 
@@ -186,7 +188,7 @@ export default function Laboratory() {
 
   const getFileList = () => {
     getDocsByCollection('files').then(data => {
-      const dataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment').map(item => {
+      const dataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.ownerId === ownerId).map(item => {
         return item
       })
       const studentDataFile = data.filter(item => item.classCode === params.id && item.category === 'assignment' && item.studentId === user.currentUser.uid).map(item => {
@@ -222,6 +224,7 @@ export default function Laboratory() {
           setTitle(item.title)
           setStartDate(item.created && new Date(item.created.seconds * 1000))
           setDueDate(item.dueDate && new Date(item.dueDate.seconds * 1000))
+          setOwnerId(item.ownerId)
         })
       } else {
         setIsNew(true)
